@@ -1,9 +1,9 @@
-import com.team12.smarthat.activities; // package
+
 import android.Manifest; // constants for permissions
 
 import android.bluetooth.BluetoothAdapter; // enable/disable HW management
-import android.bluetooth.BluetoothDevice; // device identification
-import android.bluetooth.BluetoothGattService;
+import android.bluetooth.BluetoothDevice; // device identification , not used for now might removee lster
+
 import android.content.Intent; // prompt user
 import android.content.pm.PackageManager; // permission check
 import android.os.Bundle; // store state
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity{
     private int retryCount = 0; // counter var
 
     //bluetooth
-    private BluetoothDevice bluetoothService; // declare instance will use connection logic later
+    private BluetoothService bluetoothService; // declare instance will use connection logic later
     private final Handler connectionHandler = new Handler(Looper.getMainLooper()); //new var declaration,store handler object,method call to wq21get main thread loop
 
     @Override
@@ -53,39 +53,42 @@ public class MainActivity extends AppCompatActivity{
     }
         private void initializeUI() {
             // grabbing stuff from xml
-            btnConnect = findViewByID(R.id.btn_connect);
-            tvStatus = findViewBy(R.id.tv_status);
+            btnConnect = findViewById(R.id.btn_connect);
+            tvStatus = findViewById(R.id.tv_status);
             tvNoise = findViewById(R.id.tv_Noise);
+            tvDust = findViewById(R.id.tv_Dust);
 
             btnConnect.setOnClickListener(V -> handleConnection()); //calling method on our var btn, new method defined action passed
 
         }
         private void checkBluetoothPermissions() {
             // check if already granted -> skip if not ->send request
-        //update: an error related to the BLUETOOTH_CONNECT permission requiring api level 31, but our app's minSdk is set to 24, i'll ask about the device we have but for now we add a conition before the request
-        //updated:list to store missing permissions
-        List<String> neededPermissions = new ArrayList<>();
+            //update: an error related to the BLUETOOTH_CONNECT permission requiring api level 31, but our app's minSdk is set to 24, i'll ask about the device we have but for now we add a conition before the request
+            //updated:list to store missing permissions
+            List<String> neededPermissions = new ArrayList<>();
 //adding not granted s to the list
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
-            != PackageManager.PERMISSION_GRANTED){
-                neededPermissions.add(Manifest.permission.BLUETOOTH);}
-            // updated for android api 31+ = S (12+ device):
-        if(Build.VERSION.SDK_INT >= build.VERSION_CODES.S) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
                     != PackageManager.PERMISSION_GRANTED) {
-                neededPermissions.add(Manifest.permission.BLUETOOTH_CONNECT);
+                neededPermissions.add(Manifest.permission.BLUETOOTH);
             }
-        }
-        //if android11 or lower(api 30 or below) = R
-        // location required for ble & classic scanning on older devices
-if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.R){
-    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-    != PackageManager.PERMISSION_GRANTED) {
-        neededPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-    }}
+            // updated for android api 31+ = S (12+ device):
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    neededPermissions.add(Manifest.permission.BLUETOOTH_CONNECT);
+                }
+            }
+            //if android11 or lower(api 30 or below) = R
+            // location required for ble & classic scanning on older devices
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    neededPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+                }
+            }
 //request missing permissions from user
-if (!neededPermissions.isEmpty()){
-                ActivityCompat.requestPermission(
+            if (!neededPermissions.isEmpty()) {
+                ActivityCompat.requestPermissions(
                         this,
                         neededPermissions.toArray(new String[0]), //list to string array
 
@@ -94,14 +97,14 @@ if (!neededPermissions.isEmpty()){
 
                 );
             }
-
+        }
 private void initializeBluetoothService(){ //new instance of bluetooth service
-bluetoothService = new BluetoothGattService(this, new BluetoothGattService.ConnectionCallback(){
+bluetoothService = new BluetoothService(this, new BluetoothService.ConnectionCallback(){
     @Override
     public void onConnected(){
         //update ui main thread
         runOnUiThread(()->{
-            tvStatus.setText(("Connected")
+            tvStatus.setText(("Connected");
             btnConnect.setText("Disconnect");
             retryCount = 0; //reset rety counter
         });
