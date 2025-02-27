@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity"; // contant log tag debugging
     private static final int REQUEST_ENABLE_BT = 1; // contant for prompting user later
     //private static final int REQUEST_BLUETOOTH_PERMISSIONS= 2; // runtime request
-//ssp
+//spp
     private final BroadcastReceiver pairingReceiver = createPairingReceiver();
     private static final long CONNECTION_TIMEOUT_MS = 15000;
     private final Handler timeoutHandler = new Handler(Looper.getMainLooper());
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
     private void checkPairingAndConnect() {
         BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(Constants.ESP32_MAC_ADDRESS);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
+            // LOGCAT FIX : TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showPairingDialog(BluetoothDevice device) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
+            // LOGCAT FIX: TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
