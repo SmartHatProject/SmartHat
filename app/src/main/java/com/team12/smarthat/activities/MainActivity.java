@@ -1,289 +1,262 @@
 package com.team12.smarthat.activities;
+// might switch to ble later, will expand imports
 
-import android.Manifest; // constants for permissions
+//classic bluetooth kit
 
-import android.bluetooth.BluetoothAdapter; // enable/disable HW management
-//import android.bluetooth.BluetoothDevice; // device identification , not used for now might removee lster
-
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent; // prompt user
-import android.content.IntentFilter;
-import android.content.pm.PackageManager; // permission check
-import android.os.Bundle; // store state
-import android.os.Handler; // scheduled tasks post permission
-import android.os.Looper; // handler loop
-import android.os.Build; // device & os info
-import android.util.Log; // debugging
-import android.widget.TextView; //ui layout
-import android.widget.Toast; // popups
+import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultLauncher; // launch and callback
-import androidx.activity.result.contract.ActivityResultContracts; // handle enable result
-import androidx.annotation.Nullable; // avoid crash with no data
-import androidx.appcompat.app.AppCompatActivity; // compat ui
-import androidx.core.app.ActivityCompat; // run time permission
-import androidx.core.content.ContextCompat; // pre request permission check
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.team12.smarthat.R; // xml
-import com.team12.smarthat.bluetooth.BluetoothService; // bluetooth connection logic
-import com.team12.smarthat.utils.Constants;  // constants storage
-import com.team12.smarthat.viewmodels.BluetoothViewModel; // logic & livedata
+import com.team12.smarthat.R;
+import com.team12.smarthat.bluetooth.BluetoothManager;
+import com.team12.smarthat.bluetooth.BluetoothService;
+import com.team12.smarthat.database.DatabaseHelper;
+import com.team12.smarthat.models.SensorData;
+import com.team12.smarthat.utils.Constants;
+import com.team12.smarthat.utils.NotificationUtils;
+import com.team12.smarthat.utils.PermissionUtils;
+import com.team12.smarthat.viewmodels.BluetoothViewModel;
 
-import java.util.ArrayList; // updated just for oldies support might remove look at update in conditional in checkbluetootpermission
-import java.util.List; // updated just for oldies support might remove
-
-//this class (MainActivity) inherits parent AppCompatActivity looks!!
+import java.io.IOException;
+import java.util.List;
+//ble note : currently spp , if switch -> wold need GATT callback in this class
 public class MainActivity extends AppCompatActivity {
-    // updated arch
 
+    // region class components
+private BluetoothViewModel viewModel;
+private final BluetoothManager bluetoothManager = new BluetoothManager(this);
+private BluetoothService bluetoothService;
+private DatabaseHelper databaseHelper; // our local sqlite database access
+private NotificationUtils notificationUtils;
+      // endregion
 
-    //constants
-    private static final String TAG = "MainActivity"; // contant log tag debugging
-    private static final int REQUEST_ENABLE_BT = 1; // contant for prompting user later
-    //private static final int REQUEST_BLUETOOTH_PERMISSIONS= 2; // runtime request
-//spp
-    private final BroadcastReceiver pairingReceiver = createPairingReceiver();
-    private static final long CONNECTION_TIMEOUT_MS = 15000;
-    private final Handler timeoutHandler = new Handler(Looper.getMainLooper());
+    // region ui components
+ private TextView tvStatus, tvDust, tvNoise;
+private Button btnConnect;
+    // endregion
 
-    //UI components
-    private Button btnConnect; //declare btn
-    private TextView tvStatus, tvDust, tvNoise; // tv vars
-    private BluetoothViewModel bluetoothViewModel; //update: switched from bluetooth service to this for now, bluetooth service commented out
-    private NotificationUtils notificationUtils;
-    //bluetooth activation
-    private final ActivityResultLauncher<Intent> enableBluetoothLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        if (result.getResultCode() == RESULT_OK) {
-            handleBluetoothEnabled();
-        } else {
-            showToast(getString(R.string.bluetooth_required));
-        }
-    });
-    // Connection retry
-    //private static final int MAX_RETRIES = 3; // will try another approach if this isn't enough (progressive delays maybe!?)
-    //private int retryCount = 0; // counter var
+    // region activation system spp
+// system dialog result handler
+private final ActivityResultLauncher<Intent> bluetoothEnableLauncher =
+registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 
-    //bluetooth
-    //private BluetoothService bluetoothService; // declare instance will use connection logic later
-    //private final Handler connectionHandler = new Handler(Looper.getMainLooper()); //new var declaration,store handler object,method call to wq21get main thread loop
+if (result.getResultCode() == RESULT_OK) { attemptDeviceConnection(); // case successful
 
-    @Override
-    protected void onCreate(Bundle saveInstanceState) {
-        super.onCreate(savedInstanceState); // parent's method call, init activity & restore
+         }  else { showToast("Bluetooth required for connection"); // case declined
+     }});
+     // endregion
 
-        setContentView(R.layout.activity_main);// resource xml
+    // region lifecycle methods
+ @Override
+  protected void onCreate(Bundle savedInstanceState)
+ {
+ super.onCreate(savedInstanceState);
+setContentView(R.layout.activity_main);
+initializeComponents();
+setupUI();
 
-        // initializeBlutoothService();
-        notificationUtils = new NotificationUtils(this);
-        registerReceiver(pairingReceiver, new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED));
-        requestNotificationPermission();
-        initializeUI();
-        setupViewModel();
-        checkBluetoothPermissions();
+ setupObservers();     // liveData listeners
+  checkPermissions();     // runtime permissions verifications
+     // ble note: will add loading state during init
+ }
+
+ @Override
+protected void onDestroy() {
+ super.onDestroy();
+ cleanupResources();        // prevent resource/memory  leaks
+//ble note: will add gat.disconnect()
     }
 
-    private void handleBluetoothEnabled() {
-        Log.i(Constants.TAG_BLUETOOTH, "Bluetooth enabled, ready to connect.");
+    // endregion
+
+    // region component init
+ private void initializeComponents() {
+ //lifecycle for viewmodel
+viewModel = new ViewModelProvider(this).get(BluetoothViewModel.class);
+databaseHelper = new DatabaseHelper(this); // room later
+
+ viewModel.initialize(databaseHelper);
+
+bluetoothService = new BluetoothService(viewModel); // ble:would replce with bleService
+
+ notificationUtils = new NotificationUtils(this);
     }
+    // endregion
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(pairingReceiver);
-        timeoutHandler.removeCallbacksAndMessages(null);
-        if (bluetoothViewModel != null) {
-            bluetoothViewModel.cleanupResources();
-        }
-    }
+    // region ui config
+private void setupUI() {
+ tvStatus = findViewById(R.id.tv_status);
+  tvDust = findViewById(R.id.tv_dust);
+ tvNoise = findViewById(R.id.tv_noise);
 
-    private void initializeUI() {
-        // grabbing stuff from xml
-        btnConnect = findViewById(R.id.btn_connect);
-        tvStatus = findViewById(R.id.tv_status);
-        tvNoise = findViewById(R.id.tv_noise);
-        tvDust = findViewById(R.id.tv_dust);
+ btnConnect = findViewById(R.id.btn_connect);
 
-        btnConnect.setOnClickListener(v -> handleConnection()); //calling method on our var btn, new method defined action passed
+ // btn click connection logic
+btnConnect.setOnClickListener(v -> toggleConnectionState());
+// might add progress indicator for ui here
+ }
+    // endregion
 
-    }
+     // region data observation
+ private void setupObservers() {
 
-    private void setupViewModel() {
-        bluetoothViewModel = new ViewModelProvider(this).get(BluetoothViewModel.class);
-        bluetoothViewModel.getConnectionState().observe(this, state -> {
-            switch (state) {
-                case CONNECTING:
+ //state change monitor, update status disp
+  viewModel.getConnectionState().observe(this, state -> {
+ tvStatus.setText(state);
+ updateConnectionButton(state); }); // toggle btn
+     // new data received
+viewModel.getSensorData().observe(this, sensorData -> {
+ updateSensorDisplays(sensorData);
+checkThresholdAlerts(sensorData);
 
-                    updateUI(getString(R.string.connecting), false, R.string.connect);
-                    break;
-                case CONNECTED:
-                    updateUI(getString(R.string.connected), true, R.string.disconnect);
-                    break;
-                case DISCONNECTED:
+});
 
-                    updateUI(getString(R.string.disconnected), true, R.string.connect);
-                    break;
-            }
+ // error msg from viewmodel
+viewModel.getErrorMessage().observe(this, error -> {
+   showToast(error);
+  notificationUtils.sendAlert("Device Error", error);
         });
-        bluetoothViewModel.getSensorData().observe(this, json -> {
-            try {
-                JSONObject data = new JSONObject(json);
-                String type = data.getString("sensor");
-                float value = (float) data.getDouble("value");
-                if (type.equals("dust")) {
-                    tvDust.setText(getString(R.string.dust_display, value));
-                    checkDustThreshold(value);
-                } else if (type.equals("noise")) {
-                    tvNoise.setText(getString(R.string.noise_display, value));
-                    checkNoiseThreshold(value);
-                }
+    } // endregion
 
-            } catch (JSONException e) {
-                Log.e(Constants.TAG_BLUETOOTH, "JSON error" + e.getMessage());
-            }
-        });
+    // CORE LOGIC!!
+ private void toggleConnectionState() {
+if (viewModel.isConnected()) {
+// disc flow
+if (bluetoothService != null) {
+   bluetoothService.disconnect(); //close socket
+  }
+  //update state in viewmodel
+  viewModel.disconnectDevice();
+  } else {
+    startConnectionProcess();
+   }
+    }
+    private void startConnectionProcess() {
+    // bt check
+   if (!bluetoothManager.isBluetoothSupported()) {
+  showToast("Bluetooth not available");
+ return;}
+
+// bt enable?
+if (!bluetoothManager.isBluetoothEnabled()) {
+bluetoothEnableLauncher.launch(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE));
+ return;
+       }
+
+// connect
+   attemptDeviceConnection();
     }
 
-    private void handleBluetoothEnabled() {
-        Log.i(Constants.TAG_BLUETOOTH, "Bluetooth enabled, ready to connect.");
-        bluetoothViewModel.connectToDevice(Constants.ESP32_MAC_ADDRESS); // start connection after enabling Bluetooth
-    }
-
-    private void handleConnection() {
-        if (bluetoothViewModel.isConnected()) {
-            bluetoothViewModel.disconnectDevice();
-        } else {
-            checkPairingAndConnect();
+private void attemptDeviceConnection() {
+ try {
+   connectToDevice(); //main connection
+    } catch (SecurityException e) {
+     // android 12+?
+    requestBluetoothPermissions();
         }
     }
 
-    private void checkPairingAndConnect() {
-        BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(Constants.ESP32_MAC_ADDRESS);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            // LOGCAT FIX : TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        if (device.getBondState() == BluetoothDevice.BOND_BONDED) {
-
-            attemptConnection();
-        } else {
-            showPairingDialog(device);
-        }
-    }
-
-    private void attemptConnection() {
-        if (validateBluetoothAdapter()) {
-            bluetoothViewModel.connectToDevice(Constants.ESP32_MAC_ADDRESS);
-            startConnectionTimer();
-        }
-    }
-
-    private void startConnectionTimer() { //update: instead of retry that commented out using this
-        timeoutHandler.postDelayed(() -> {
-            if (!bluetoothViewModel.isConnected()) {
-                showToast(getString(R.string.connection_timeout));
-                bluetoothViewModel.disconnectDevice();
-            }
-        }, CONNECTION_TIMEOUT_MS);
-    }
-
-    private BroadcastReceiver createPairingReceiver() {
-        return new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(intent.getAction())) {
-                    int state = intent.getIntExtra(
-                            BluetoothDevice.EXTRA_BOND_STATE, -1);
-                    if (state == BluetoothDevice.BOND_BONDED) {
-                        attemptConnection();
-                    }
-                }
-            }
-        };
-    }
-
-    private void handleBluetoothEnabled() {
-        Log.i(Constants.TAG_BLUETOOTH, "Bluetooth enabled, ready to connect.");
-        bluetoothViewModel.connectToDevice(Constants.ESP32_MAC_ADDRESS); // Start connection after enabling Bluetooth
-    }
-
-    private void showPairingDialog(BluetoothDevice device) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            // LOGCAT FIX: TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        new AlertDialog.Builder(this)
-                .setTitle("Pair With Device")
-                .setMessage("Pair with " + device.getName() + " to continue")
-                .setPositiveButton("Pair", (d, w) -> device.createBond())
-                .setNegativeButton("Cancel", null)
-                .show();
+  /** connects via spp, ble would need gatt stuff here */
+    private void connectToDevice() {
+ BluetoothDevice device = bluetoothManager.getPairedDevice();
+  if (device == null) {
+   showPairingDialog(); // case not paired
+ return;
+}
+  try {
+ BluetoothSocket socket = device.createRfcommSocketToServiceRecord(Constants.SPP_UUID);
+ bluetoothService.connect(socket);
+  viewModel.updateConnectionState(Constants.STATE_CONNECTED);
+     } catch (IOException | SecurityException e) {
+ viewModel.handleError("Connection failed: " + e.getMessage());
       }
-        private void checkBluetoothPermissions() {
-            // check if already granted -> skip if not ->send request
-            //update: an error related to the BLUETOOTH_CONNECT permission requiring api level 31, but our app's minSdk is set to 24, i'll ask about the device we have but for now we add a conition before the request
-            //updated:list to store missing permissions
-            List<String> neededPermissions = new ArrayList<>();
-//adding not granted s to the list
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
-                    != PackageManager.PERMISSION_GRANTED) {
-                neededPermissions.add(Manifest.permission.BLUETOOTH);
-            }
-            // updated for android api 31+ = S (12+ device):
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    neededPermissions.add(Manifest.permission.BLUETOOTH_CONNECT);
-                }
-            }
-            //if android11 or lower(api 30 or below) = R
-            // location required for ble & classic scanning on older devices
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    neededPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-                }
-            }
-//request missing permissions from user
-            if (!neededPermissions.isEmpty()) {
-                ActivityCompat.requestPermissions(
-                        this,
-                        neededPermissions.toArray(new String[0]), //list to string array
+    }
+    // endregion
 
-                        Constants.REQUEST_BLUETOOTH_PERMISSIONS //code request
+    // region permission handling
+ private void checkPermissions() {
+  List<String> neededPermissions = PermissionUtils.getRequiredPermissions(this);
+   if (!neededPermissions.isEmpty()) {
+     requestPermissions(neededPermissions.toArray(new String[0]),
+    Constants.REQUEST_BLUETOOTH_PERMISSIONS);
+        } }
 
+    private void requestBluetoothPermissions() {
+        // incase
+        checkPermissions();
+    }
 
-                );
+ @Override
+ public void onRequestPermissionsResult(int requestCode,
+  @NonNull String[] permissions, @NonNull int[] grantResults) {
+ super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+ if (requestCode == Constants.REQUEST_BLUETOOTH_PERMISSIONS) {
+    for (int result : grantResults) {
+     if (result != PackageManager.PERMISSION_GRANTED) {
+showToast("Required permissions denied");
+    finish();
+  return;} }
+      attemptDeviceConnection();} }
+    // endregion
+
+    // region data disp
+    private void updateConnectionButton(String state) {
+  if (Constants.STATE_CONNECTED.equals(state)) {
+   btnConnect.setText(R.string.disconnect);
+        } else {
+   btnConnect.setText(R.string.connect);
+        } }
+
+ private void updateSensorDisplays(SensorData data) { runOnUiThread(() -> {
+ if ("dust".equals(data.getSensorType())) {
+     tvDust.setText(String.format("PM2.5: %.1f µg/m³", data.getValue()));
+ } else if ("noise".equals(data.getSensorType()))
+    { tvNoise.setText(String.format("Noise: %.1f dB", data.getValue()));
             }
-        }}
-//private void initializeBluetoothService(){ //new instance of bluetooth service
-//bluetoothService = new BluetoothService(this, new BluetoothService.ConnectionCallback(){
-   // @Override
-   // public void onConnected(){
-        //update ui main thread
-       // runOnUiThread(()->{
-           // tvStatus.setText(("Connected");
-           // btnConnect.setText("Disconnect");
-           // retryCount = 0; //reset rety counter
-       // });
-      //  }
-       //failed connection
-     //  @Override
- //   public void onConnectionFailed(String error){
+        });
+    }  //DOUBLE CHECK
 
+private void checkThresholdAlerts(SensorData data) {
+if ("dust".equals(data.getSensorType()) && data.getValue() > Constants.DUST_THRESHOLD) {
+    notificationUtils.sendAlert("Dust Alert!",
+  "High particulate levels detected: " + data.getValue());
+        }
+    }
+    // endregion
+
+    // region utilities
+    private void showToast(String message) {
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+
+
+    private void showPairingDialog() {
+        new AlertDialog.Builder(this)
+ .setTitle("Pair Device")
+    .setMessage("Please pair with your SmartHat device first")
+ .setPositiveButton("Open Settings", (d, w) ->
+  startActivity(new Intent(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS)))
+.setNegativeButton("Cancel", null)
+ .show();
+    }
+ private void cleanupResources() {
+ if (viewModel != null) {
+  viewModel.cleanupResources();
+        } //ble note: might add BluetoothGatt.close()
+    }
+    // endregion
+}

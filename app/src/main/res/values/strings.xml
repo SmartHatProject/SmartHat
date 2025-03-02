@@ -1,3 +1,17 @@
 <resources>
-    <string name="app_name">SmartHat</string>
+    <!-- Connection Status -->
+    <string name="bluetooth_required">Bluetooth is required</string>
+    <string name="connecting">Connecting…</string>
+    <string name="connected">Connected</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="connect">Connect</string>
+    <string name="disconnect">Disconnect</string>
+
+    <!-- Errors -->
+    <string name="connection_timeout">Connection timed out</string>
+    <string name="bluetooth_unavailable">Bluetooth not supported</string>
+
+    <!-- Sensor Displays -->
+    <string name="dust_display">PM2.5: %.1f µg/m³</string>
+    <string name="noise_display">Noise: %.1f dB</string>
 </resources>
