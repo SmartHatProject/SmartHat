@@ -20,11 +20,12 @@ import android.util.Log;
 import androidx.core.content.ContextCompat;
 import com.team12.smarthat.utils.Constants;
 import com.team12.smarthat.viewmodels.BluetoothViewModel;
-// ble note: would replace the enire class with ble gatt
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class BluetoothManager {
-
- private final BluetoothAdapter bluetoothAdapter;
-
+    private final BluetoothAdapter bluetoothAdapter;
     private final Context context;
     private BluetoothLeScanner bluetoothLeScanner;
     private boolean scanning;
@@ -38,49 +39,52 @@ public class BluetoothManager {
     private BluetoothDevice targetDevice;
 
     public BluetoothManager(Context context) {
-     this.context = context;
-  this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-  if (bluetoothAdapter != null) {
-   this.bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
-  }
+        this.context = context;
+        this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter != null) {
+            this.bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
+        }
     }
-//ble -> 18+ api
-public boolean isBluetoothSupported() {
+
+    // basic bluetooth checks
+    public boolean isBluetoothSupported() {
         return bluetoothAdapter != null;
     }
 
- public boolean isBluetoothEnabled() {
+    public boolean isBluetoothEnabled() {
         return bluetoothAdapter != null && bluetoothAdapter.isEnabled();
     }
-
- // mac address
-  //ble -> scanner or scanner call back
- public BluetoothDevice getEsp32Device() throws SecurityException {
-    try {
-    return bluetoothAdapter.getRemoteDevice(Constants.ESP32_MAC_ADDRESS);
- } catch (IllegalArgumentException e) {
-   Log.e(Constants.TAG_BLUETOOTH, "Invalid MAC: " + Constants.ESP32_MAC_ADDRESS);
-   return null;}
+    
+    // getting device by mac is not recommended for ble
+    // keeping for compatibility but we'll use scanning instead
+    public BluetoothDevice getDeviceByMac() throws SecurityException {
+        try {
+            return bluetoothAdapter.getRemoteDevice(Constants.ESP32_MAC_ADDRESS);
+        } catch (IllegalArgumentException e) {
+            Log.e(Constants.TAG_BLUETOOTH, "Invalid MAC: " + Constants.ESP32_MAC_ADDRESS);
+            return null;
+        }
     }
 
-  return device.createRfcommSocketToServiceRecord(Constants.SPP_UUID);
-    }
-
+    // check if our device is already paired
     public boolean isDevicePaired() {
-// Check for BLUETOOTH_CONNECT permission
-    if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-  throw new SecurityException("BLUETOOTH_CONNECT permission not granted");
-}
- for (BluetoothDevice device : bluetoothAdapter.getBondedDevices()) {
- if (device.getAddress().equals(Constants.ESP32_MAC_ADDRESS)) {
-  return true;
- }}
+        // Check for BLUETOOTH_CONNECT permission
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) 
+                != PackageManager.PERMISSION_GRANTED) {
+            throw new SecurityException("BLUETOOTH_CONNECT permission not granted");
+        }
+        
+        for (BluetoothDevice device : bluetoothAdapter.getBondedDevices()) {
+            if (device.getAddress().equals(Constants.ESP32_MAC_ADDRESS)) {
+                return true;
+            }
+        }
         return false;
     }
 
-    // updated mainactivity
-  public BluetoothDevice getPairedDevice() throws SecurityException {
- return getEsp32Device();
+    // still used by main activity in some code paths
+    public BluetoothDevice getPairedDevice() throws SecurityException {
+        return getDeviceByMac();
     }
 
     // new methods for ble

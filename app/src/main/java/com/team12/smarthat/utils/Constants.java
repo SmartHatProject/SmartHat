@@ -6,7 +6,6 @@ import java.util.UUID;
 public class Constants {
 // bluetooth config
 public static final String ESP32_MAC_ADDRESS = "00:11:22:33:44:55"; //will update this later - ask Rasham maybe
-public static final UUID SPP_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
 // ble stuff
 public static final UUID SERVICE_UUID = UUID.fromString("4fafc201-1fb5-459e-8fcc-c5c9c331914b"); // our service
