@@ -37,16 +37,8 @@ requiredPermissions.add(Manifest.permission.BLUETOOTH);
    }
         }
 
-// location permissions needed for ble scanning
-// only need to request one of them - system will handle which one to grant
-boolean hasLocationPermission = 
-    (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) ||
-    (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED);
-
-if (!hasLocationPermission) {
-    // prefer fine location for more accurate scanning
-    requiredPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-}
+// Not checking location permissions here anymore, handled separately in MainActivity
+// for better "while using app" support
 
 //required for Android 13+ api 33+
 

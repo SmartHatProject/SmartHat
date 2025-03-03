@@ -32,6 +32,21 @@ public class BluetoothService {
     // ble manager
     private final BluetoothManager bluetoothManager;
     
+    // Test mode fields
+    private boolean testModeEnabled = false;
+    private Handler testModeHandler;
+    private final Runnable testDataRunnable = new Runnable() {
+        @Override
+        public void run() {
+            // Generate random sensor data
+            generateMockSensorData();
+            // Schedule next data generation
+            if (testModeEnabled) {
+                testModeHandler.postDelayed(this, 2000); // Generate data every 2 seconds
+            }
+        }
+    };
+    
     // scan callback - for device discovery
     private final ScanCallback scanCallback = new ScanCallback() {
         @Override
@@ -159,28 +174,61 @@ public class BluetoothService {
         // setup callbacks
         bluetoothManager.setViewModel(viewModel);
         bluetoothManager.setGattCallback(gattCallback);
+        
+        // Initialize test mode handler
+        testModeHandler = new Handler(Looper.getMainLooper());
     }
     
+  
     /** kicks off device scanning */
     public void startScan() {
+        // Check if test mode is enabled
+        if (testModeEnabled) {
+            Log.d(Constants.TAG_BLUETOOTH, "test mode active - bypassing actual bluetooth scanning");
+            // Simulate found device after a short delay
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                viewModel.updateConnectionState(Constants.STATE_CONNECTED);
+                startMockDataGeneration();
+            }, 1500); // Simulate connection delay
+            return;
+        }
+        
         // adding some logs for easier debugging
         Log.d(Constants.TAG_BLUETOOTH, "starting scan... hope we find something");
         
         // gonna timeout after a bit if no device found
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             if (viewModel.getConnectionState().getValue().equals(Constants.STATE_DISCONNECTED)) {
-                viewModel.handleError("no smarthat found nearby... normal if hardware isn't ready yet");
+                viewModel.handleError("No SmartHat device found nearby");
                 bluetoothManager.stopScan();
             }
         }, Constants.SCAN_PERIOD);
         
-        bluetoothManager.scanForDevices(scanCallback);
+        try {
+            bluetoothManager.scanForDevices(scanCallback);
+        } catch (Exception e) {
+            Log.e(Constants.TAG_BLUETOOTH, "error starting scan: " + e.getMessage());
+            viewModel.handleError("Error starting Bluetooth scan: " + e.getMessage());
+        }
     }
     
     // connect to device - can be called directly or from scan
     public void connect(BluetoothDevice device) {
-        bluetoothGatt = bluetoothManager.connectToBleDevice(device);
-        bluetoothManager.setBluetoothGatt(bluetoothGatt);
+        // In test mode, just simulate connection
+        if (testModeEnabled) {
+            Log.d(Constants.TAG_BLUETOOTH, "test mode active - simulating connection");
+            viewModel.updateConnectionState(Constants.STATE_CONNECTED);
+            startMockDataGeneration();
+            return;
+        }
+        
+        try {
+            bluetoothGatt = bluetoothManager.connectToBleDevice(device);
+            bluetoothManager.setBluetoothGatt(bluetoothGatt);
+        } catch (Exception e) {
+            Log.e(Constants.TAG_BLUETOOTH, "error connecting: " + e.getMessage());
+            viewModel.handleError("Error connecting to device: " + e.getMessage());
+        }
     }
     
     // enable notifications for sensor values
@@ -223,11 +271,100 @@ public class BluetoothService {
     
     // disconnect from gatt server
     public void disconnect() {
+        if (testModeEnabled) {
+            stopMockDataGeneration();
+            viewModel.updateConnectionState(Constants.STATE_DISCONNECTED);
+            return;
+        }
+        
         if (bluetoothGatt != null) {
             bluetoothGatt.disconnect();
             bluetoothGatt.close();
             bluetoothGatt = null;
             bluetoothManager.setBluetoothGatt(null);
+        }
+    }
+    
+    /**
+     * test mode methods
+     */
+    
+    /**
+     * enable or disable test mode
+     * @param enabled true enable 
+     */
+    public void setTestMode(boolean enabled) {
+        this.testModeEnabled = enabled;
+        if (enabled) {
+            Log.d(Constants.TAG_BLUETOOTH, "Test Mode Enabled");
+            // no real connection yet!!!
+            if (bluetoothGatt != null) {
+                bluetoothGatt.disconnect();
+                bluetoothGatt.close();
+                bluetoothGatt = null;
+                bluetoothManager.setBluetoothGatt(null);
+            }
+        } else {
+            Log.d(Constants.TAG_BLUETOOTH, "Test mode disabled");
+            stopMockDataGeneration();
+            // connection state eset
+        
+            viewModel.updateConnectionState(Constants.STATE_DISCONNECTED);
+        }
+    }
+    
+    /**
+     * @return true if test mode is enabled
+     */
+    public boolean isTestModeEnabled() {
+        return testModeEnabled;
+    }
+    
+    /**
+     * start generating mock sensor data
+     */
+    private void startMockDataGeneration() {
+        if (!testModeEnabled) return;
+        
+        Log.d(Constants.TAG_BLUETOOTH, "Starting mock data generation");
+        testModeHandler.post(testDataRunnable);
+    }
+    
+    /**
+     * stop generating mock sensor data
+     */
+    private void stopMockDataGeneration() {
+        Log.d(Constants.TAG_BLUETOOTH, "Stopping mock data generation");
+        testModeHandler.removeCallbacks(testDataRunnable);
+    }
+    
+    /**
+     * generate random sensor data
+     */
+    private void generateMockSensorData() {
+        Log.d(Constants.TAG_BLUETOOTH, "generating mock sensor data in test mode");
+        
+        // random dust reading (10-50 micrograms/m³)
+        float dustValue = 10 + (float) (Math.random() * 40);
+        SensorData dustData = new SensorData("dust", dustValue);
+        viewModel.handleNewData(dustData);
+        
+        //random noise  (40-85 dB)
+        float noiseValue = 40 + (float) (Math.random() * 45);
+        SensorData noiseData = new SensorData("noise", noiseValue);
+        viewModel.handleNewData(noiseData);
+        
+        // occasional simulate threshold alerts
+        if (Math.random() > 0.7) {
+            if (Math.random() > 0.5) {
+                // high dust reading sim
+                dustData = new SensorData("dust", Constants.DUST_THRESHOLD + 10);
+                viewModel.handleNewData(dustData);
+            } else {
+                // high noise reading sim
+                noiseData = new SensorData("noise", Constants.NOISE_THRESHOLD + 5);
+                viewModel.handleNewData(noiseData);
+            }
         }
     }
 }
