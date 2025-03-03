@@ -29,8 +29,19 @@ requiredPermissions.add(Manifest.permission.BLUETOOTH);
 
      requiredPermissions.add(Manifest.permission.BLUETOOTH_CONNECT);
    }
+   
+   // need this for ble scanning on android 12+
+   if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN)
+   != PackageManager.PERMISSION_GRANTED) {
+     requiredPermissions.add(Manifest.permission.BLUETOOTH_SCAN);
+   }
         }
 
+// location permissions needed for ble scanning
+if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+   != PackageManager.PERMISSION_GRANTED) {
+  requiredPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+}
 
 //required for Android 13+ api 33+
 

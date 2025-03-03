@@ -5,7 +5,6 @@ package com.team12.smarthat.activities;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -30,9 +29,8 @@ import com.team12.smarthat.utils.NotificationUtils;
 import com.team12.smarthat.utils.PermissionUtils;
 import com.team12.smarthat.viewmodels.BluetoothViewModel;
 
-import java.io.IOException;
 import java.util.List;
-//ble note : currently spp , if switch -> wold need GATT callback in this class
+//now using ble
 public class MainActivity extends AppCompatActivity {
 
     // region class components
@@ -70,15 +68,14 @@ setupUI();
 
  setupObservers();     // liveData listeners
   checkPermissions();     // runtime permissions verifications
-     // ble note: will add loading state during init
+     // added loading state indicator during initialization
  }
 
  @Override
 protected void onDestroy() {
  super.onDestroy();
  cleanupResources();        // prevent resource/memory  leaks
-//ble note: will add gat.disconnect()
-    }
+}
 
     // endregion
 
@@ -90,7 +87,8 @@ databaseHelper = new DatabaseHelper(this); // room later
 
  viewModel.initialize(databaseHelper);
 
-bluetoothService = new BluetoothService(viewModel); // ble:would replce with bleService
+ // passing bluetoothManager to service for ble ops
+bluetoothService = new BluetoothService(viewModel, bluetoothManager);
 
  notificationUtils = new NotificationUtils(this);
     }
@@ -136,7 +134,7 @@ viewModel.getErrorMessage().observe(this, error -> {
 if (viewModel.isConnected()) {
 // disc flow
 if (bluetoothService != null) {
-   bluetoothService.disconnect(); //close socket
+   bluetoothService.disconnect(); //close gatt connection
   }
   //update state in viewmodel
   viewModel.disconnectDevice();
@@ -162,27 +160,29 @@ bluetoothEnableLauncher.launch(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE
 
 private void attemptDeviceConnection() {
  try {
-   connectToDevice(); //main connection
+   // changed to start a ble scan
+   startBleScan();
     } catch (SecurityException e) {
      // android 12+?
     requestBluetoothPermissions();
         }
     }
 
-  /** connects via spp, ble would need gatt stuff here */
+  /** starts ble scan for devices */
+    private void startBleScan() {
+        // Start scanning for our device
+        showToast("Scanning for SmartHat device...");
+        bluetoothService.startScan();  
+    }
+    
+    // still keeping in case we want direct connection
     private void connectToDevice() {
- BluetoothDevice device = bluetoothManager.getPairedDevice();
-  if (device == null) {
-   showPairingDialog(); // case not paired
- return;
-}
-  try {
- BluetoothSocket socket = device.createRfcommSocketToServiceRecord(Constants.SPP_UUID);
- bluetoothService.connect(socket);
-  viewModel.updateConnectionState(Constants.STATE_CONNECTED);
-     } catch (IOException | SecurityException e) {
- viewModel.handleError("Connection failed: " + e.getMessage());
-      }
+        BluetoothDevice device = bluetoothManager.getPairedDevice();
+        if (device == null) {
+            showPairingDialog(); // case not paired
+            return;
+        }
+        bluetoothService.connect(device);
     }
     // endregion
 
@@ -198,65 +198,85 @@ private void attemptDeviceConnection() {
         // incase
         checkPermissions();
     }
-
- @Override
- public void onRequestPermissionsResult(int requestCode,
-  @NonNull String[] permissions, @NonNull int[] grantResults) {
- super.onRequestPermissionsResult(requestCode, permissions, grantResults);
- if (requestCode == Constants.REQUEST_BLUETOOTH_PERMISSIONS) {
-    for (int result : grantResults) {
-     if (result != PackageManager.PERMISSION_GRANTED) {
-showToast("Required permissions denied");
-    finish();
-  return;} }
-      attemptDeviceConnection();} }
     // endregion
-
-    // region data disp
-    private void updateConnectionButton(String state) {
-  if (Constants.STATE_CONNECTED.equals(state)) {
-   btnConnect.setText(R.string.disconnect);
-        } else {
-   btnConnect.setText(R.string.connect);
-        } }
-
- private void updateSensorDisplays(SensorData data) { runOnUiThread(() -> {
- if ("dust".equals(data.getSensorType())) {
-     tvDust.setText(String.format("PM2.5: %.1f µg/m³", data.getValue()));
- } else if ("noise".equals(data.getSensorType()))
-    { tvNoise.setText(String.format("Noise: %.1f dB", data.getValue()));
+    
+    // region request result callbacks
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == Constants.REQUEST_BLUETOOTH_PERMISSIONS) {
+            if (grantResults.length > 0 && allPermissionsGranted(grantResults)) {
+                // retry now that permissions granted
+                attemptDeviceConnection();
+            } else {
+                showToast("Bluetooth permissions required for connection");
             }
-        });
-    }  //DOUBLE CHECK
-
-private void checkThresholdAlerts(SensorData data) {
-if ("dust".equals(data.getSensorType()) && data.getValue() > Constants.DUST_THRESHOLD) {
-    notificationUtils.sendAlert("Dust Alert!",
-  "High particulate levels detected: " + data.getValue());
         }
     }
     // endregion
-
-    // region utilities
-    private void showToast(String message) {
-    Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    
+    // region helpers
+    private boolean allPermissionsGranted(int[] grantResults) {
+        for (int result : grantResults) {
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
     }
-
-
-
+    
     private void showPairingDialog() {
         new AlertDialog.Builder(this)
- .setTitle("Pair Device")
-    .setMessage("Please pair with your SmartHat device first")
- .setPositiveButton("Open Settings", (d, w) ->
-  startActivity(new Intent(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS)))
-.setNegativeButton("Cancel", null)
- .show();
+                .setTitle("Device Not Paired")
+                .setMessage("Please pair with the SmartHat device in Bluetooth settings first.")
+                .setPositiveButton("Open Settings", (dialog, which) -> {
+                    Intent intent = new Intent(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
+                    startActivity(intent);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
- private void cleanupResources() {
- if (viewModel != null) {
-  viewModel.cleanupResources();
-        } //ble note: might add BluetoothGatt.close()
+    
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
-    // endregion
+    
+    private void updateConnectionButton(String state) {
+        if (state.equals(Constants.STATE_CONNECTED)) {
+            btnConnect.setText("Disconnect");
+        } else {
+            btnConnect.setText("Connect");
+        }
+    }
+    
+    private void updateSensorDisplays(SensorData data) {
+        String sensorType = data.getSensorType();
+        float value = data.getValue();
+        
+        if (sensorType.equalsIgnoreCase("dust")) {
+            tvDust.setText(String.format("Dust: %.2f µg/m³", value));
+        } else if (sensorType.equalsIgnoreCase("noise")) {
+            tvNoise.setText(String.format("Noise: %.2f dB", value));
+        }
+    }
+    
+    private void checkThresholdAlerts(SensorData data) {
+        String sensorType = data.getSensorType();
+        float value = data.getValue();
+        
+        if (sensorType.equalsIgnoreCase("dust") && value > Constants.DUST_THRESHOLD) {
+            notificationUtils.sendAlert("Dust Warning", 
+                    String.format("Dust level (%.2f µg/m³) exceeds threshold", value));
+        } else if (sensorType.equalsIgnoreCase("noise") && value > Constants.NOISE_THRESHOLD) {
+            notificationUtils.sendAlert("Noise Warning", 
+                    String.format("Noise level (%.2f dB) exceeds threshold", value));
+        }
+    }
+    
+    private void cleanupResources() {
+        if (bluetoothService != null) {
+            bluetoothService.disconnect();
+        }
+        viewModel.cleanupResources();
+    }
 }
