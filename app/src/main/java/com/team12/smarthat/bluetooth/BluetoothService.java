@@ -25,29 +25,31 @@ import java.util.List;
 import java.util.UUID;
 
 public class BluetoothService {
+    
     // ble connection
     private BluetoothGatt bluetoothGatt;
     // updates ui state,sensor data,errors
     private final BluetoothViewModel viewModel;
-    // ble manager
     private final BluetoothManager bluetoothManager;
     
-    // Test mode fields
+    // test mode fields
     private boolean testModeEnabled = false;
     private Handler testModeHandler;
     private final Runnable testDataRunnable = new Runnable() {
         @Override
         public void run() {
-            // Generate random sensor data
+            // generate random sensor data
             generateMockSensorData();
-            // Schedule next data generation
+            // schedule next data generation
             if (testModeEnabled) {
-                testModeHandler.postDelayed(this, 2000); // Generate data every 2 seconds
+                testModeHandler.postDelayed(this, 2000); // generate data every 2 seconds
             }
         }
     };
+    // endregion
     
-    // scan callback - for device discovery
+    // region callbacks
+    // scan callback for device discovery
     private final ScanCallback scanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
@@ -57,7 +59,7 @@ public class BluetoothService {
             // checking if device is our esp32 
             if (deviceName != null && deviceName.contains("SmartHat")) {
                 Log.d(Constants.TAG_BLUETOOTH, "found device: " + deviceName);
-                // found our device, connect to it
+                
                 bluetoothManager.stopScan();
                 connect(device);
             }
@@ -74,11 +76,13 @@ public class BluetoothService {
                     errorMsg += "app registration failed";
                     break;
                 case ScanCallback.SCAN_FAILED_FEATURE_UNSUPPORTED:
-                    errorMsg += "ble not supported";
+                   
+        errorMsg += "ble not supported";
                     break;
                 case ScanCallback.SCAN_FAILED_INTERNAL_ERROR:
                     errorMsg += "internal error";
                     break;
+                    
                 default:
                     errorMsg += "unknown error";
             }
@@ -86,7 +90,6 @@ public class BluetoothService {
         }
     };
     
-    // gatt callback - handles connection & data events
     private final BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
@@ -95,12 +98,13 @@ public class BluetoothService {
                     Log.d(Constants.TAG_BLUETOOTH, "connected to gatt server");
                     bluetoothGatt = gatt;
                     // discover services after connecting
+
                     gatt.discoverServices();
                     // update ui
                     viewModel.updateConnectionState(Constants.STATE_CONNECTED);
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     Log.d(Constants.TAG_BLUETOOTH, "disconnected from gatt server");
-                    // update ui
+                
                     viewModel.updateConnectionState(Constants.STATE_DISCONNECTED);
                 }
             } else {
@@ -134,39 +138,48 @@ public class BluetoothService {
         
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-            // reading characteristic data - will contain sensor values
+            // get data for sensor type
             UUID uuid = characteristic.getUuid();
             byte[] data = characteristic.getValue();
             String sensorType;
             
-            // determine sensor type by characteristic uuid
+            // sensor type based on characteristic uuid
             if (uuid.equals(Constants.DUST_CHARACTERISTIC_UUID)) {
                 sensorType = "dust";
             } else if (uuid.equals(Constants.NOISE_CHARACTERISTIC_UUID)) {
                 sensorType = "noise";
             } else {
-                return; // unknown characteristic
+                return; // unknown characteristic, ignore
             }
             
-            // convert bytes to string and process
+            // convert bytes to string for processing
             String stringValue = new String(data, StandardCharsets.UTF_8);
+            Log.d(Constants.TAG_BLUETOOTH, "received data: " + stringValue);
+            
             try {
-                // might be pure float or json format
-                try {
-                    // try as json
-                    processData(stringValue);
-                } catch (JSONException e) {
-                    // try as pure float value
-                    float value = Float.parseFloat(stringValue.trim());
-                    SensorData sensorData = new SensorData(sensorType, value);
-                    viewModel.handleNewData(sensorData);
+                // try different formats that may come from the arduino
+                // 1. try as json if it starts with '{'
+                if (stringValue.trim().startsWith("{")) {
+                    processJsonData(stringValue, sensorType);
+                } 
+                // 2. try as plain number
+                else {
+                    try {
+                        float value = Float.parseFloat(stringValue.trim());
+                        SensorData sensorData = new SensorData(sensorType, value);
+                        viewModel.handleNewData(sensorData);
+                    } catch (NumberFormatException e) {
+                        viewModel.handleError("invalid number format: " + stringValue);
+                    }
                 }
             } catch (Exception e) {
-                viewModel.handleError("invalid data format: " + e.getMessage());
+                viewModel.handleError("data processing error: " + e.getMessage());
             }
         }
     };
+    // endregion
     
+    // region constructors
     public BluetoothService(BluetoothViewModel viewModel, BluetoothManager bluetoothManager) {
         this.viewModel = viewModel;
         this.bluetoothManager = bluetoothManager;
@@ -175,31 +188,34 @@ public class BluetoothService {
         bluetoothManager.setViewModel(viewModel);
         bluetoothManager.setGattCallback(gattCallback);
         
-        // Initialize test mode handler
+        // initialize test mode handler
         testModeHandler = new Handler(Looper.getMainLooper());
     }
+    // endregion
     
-  
-    /** kicks off device scanning */
+    // region scanning and connection
+    /** 
+     * SCANNING FOR BLE 
+     */
     public void startScan() {
-        // Check if test mode is enabled
+        // check if test mode is enabled
         if (testModeEnabled) {
             Log.d(Constants.TAG_BLUETOOTH, "test mode active - bypassing actual bluetooth scanning");
-            // Simulate found device after a short delay
+            // simulate found device after a short delay
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 viewModel.updateConnectionState(Constants.STATE_CONNECTED);
                 startMockDataGeneration();
-            }, 1500); // Simulate connection delay
+            }, 1500); // simulate connection delay
             return;
         }
         
-        // adding some logs for easier debugging
-        Log.d(Constants.TAG_BLUETOOTH, "starting scan... hope we find something");
+        // add log for debugging
+        Log.d(Constants.TAG_BLUETOOTH, "starting ble scan for smarthat device");
         
-        // gonna timeout after a bit if no device found
+        // set timeout for scan
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             if (viewModel.getConnectionState().getValue().equals(Constants.STATE_DISCONNECTED)) {
-                viewModel.handleError("No SmartHat device found nearby");
+                viewModel.handleError("no smarthat device found nearby");
                 bluetoothManager.stopScan();
             }
         }, Constants.SCAN_PERIOD);
@@ -208,13 +224,15 @@ public class BluetoothService {
             bluetoothManager.scanForDevices(scanCallback);
         } catch (Exception e) {
             Log.e(Constants.TAG_BLUETOOTH, "error starting scan: " + e.getMessage());
-            viewModel.handleError("Error starting Bluetooth scan: " + e.getMessage());
+            viewModel.handleError("error starting bluetooth scan: " + e.getMessage());
         }
     }
     
-    // connect to device - can be called directly or from scan
+    /**
+     * connect to the specified bluetoothdevice
+     */
     public void connect(BluetoothDevice device) {
-        // In test mode, just simulate connection
+        // in test mode, just simulate connection
         if (testModeEnabled) {
             Log.d(Constants.TAG_BLUETOOTH, "test mode active - simulating connection");
             viewModel.updateConnectionState(Constants.STATE_CONNECTED);
@@ -227,11 +245,13 @@ public class BluetoothService {
             bluetoothManager.setBluetoothGatt(bluetoothGatt);
         } catch (Exception e) {
             Log.e(Constants.TAG_BLUETOOTH, "error connecting: " + e.getMessage());
-            viewModel.handleError("Error connecting to device: " + e.getMessage());
+            viewModel.handleError("error connecting to device: " + e.getMessage());
         }
     }
     
-    // enable notifications for sensor values
+    /**
+     * enable notif for sensor vlaues
+     */
     private void enableSensorNotifications(BluetoothGatt gatt, BluetoothGattService service) {
         // get characteristics
         BluetoothGattCharacteristic dustChar = service.getCharacteristic(Constants.DUST_CHARACTERISTIC_UUID);
@@ -247,7 +267,9 @@ public class BluetoothService {
         }
     }
     
-    // helper to enable notifications
+    /**
+     * helper to enable notifications for a characteristic
+     */
     private void enableCharacteristicNotification(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
         // enable notification
         gatt.setCharacteristicNotification(characteristic, true);
@@ -256,20 +278,67 @@ public class BluetoothService {
         // not needed for most simple implementations
     }
     
-    // process json data from characteristic
-    private void processData(String rawData) throws JSONException {
-        // json object from rawdata string
+    /**
+     * process json data received from characteristic with support for multiple formats
+     * @param rawData the json string to parse
+     * @param fallbackSensorType the sensor type to use if not specified in json
+     */
+    private void processJsonData(String rawData, String fallbackSensorType) throws JSONException {
+        // parse the json string
         JSONObject json = new JSONObject(rawData);
-        //sensor data object using json
-        SensorData data = new SensorData(
-                json.getString("sensor"),
-                (float) json.getDouble("value")
-        );
-        // update viewmodel: new sensor val
-        viewModel.handleNewData(data);
+        
+        // support multiple json formats that may come from the arduino
+        //might remove/change when sensor repo is ready
+        // format 1 -> {"sensor": "dust", "value": 25.4}
+        if (json.has("sensor") && json.has("value")) {
+            SensorData data = new SensorData(
+                    json.getString("sensor"),
+                    (float) json.getDouble("value")
+            );
+            viewModel.handleNewData(data);
+            return;
+        }
+        
+        // format 2 -> {"dust": 25.4} or {"noise": 65.7}
+        if (json.has("dust")) {
+            SensorData data = new SensorData("dust", (float) json.getDouble("dust"));
+            viewModel.handleNewData(data);
+            return;
+        }
+        
+        if (json.has("noise")) {
+            SensorData data = new SensorData("noise", (float) json.getDouble("noise"));
+            viewModel.handleNewData(data);
+            return;
+        }
+        
+        // format 3 -> {"type": "dust", "reading": 25.4}
+        if (json.has("type") && json.has("reading")) {
+            SensorData data = new SensorData(
+                    json.getString("type"),
+                    (float) json.getDouble("reading")
+            );
+            viewModel.handleNewData(data);
+            return;
+        }
+        
+        // format 4 -> {"value": 25.4} - use fallback sensor type from characteristic uuid
+        if (json.has("value")) {
+            SensorData data = new SensorData(
+                    fallbackSensorType,
+                    (float) json.getDouble("value")
+            );
+            viewModel.handleNewData(data);
+            return;
+        }
+        
+        //case the json format wasn't recognized
+        throw new JSONException("unrecognized json format: " + rawData);
     }
     
-    // disconnect from gatt server
+    /**
+     * disc gatt
+     */
     public void disconnect() {
         if (testModeEnabled) {
             stopMockDataGeneration();
@@ -284,20 +353,19 @@ public class BluetoothService {
             bluetoothManager.setBluetoothGatt(null);
         }
     }
+    // endregion
+    
+    // region test mode
     
     /**
-     * test mode methods
-     */
-    
-    /**
-     * enable or disable test mode
-     * @param enabled true enable 
+     * Enable or disable test mode
+     * @param enabled true to enable test mode, false to disable
      */
     public void setTestMode(boolean enabled) {
         this.testModeEnabled = enabled;
         if (enabled) {
-            Log.d(Constants.TAG_BLUETOOTH, "Test Mode Enabled");
-            // no real connection yet!!!
+            Log.d(Constants.TAG_BLUETOOTH, "test mode enabled - bluetooth hardware will be bypassed");
+            // If already connected, disconnect real connection
             if (bluetoothGatt != null) {
                 bluetoothGatt.disconnect();
                 bluetoothGatt.close();
@@ -305,10 +373,9 @@ public class BluetoothService {
                 bluetoothManager.setBluetoothGatt(null);
             }
         } else {
-            Log.d(Constants.TAG_BLUETOOTH, "Test mode disabled");
+            Log.d(Constants.TAG_BLUETOOTH, "test mode disabled");
             stopMockDataGeneration();
-            // connection state eset
-        
+            // Reset connection state
             viewModel.updateConnectionState(Constants.STATE_DISCONNECTED);
         }
     }
@@ -321,50 +388,65 @@ public class BluetoothService {
     }
     
     /**
-     * start generating mock sensor data
+     * mocck data gen
      */
     private void startMockDataGeneration() {
         if (!testModeEnabled) return;
         
-        Log.d(Constants.TAG_BLUETOOTH, "Starting mock data generation");
+        Log.d(Constants.TAG_BLUETOOTH, "starting mock data generation");
         testModeHandler.post(testDataRunnable);
     }
     
     /**
-     * stop generating mock sensor data
+     * stop gen
      */
     private void stopMockDataGeneration() {
-        Log.d(Constants.TAG_BLUETOOTH, "Stopping mock data generation");
+        Log.d(Constants.TAG_BLUETOOTH, "stopping mock data generation");
         testModeHandler.removeCallbacks(testDataRunnable);
     }
     
     /**
-     * generate random sensor data
+     * random data gen
      */
     private void generateMockSensorData() {
         Log.d(Constants.TAG_BLUETOOTH, "generating mock sensor data in test mode");
         
-        // random dust reading (10-50 micrograms/m³)
+        // random dust reading (10-50 microg / m^3) 
         float dustValue = 10 + (float) (Math.random() * 40);
         SensorData dustData = new SensorData("dust", dustValue);
         viewModel.handleNewData(dustData);
         
-        //random noise  (40-85 dB)
+        // random noise reading(40-85 dB)
         float noiseValue = 40 + (float) (Math.random() * 45);
         SensorData noiseData = new SensorData("noise", noiseValue);
         viewModel.handleNewData(noiseData);
         
-        // occasional simulate threshold alerts
+        // occasionally simulate threshold alerts
         if (Math.random() > 0.7) {
             if (Math.random() > 0.5) {
                 // high dust reading sim
                 dustData = new SensorData("dust", Constants.DUST_THRESHOLD + 10);
                 viewModel.handleNewData(dustData);
+                
+                // sample json formats sim
+                if (Math.random() > 0.5) {
+                    Log.d(Constants.TAG_BLUETOOTH, "sample json: {\"sensor\":\"dust\",\"value\":" + (Constants.DUST_THRESHOLD + 10) + "}");
+                } else {
+                    Log.d(Constants.TAG_BLUETOOTH, "sample json: {\"dust\":" + (Constants.DUST_THRESHOLD + 10) + "}");
+                }
             } else {
-                // high noise reading sim
+                //high noise reading sim
                 noiseData = new SensorData("noise", Constants.NOISE_THRESHOLD + 5);
                 viewModel.handleNewData(noiseData);
+                
+                // log sample json formats
+                if (Math.random() > 0.5) {
+                    Log.d(Constants.TAG_BLUETOOTH, "sample json: {\"sensor\":\"noise\",\"value\":" + (Constants.NOISE_THRESHOLD + 5) + "}");
+                } else {
+                    Log.d(Constants.TAG_BLUETOOTH, "sample json: {\"noise\":" + (Constants.NOISE_THRESHOLD + 5) + "}");
+                }
             }
         }
     }
+    // endregion
 }
