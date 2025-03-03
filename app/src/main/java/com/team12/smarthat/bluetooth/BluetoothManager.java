@@ -20,7 +20,6 @@ import android.util.Log;
 import androidx.core.content.ContextCompat;
 import com.team12.smarthat.utils.Constants;
 import com.team12.smarthat.viewmodels.BluetoothViewModel;
-import java.io.IOException;
 // ble note: would replace the enire class with ble gatt
 public class BluetoothManager {
 
@@ -64,9 +63,6 @@ public boolean isBluetoothSupported() {
    return null;}
     }
 
-  public BluetoothSocket createSppSocket(BluetoothDevice device) throws IOException {
- if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-  throw new SecurityException("BLUETOOTH_CONNECT permission not granted");}
   return device.createRfcommSocketToServiceRecord(Constants.SPP_UUID);
     }
 
