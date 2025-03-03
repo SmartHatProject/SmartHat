@@ -1,6 +1,7 @@
 package com.team12.smarthat.activities;
 // using ble for communication with the smarthat
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
