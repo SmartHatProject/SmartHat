@@ -124,9 +124,14 @@ public class BluetoothManager {
             return;
         }
         
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) 
-                != PackageManager.PERMISSION_GRANTED) {
-            viewModel.handleError("Location permission not granted");
+        // location permission check - essential for ble scanning
+        boolean hasLocationPermission = (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) 
+                == PackageManager.PERMISSION_GRANTED) || 
+                (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) 
+                == PackageManager.PERMISSION_GRANTED);
+                
+        if (!hasLocationPermission) {
+            viewModel.handleError("Location permission not granted - required for BLE scanning");
             return;
         }
         

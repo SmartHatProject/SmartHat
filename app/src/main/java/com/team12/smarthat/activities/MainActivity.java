@@ -202,11 +202,28 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == Constants.REQUEST_BLUETOOTH_PERMISSIONS) {
+            // check if all permissions were granted
             if (grantResults.length > 0 && allPermissionsGranted(grantResults)) {
                 // retry now that permissions granted
                 attemptDeviceConnection();
             } else {
-                showToast("Bluetooth permissions required for connection");
+                // find which permission was denied
+                for (int i = 0; i < permissions.length; i++) {
+                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                        if (permissions[i].equals(Manifest.permission.ACCESS_FINE_LOCATION) || 
+                            permissions[i].equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                            showToast("Location permission required for BLE scanning. Please select 'Allow while using the app'");
+                            return;
+                        } else if (permissions[i].equals(Manifest.permission.BLUETOOTH_SCAN)) {
+                            showToast("Bluetooth scanning permission required");
+                            return;
+                        } else if (permissions[i].equals(Manifest.permission.BLUETOOTH_CONNECT)) {
+                            showToast("Bluetooth connection permission required");
+                            return;
+                        }
+                    }
+                }
+                showToast("All Bluetooth permissions required for connection");
             }
         }
     }
