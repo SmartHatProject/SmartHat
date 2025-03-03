@@ -117,41 +117,57 @@ public class BluetoothManager {
     public void scanForDevices(ScanCallback callback) {
         this.scanCallback = callback;
         
-        // check permissions for scan
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) 
-                != PackageManager.PERMISSION_GRANTED) {
-            viewModel.handleError("BLUETOOTH_SCAN permission not granted");
+        // make sure bt works in dev mode
+        if (Constants.DEV_MODE && (bluetoothAdapter == null || bluetoothLeScanner == null)) {
+            viewModel.handleError("bluetooth not working... turn it on maybe?");
             return;
         }
         
-        // location permission check - essential for ble scanning
+        // check scan permission
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) 
+                != PackageManager.PERMISSION_GRANTED) {
+            viewModel.handleError("need scan permission");
+            return;
+        }
+        
+        // need location for ble to work
         boolean hasLocationPermission = (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) 
                 == PackageManager.PERMISSION_GRANTED) || 
                 (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) 
                 == PackageManager.PERMISSION_GRANTED);
                 
         if (!hasLocationPermission) {
-            viewModel.handleError("Location permission not granted - required for BLE scanning");
+            viewModel.handleError("need location for ble scan... annoying android thing");
             return;
         }
         
         if (!scanning) {
-            // scan timeout
+            // stop scan after timeout
             handler.postDelayed(this::stopScan, Constants.SCAN_PERIOD);
             
             scanning = true;
             
-            // scan settings - balanced power mode
+            // balanced power mode for scanning
             ScanSettings settings = new ScanSettings.Builder()
                     .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
                     .build();
                     
-            // filter by service uuid if needed
+            // not filtering devices yet
             List<ScanFilter> filters = new ArrayList<>();
-            // we're not filtering here so we find all ble devices
             
-            bluetoothLeScanner.startScan(filters, settings, scanCallback);
-            Log.d(Constants.TAG_BLUETOOTH, "started scanning");
+            try {
+                bluetoothLeScanner.startScan(filters, settings, scanCallback);
+                Log.d(Constants.TAG_BLUETOOTH, "scan started... fingers crossed");
+            } catch (Exception e) {
+                // more details in dev mode
+                if (Constants.DEV_MODE) {
+                    viewModel.handleError("scan failed: " + e.getMessage());
+                    Log.e(Constants.TAG_BLUETOOTH, "scan error: " + e.getMessage(), e);
+                } else {
+                    viewModel.handleError("couldn't start scan");
+                }
+                scanning = false;
+            }
         } else {
             scanning = false;
             bluetoothLeScanner.stopScan(scanCallback);

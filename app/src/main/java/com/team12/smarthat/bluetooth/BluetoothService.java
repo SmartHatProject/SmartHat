@@ -9,6 +9,8 @@ import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.team12.smarthat.models.SensorData;
@@ -159,8 +161,19 @@ public class BluetoothService {
         bluetoothManager.setGattCallback(gattCallback);
     }
     
-    // start scan
+    /** kicks off device scanning */
     public void startScan() {
+        // adding some logs for easier debugging
+        Log.d(Constants.TAG_BLUETOOTH, "starting scan... hope we find something");
+        
+        // gonna timeout after a bit if no device found
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            if (viewModel.getConnectionState().getValue().equals(Constants.STATE_DISCONNECTED)) {
+                viewModel.handleError("no smarthat found nearby... normal if hardware isn't ready yet");
+                bluetoothManager.stopScan();
+            }
+        }, Constants.SCAN_PERIOD);
+        
         bluetoothManager.scanForDevices(scanCallback);
     }
     
