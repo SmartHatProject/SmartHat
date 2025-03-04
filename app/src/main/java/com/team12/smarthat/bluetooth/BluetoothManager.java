@@ -1,23 +1,22 @@
 package com.team12.smarthat.bluetooth;
+
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
-import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattService;
-import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
-import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+
 import androidx.core.content.ContextCompat;
+
 import com.team12.smarthat.utils.Constants;
 import com.team12.smarthat.viewmodels.BluetoothViewModel;
 
@@ -45,9 +44,18 @@ public class BluetoothManager {
             this.bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
         }
     }
+    
+    /**
+     * Get the context for permission checks
+     * @return the context associated with this manager
+     */
+    public Context getContext() {
+        return context;
+    }
 
     // basic bluetooth checks
     public boolean isBluetoothSupported() {
+
         return bluetoothAdapter != null;
     }
 
@@ -55,8 +63,8 @@ public class BluetoothManager {
         return bluetoothAdapter != null && bluetoothAdapter.isEnabled();
     }
     
-    // getting device by mac is not recommended for ble
-    // keeping for compatibility but we'll use scanning instead
+    // mac is spp but we'll keep for now(might remove later)
+    //ble ->  scanning instead
     public BluetoothDevice getDeviceByMac() throws SecurityException {
         try {
             return bluetoothAdapter.getRemoteDevice(Constants.ESP32_MAC_ADDRESS);
@@ -66,9 +74,9 @@ public class BluetoothManager {
         }
     }
 
-    // check if our device is already paired
+    // check if paired
     public boolean isDevicePaired() {
-        // Check for BLUETOOTH_CONNECT permission
+
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) 
                 != PackageManager.PERMISSION_GRANTED) {
             throw new SecurityException("BLUETOOTH_CONNECT permission not granted");
@@ -82,7 +90,7 @@ public class BluetoothManager {
         return false;
     }
 
-    // still used by main activity in some code paths
+   //might change later
     public BluetoothDevice getPairedDevice() throws SecurityException {
         return getDeviceByMac();
     }
@@ -109,8 +117,8 @@ public class BluetoothManager {
         if (viewModel != null) {
             viewModel.updateConnectionState(Constants.STATE_CONNECTING);
         }
-        
-        // connect to gatt server, using the callback from service
+
+        // connect to gatt using callback fro service
         return device.connectGatt(context, false, gattCallback);
     }
     
@@ -193,11 +201,21 @@ public class BluetoothManager {
                     != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            bluetoothGatt.disconnect();
+      bluetoothGatt.disconnect();
         }
     }
     
     public void setBluetoothGatt(BluetoothGatt gatt) {
-        this.bluetoothGatt = gatt;
+        try {
+            // no permission needed storing a reference
+            // potential SecurityException check just in case
+            this.bluetoothGatt = gatt;
+        } catch (SecurityException e) {
+            Log.e(Constants.TAG_BLUETOOTH, "security exception in setBluetoothGatt: " + e.getMessage());
+            if (viewModel != null) {
+                viewModel.handleError("permission denied when managing bluetooth connection");
+            }
+
+        }
     }
 }

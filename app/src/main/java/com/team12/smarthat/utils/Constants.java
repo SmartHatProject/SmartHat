@@ -20,6 +20,9 @@ public class Constants {
     // notification stuff
     public static final String NOTIFICATION_CHANNEL_ID = "sensor_alerts";
     public static final int NOTIFICATION_ID = 1001;
+    public static final int NOTIFICATION_ID_DUST = 1002;
+    public static final int NOTIFICATION_ID_NOISE = 1003;
+    public static final int NOTIFICATION_ID_GENERAL = 1001;
 
     // sensor thresholds 
     public static final float DUST_PM25_THRESHOLD = 50.0f; // microg/m^3

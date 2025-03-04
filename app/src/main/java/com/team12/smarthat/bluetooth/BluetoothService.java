@@ -1,17 +1,21 @@
 package com.team12.smarthat.bluetooth;
 
+import android.Manifest;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
-import android.os.Build;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+
+import androidx.core.content.ContextCompat;
 
 import com.team12.smarthat.models.SensorData;
 import com.team12.smarthat.utils.Constants;
@@ -21,11 +25,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.UUID;
 
 public class BluetoothService {
-    
     // ble connection
     private BluetoothGatt bluetoothGatt;
     // updates ui state,sensor data,errors
@@ -40,9 +42,12 @@ public class BluetoothService {
         public void run() {
             // generate random sensor data
             generateMockSensorData();
-            // schedule next data generation
+            
+            // schedule next data generation with variable timing for more natural feel
             if (testModeEnabled) {
-                testModeHandler.postDelayed(this, 2000); // generate data every 2 seconds
+                // Random delay between 1-3 seconds (feels more natural than fixed intervals)
+                int randomDelay = 1000 + (int)(Math.random() * 2000);
+                testModeHandler.postDelayed(this, randomDelay);
             }
         }
     };
@@ -53,15 +58,40 @@ public class BluetoothService {
     private final ScanCallback scanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
-            BluetoothDevice device = result.getDevice();
-            String deviceName = device.getName();
-            
-            // checking if device is our esp32 
-            if (deviceName != null && deviceName.contains("SmartHat")) {
-                Log.d(Constants.TAG_BLUETOOTH, "found device: " + deviceName);
+            try {
+                // Check for BLUETOOTH_CONNECT permission before accessing device name
+                BluetoothDevice device = result.getDevice();
+                String deviceName = null;
                 
-                bluetoothManager.stopScan();
-                connect(device);
+                if (ContextCompat.checkSelfPermission(bluetoothManager.getContext(), 
+                        Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+                    deviceName = device.getName();
+                } else {
+                    Log.e(Constants.TAG_BLUETOOTH, "bluetooth connect permission not granted for accessing device name");
+                    viewModel.handleError("permission issue when scanning");
+                    return;
+                }
+                
+                // checking if device is our esp32 
+                if (deviceName != null && deviceName.contains("SmartHat")) {
+                    Log.d(Constants.TAG_BLUETOOTH, "found device: " + deviceName);
+                    
+                    // Check for BLUETOOTH_SCAN permission before stopping scan
+                    if (ContextCompat.checkSelfPermission(bluetoothManager.getContext(), 
+                            Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+                        bluetoothManager.stopScan();
+                        connect(device);
+                    } else {
+                        Log.e(Constants.TAG_BLUETOOTH, "bluetooth scan permission not granted for stopping scan");
+                        viewModel.handleError("permission issue when connecting to device");
+                    }
+                }
+            } catch (SecurityException e) {
+                Log.e(Constants.TAG_BLUETOOTH, "security exception in scan result: " + e.getMessage());
+                viewModel.handleError("permission denied while processing scan result");
+            } catch (Exception e) {
+                Log.e(Constants.TAG_BLUETOOTH, "error processing scan result: " + e.getMessage());
+                viewModel.handleError("error processing scan result");
             }
         }
         
@@ -93,87 +123,138 @@ public class BluetoothService {
     private final BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                if (newState == BluetoothProfile.STATE_CONNECTED) {
-                    Log.d(Constants.TAG_BLUETOOTH, "connected to gatt server");
-                    bluetoothGatt = gatt;
-                    // discover services after connecting
-
-                    gatt.discoverServices();
-                    // update ui
-                    viewModel.updateConnectionState(Constants.STATE_CONNECTED);
-                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                    Log.d(Constants.TAG_BLUETOOTH, "disconnected from gatt server");
-                
+            try {
+                // Check for BLUETOOTH_CONNECT permission
+                if (ContextCompat.checkSelfPermission(bluetoothManager.getContext(), 
+                        Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    Log.e(Constants.TAG_BLUETOOTH, "bluetooth connect permission not granted for connection state change");
+                    viewModel.handleError("permission issue when connecting");
                     viewModel.updateConnectionState(Constants.STATE_DISCONNECTED);
+                    return;
                 }
-            } else {
-                // connection failed
-                String errorMsg = "connection failed with status: " + status;
-                Log.e(Constants.TAG_BLUETOOTH, errorMsg);
-                viewModel.handleError(errorMsg);
+                
+                if (status == BluetoothGatt.GATT_SUCCESS) {
+                    if (newState == BluetoothProfile.STATE_CONNECTED) {
+                        Log.d(Constants.TAG_BLUETOOTH, "connected to gatt server");
+                        bluetoothGatt = gatt;
+                        // discover services after connecting
+
+                        gatt.discoverServices();
+                        // update ui
+                        viewModel.updateConnectionState(Constants.STATE_CONNECTED);
+                    } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                        Log.d(Constants.TAG_BLUETOOTH, "disconnected from gatt server");
+                    
+                        viewModel.updateConnectionState(Constants.STATE_DISCONNECTED);
+                    }
+                } else {
+                    // connection failed
+                    String errorMsg = "connection failed with status: " + status;
+                    Log.e(Constants.TAG_BLUETOOTH, errorMsg);
+                    viewModel.handleError(errorMsg);
+                    viewModel.updateConnectionState(Constants.STATE_DISCONNECTED);
+                    disconnect();
+                }
+            } catch (SecurityException e) {
+                Log.e(Constants.TAG_BLUETOOTH, "security exception in connection state change: " + e.getMessage());
+                viewModel.handleError("permission denied during connection process");
                 viewModel.updateConnectionState(Constants.STATE_DISCONNECTED);
-                disconnect();
+            } catch (Exception e) {
+                Log.e(Constants.TAG_BLUETOOTH, "error in connection state change: " + e.getMessage());
+                viewModel.handleError("error during connection process");
+                viewModel.updateConnectionState(Constants.STATE_DISCONNECTED);
             }
         }
         
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                // find our service
-                BluetoothGattService service = gatt.getService(Constants.SERVICE_UUID);
-                if (service != null) {
-                    Log.d(Constants.TAG_BLUETOOTH, "found service");
-                    // enable notifications for all characteristics
-                    enableSensorNotifications(gatt, service);
-                } else {
-                    Log.e(Constants.TAG_BLUETOOTH, "service not found");
-                    viewModel.handleError("service not found on device");
+            try {
+                // Check for BLUETOOTH_CONNECT permission
+                if (ContextCompat.checkSelfPermission(bluetoothManager.getContext(), 
+                        Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    Log.e(Constants.TAG_BLUETOOTH, "bluetooth connect permission not granted for service discovery");
+                    viewModel.handleError("permission issue when discovering services");
+                    return;
                 }
-            } else {
-                Log.e(Constants.TAG_BLUETOOTH, "service discovery failed: " + status);
-                viewModel.handleError("service discovery failed");
+                
+                if (status == BluetoothGatt.GATT_SUCCESS) {
+                    // find our service
+                    BluetoothGattService service = gatt.getService(Constants.SERVICE_UUID);
+                    if (service != null) {
+                        Log.d(Constants.TAG_BLUETOOTH, "found service");
+                        // enable notifications for all characteristics
+                        enableSensorNotifications(gatt, service);
+                    } else {
+                        Log.e(Constants.TAG_BLUETOOTH, "service not found");
+                        viewModel.handleError("service not found on device");
+                    }
+                } else {
+                    Log.e(Constants.TAG_BLUETOOTH, "service discovery failed: " + status);
+                    viewModel.handleError("service discovery failed");
+                }
+            } catch (SecurityException e) {
+                Log.e(Constants.TAG_BLUETOOTH, "security exception in service discovery: " + e.getMessage());
+                viewModel.handleError("permission denied during service discovery");
+            } catch (Exception e) {
+                Log.e(Constants.TAG_BLUETOOTH, "error in service discovery: " + e.getMessage());
+                viewModel.handleError("error during service discovery");
             }
         }
         
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-            // get data for sensor type
-            UUID uuid = characteristic.getUuid();
-            byte[] data = characteristic.getValue();
-            String sensorType;
-            
-            // sensor type based on characteristic uuid
-            if (uuid.equals(Constants.DUST_CHARACTERISTIC_UUID)) {
-                sensorType = "dust";
-            } else if (uuid.equals(Constants.NOISE_CHARACTERISTIC_UUID)) {
-                sensorType = "noise";
-            } else {
-                return; // unknown characteristic, ignore
-            }
-            
-            // convert bytes to string for processing
-            String stringValue = new String(data, StandardCharsets.UTF_8);
-            Log.d(Constants.TAG_BLUETOOTH, "received data: " + stringValue);
-            
             try {
-                // try different formats that may come from the arduino
-                // 1. try as json if it starts with '{'
-                if (stringValue.trim().startsWith("{")) {
-                    processJsonData(stringValue, sensorType);
-                } 
-                // 2. try as plain number
-                else {
-                    try {
-                        float value = Float.parseFloat(stringValue.trim());
-                        SensorData sensorData = new SensorData(sensorType, value);
-                        viewModel.handleNewData(sensorData);
-                    } catch (NumberFormatException e) {
-                        viewModel.handleError("invalid number format: " + stringValue);
-                    }
+               
+                if (ContextCompat.checkSelfPermission(bluetoothManager.getContext(), 
+                        Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    Log.e(Constants.TAG_BLUETOOTH, "bluetooth connect permission not granted for characteristic change");
+                    viewModel.handleError("permission issue when reading sensor data");
+                    return;
                 }
+                
+                // get data for sensor type
+                UUID uuid = characteristic.getUuid();
+                byte[] data = characteristic.getValue();
+                String sensorType;
+                
+                // sensor type based on characteristic uuid
+                if (uuid.equals(Constants.DUST_CHARACTERISTIC_UUID)) {
+                    sensorType = "dust";
+                } else if (uuid.equals(Constants.NOISE_CHARACTERISTIC_UUID)) {
+                    sensorType = "noise";
+                } else {
+                    return; // unknown characteristic, ignore
+                }
+                
+                // convert bytes to string for processing
+                String stringValue = new String(data, StandardCharsets.UTF_8);
+                Log.d(Constants.TAG_BLUETOOTH, "received data: " + stringValue);
+                
+                try {
+                    // try different formats that may come from the arduino
+                    // 1. try as json if it starts with '{'
+                    if (stringValue.trim().startsWith("{")) {
+                        processJsonData(stringValue, sensorType);
+                    } 
+                    // 2. try as plain number
+                    else {
+                        try {
+                            float value = Float.parseFloat(stringValue.trim());
+                            SensorData sensorData = new SensorData(sensorType, value);
+                            viewModel.handleNewData(sensorData);
+                        } catch (NumberFormatException e) {
+                            viewModel.handleError("invalid number format: " + stringValue);
+                        }
+                    }
+                } catch (Exception e) {
+                    viewModel.handleError("data processing error: " + e.getMessage());
+                }
+            } catch (SecurityException e) {
+                Log.e(Constants.TAG_BLUETOOTH, "security exception in characteristic change: " + e.getMessage());
+                viewModel.handleError("permission denied when reading sensor data");
             } catch (Exception e) {
-                viewModel.handleError("data processing error: " + e.getMessage());
+                Log.e(Constants.TAG_BLUETOOTH, "error in characteristic change: " + e.getMessage());
+                viewModel.handleError("error processing sensor data");
             }
         }
     };
@@ -216,12 +297,29 @@ public class BluetoothService {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             if (viewModel.getConnectionState().getValue().equals(Constants.STATE_DISCONNECTED)) {
                 viewModel.handleError("no smarthat device found nearby");
-                bluetoothManager.stopScan();
+                try {
+               
+                    if (ContextCompat.checkSelfPermission(bluetoothManager.getContext(), 
+                            Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+                        bluetoothManager.stopScan();
+                    }
+                } catch (SecurityException e) {
+                    Log.e(Constants.TAG_BLUETOOTH, "security exception when stopping scan: " + e.getMessage());
+                }
             }
         }, Constants.SCAN_PERIOD);
         
         try {
+
+            if (ContextCompat.checkSelfPermission(bluetoothManager.getContext(), 
+                    Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                viewModel.handleError("bluetooth scan permission not granted");
+                return;
+            }
             bluetoothManager.scanForDevices(scanCallback);
+        } catch (SecurityException e) {
+            Log.e(Constants.TAG_BLUETOOTH, "security exception during scan: " + e.getMessage());
+            viewModel.handleError("permission denied for bluetooth scan: " + e.getMessage());
         } catch (Exception e) {
             Log.e(Constants.TAG_BLUETOOTH, "error starting scan: " + e.getMessage());
             viewModel.handleError("error starting bluetooth scan: " + e.getMessage());
@@ -241,8 +339,20 @@ public class BluetoothService {
         }
         
         try {
+            
+            if (ContextCompat.checkSelfPermission(bluetoothManager.getContext(), 
+                    Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                viewModel.handleError("bluetooth connect permission not granted");
+                return;
+            }
+            
+            // connect to device using manager
+            Log.d(Constants.TAG_BLUETOOTH, "connecting to device: " + device.getName());
             bluetoothGatt = bluetoothManager.connectToBleDevice(device);
             bluetoothManager.setBluetoothGatt(bluetoothGatt);
+        } catch (SecurityException e) {
+            Log.e(Constants.TAG_BLUETOOTH, "security exception during connect: " + e.getMessage());
+            viewModel.handleError("permission denied for bluetooth connection: " + e.getMessage());
         } catch (Exception e) {
             Log.e(Constants.TAG_BLUETOOTH, "error connecting: " + e.getMessage());
             viewModel.handleError("error connecting to device: " + e.getMessage());
@@ -268,18 +378,41 @@ public class BluetoothService {
     }
     
     /**
-     * helper to enable notifications for a characteristic
+     * helper to enable notifications 
      */
     private void enableCharacteristicNotification(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-        // enable notification
-        gatt.setCharacteristicNotification(characteristic, true);
-        
-        // descriptor setup would go here if needed
-        // not needed for most simple implementations
+        try {
+            // Check fpermission before enabling notification
+            if (ContextCompat.checkSelfPermission(bluetoothManager.getContext(), 
+                    Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                Log.e(Constants.TAG_BLUETOOTH, "bluetooth connect permission not granted for enabling notifications");
+                viewModel.handleError("permission issue when enabling sensor notifications");
+                return;
+            }
+            
+            // enable notification
+            gatt.setCharacteristicNotification(characteristic, true);
+            
+            // ble config descriptor
+            BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
+                    UUID.fromString("00002902-0000-1000-8000-00805f9b34fb"));
+            
+            if (descriptor != null) {
+
+                descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                gatt.writeDescriptor(descriptor);
+            }
+        } catch (SecurityException e) {
+            Log.e(Constants.TAG_BLUETOOTH, "security exception while enabling notifications: " + e.getMessage());
+            viewModel.handleError("permission denied for bluetooth operation");
+        } catch (Exception e) {
+            Log.e(Constants.TAG_BLUETOOTH, "error enabling notifications: " + e.getMessage());
+            viewModel.handleError("error setting up sensor notifications");
+        }  
     }
     
     /**
-     * process json data received from characteristic with support for multiple formats
+     *  support for multiple json formats 
      * @param rawData the json string to parse
      * @param fallbackSensorType the sensor type to use if not specified in json
      */
@@ -287,7 +420,7 @@ public class BluetoothService {
         // parse the json string
         JSONObject json = new JSONObject(rawData);
         
-        // support multiple json formats that may come from the arduino
+        // support multiple json formats from the arduino
         //might remove/change when sensor repo is ready
         // format 1 -> {"sensor": "dust", "value": 25.4}
         if (json.has("sensor") && json.has("value")) {
@@ -337,20 +470,44 @@ public class BluetoothService {
     }
     
     /**
-     * disc gatt
+     * disc from gatt
      */
     public void disconnect() {
         if (testModeEnabled) {
             stopMockDataGeneration();
+           
             viewModel.updateConnectionState(Constants.STATE_DISCONNECTED);
+
             return;
         }
         
         if (bluetoothGatt != null) {
-            bluetoothGatt.disconnect();
-            bluetoothGatt.close();
-            bluetoothGatt = null;
-            bluetoothManager.setBluetoothGatt(null);
+            try {
+                
+                if (ContextCompat.checkSelfPermission(bluetoothManager.getContext(), 
+                        Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    Log.e(Constants.TAG_BLUETOOTH, "bluetooth connect permission not granted for disconnecting");
+                    viewModel.handleError("permission issue when disconnecting");
+                   
+                    viewModel.updateConnectionState(Constants.STATE_DISCONNECTED);
+                    return;
+                }
+                
+                bluetoothGatt.disconnect();
+                bluetoothGatt.close();
+                bluetoothGatt = null;
+                bluetoothManager.setBluetoothGatt(null);
+            } catch (SecurityException e) {
+                Log.e(Constants.TAG_BLUETOOTH, "security exception while disconnecting: " + e.getMessage());
+                viewModel.handleError("permission denied for bluetooth disconnection");
+                // update UI state
+                viewModel.updateConnectionState(Constants.STATE_DISCONNECTED);
+            } catch (Exception e) {
+                Log.e(Constants.TAG_BLUETOOTH, "error disconnecting: " + e.getMessage());
+                viewModel.handleError("error disconnecting from device: " + e.getMessage());
+                // update ui state
+                viewModel.updateConnectionState(Constants.STATE_DISCONNECTED);
+            }
         }
     }
     // endregion
@@ -362,21 +519,34 @@ public class BluetoothService {
      * @param enabled true to enable test mode, false to disable
      */
     public void setTestMode(boolean enabled) {
-        this.testModeEnabled = enabled;
-        if (enabled) {
-            Log.d(Constants.TAG_BLUETOOTH, "test mode enabled - bluetooth hardware will be bypassed");
-            // If already connected, disconnect real connection
-            if (bluetoothGatt != null) {
-                bluetoothGatt.disconnect();
-                bluetoothGatt.close();
-                bluetoothGatt = null;
-                bluetoothManager.setBluetoothGatt(null);
+        try {
+            if (enabled) {
+                if (!testModeEnabled) {
+                    // enabling test mode
+                    Log.d(Constants.TAG_BLUETOOTH, "test mode enabled - bluetooth hardware will be bypassed");
+                    testModeEnabled = true;
+                    
+                    // init handler if needed
+                    if (testModeHandler == null) {
+                        testModeHandler = new Handler(Looper.getMainLooper());
+                    }
+                    
+                    // start data generation (simulates device connection)
+                    startMockDataGeneration();
+                    
+                    // For test mode, we automatically connect (simulate connection)
+                    viewModel.updateConnectionState(Constants.STATE_CONNECTED);
+                }
+            } else {
+                Log.d(Constants.TAG_BLUETOOTH, "test mode disabled");
+                stopMockDataGeneration();
+               
+                // reset state
+                viewModel.updateConnectionState(Constants.STATE_DISCONNECTED);
             }
-        } else {
-            Log.d(Constants.TAG_BLUETOOTH, "test mode disabled");
-            stopMockDataGeneration();
-            // Reset connection state
-            viewModel.updateConnectionState(Constants.STATE_DISCONNECTED);
+        } catch (Exception e) {
+            Log.e(Constants.TAG_BLUETOOTH, "error setting test mode: " + e.getMessage());
+            viewModel.handleError("error setting test mode: " + e.getMessage());
         }
     }
     
@@ -406,46 +576,89 @@ public class BluetoothService {
     }
     
     /**
-     * random data gen
+     * generates random sensor data in test mode
      */
     private void generateMockSensorData() {
-        Log.d(Constants.TAG_BLUETOOTH, "generating mock sensor data in test mode");
+        if (!testModeEnabled) {
+            Log.e(Constants.TAG_BLUETOOTH, "Test mode not enabled, cannot generate mock data");
+            return;
+        }
         
-        // random dust reading (10-50 microg / m^3) 
-        float dustValue = 10 + (float) (Math.random() * 40);
-        SensorData dustData = new SensorData("dust", dustValue);
-        viewModel.handleNewData(dustData);
+        Log.d(Constants.TAG_BLUETOOTH, "Generating mock sensor data in test mode");
         
-        // random noise reading(40-85 dB)
-        float noiseValue = 40 + (float) (Math.random() * 45);
-        SensorData noiseData = new SensorData("noise", noiseValue);
-        viewModel.handleNewData(noiseData);
-        
-        // occasionally simulate threshold alerts
-        if (Math.random() > 0.7) {
-            if (Math.random() > 0.5) {
-                // high dust reading sim
-                dustData = new SensorData("dust", Constants.DUST_THRESHOLD + 10);
-                viewModel.handleNewData(dustData);
-                
-                // sample json formats sim
-                if (Math.random() > 0.5) {
-                    Log.d(Constants.TAG_BLUETOOTH, "sample json: {\"sensor\":\"dust\",\"value\":" + (Constants.DUST_THRESHOLD + 10) + "}");
-                } else {
-                    Log.d(Constants.TAG_BLUETOOTH, "sample json: {\"dust\":" + (Constants.DUST_THRESHOLD + 10) + "}");
-                }
+        try {
+            // Generate dust value with 25% chance of high reading
+            boolean highDustReading = Math.random() < 0.25;
+            float dustValue;
+            
+            if (highDustReading) {
+                // High dust reading (50-120 μg/m³)
+                dustValue = Constants.DUST_THRESHOLD + (float)(Math.random() * 70);
+                Log.d(Constants.TAG_BLUETOOTH, "HIGH DUST generated: " + dustValue + " μg/m³");
             } else {
-                //high noise reading sim
-                noiseData = new SensorData("noise", Constants.NOISE_THRESHOLD + 5);
-                viewModel.handleNewData(noiseData);
-                
-                // log sample json formats
-                if (Math.random() > 0.5) {
-                    Log.d(Constants.TAG_BLUETOOTH, "sample json: {\"sensor\":\"noise\",\"value\":" + (Constants.NOISE_THRESHOLD + 5) + "}");
-                } else {
-                    Log.d(Constants.TAG_BLUETOOTH, "sample json: {\"noise\":" + (Constants.NOISE_THRESHOLD + 5) + "}");
-                }
+                // Normal dust reading (5-45 μg/m³)
+                dustValue = 5f + (float)(Math.random() * 40);
+                Log.d(Constants.TAG_BLUETOOTH, "Normal dust generated: " + dustValue + " μg/m³");
             }
+            
+            // Create dust sensor data
+            final SensorData dustData = new SensorData("dust", dustValue);
+            
+            // Generate noise value with 25% chance of high reading
+            boolean highNoiseReading = Math.random() < 0.25;
+            float noiseValue;
+            
+            if (highNoiseReading) {
+                // High noise reading (85-120 dB)
+                noiseValue = Constants.NOISE_THRESHOLD + (float)(Math.random() * 35);
+                Log.d(Constants.TAG_BLUETOOTH, "HIGH NOISE generated: " + noiseValue + " dB");
+            } else {
+                // Normal noise reading (40-80 dB)
+                noiseValue = 40f + (float)(Math.random() * 40);
+                Log.d(Constants.TAG_BLUETOOTH, "Normal noise generated: " + noiseValue + " dB");
+            }
+            
+            // Create noise sensor data
+            final SensorData noiseData = new SensorData("noise", noiseValue);
+            
+            // Send both sensor data on the main thread to ensure UI updates
+            Handler mainHandler = new Handler(Looper.getMainLooper());
+            
+            // Post dust data update first
+            mainHandler.post(() -> {
+                try {
+                    viewModel.handleNewData(dustData);
+                    Log.d(Constants.TAG_BLUETOOTH, "Dust data sent to ViewModel: " + dustValue);
+                } catch (Exception e) {
+                    Log.e(Constants.TAG_BLUETOOTH, "Error sending dust data: " + e.getMessage(), e);
+                }
+            });
+            
+            // Post noise data update after a short delay
+            mainHandler.postDelayed(() -> {
+                try {
+                    viewModel.handleNewData(noiseData);
+                    Log.d(Constants.TAG_BLUETOOTH, "Noise data sent to ViewModel: " + noiseValue);
+                } catch (Exception e) {
+                    Log.e(Constants.TAG_BLUETOOTH, "Error sending noise data: " + e.getMessage(), e);
+                }
+            }, 200); // 200ms delay to ensure separate updates
+            
+        } catch (Exception e) {
+            Log.e(Constants.TAG_BLUETOOTH, "Error in generateMockSensorData: " + e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * forces immediate test data generation
+     */
+    public void forceGenerateTestData() {
+        if (testModeEnabled) {
+            Log.d(Constants.TAG_BLUETOOTH, "Forcing immediate test data generation");
+            // Generate data right away
+            generateMockSensorData();
+            // Also ensure the runnable is scheduled
+            startMockDataGeneration();
         }
     }
     // endregion

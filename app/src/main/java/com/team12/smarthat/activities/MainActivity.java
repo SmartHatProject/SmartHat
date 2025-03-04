@@ -6,7 +6,11 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,9 +23,9 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.team12.smarthat.R;
 import com.team12.smarthat.bluetooth.BluetoothManager;
@@ -68,10 +72,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        // initialize components
         initializeComponents();
         setupUI();
-        setupObservers();     // liveData listeners
-        checkPermissions();   // runtime permissions verifications
+        setupObservers();
+        
+        // force init values for sensor displays
+        tvDust.setText("Dust: 0.0 µg/m³");
+        tvNoise.setText("Noise: 0.0 dB");
+        
+        // check permissions needed for BLE
+        checkPermissions();
     }
 
     @Override
@@ -96,21 +108,25 @@ public class MainActivity extends AppCompatActivity {
             boolean newState = !item.isChecked();
             item.setChecked(newState);
             
-            // Toggle test mode
+  //toggle test mode
             if (bluetoothService != null) {
                 bluetoothService.setTestMode(newState);
                 if (newState) {
-                    showToast("Test mode enabled - Connect to generate mock data");
-                    // Show test mode indicator
+                    showToast("Test mode enabled - Generating mock data now");
+
                     tvTestMode.setVisibility(View.VISIBLE);
                     tvTestMode.setText("TEST MODE ACTIVE");
-                    // Update status to show it's in test mode
-                    tvStatus.setText("TEST MODE READY");
+
+                    tvStatus.setText("TEST MODE ACTIVE");
+                    viewModel.updateConnectionState("TEST MODE ACTIVE");
+                    
+                    // updated : immediate data generation (fixing delay)
+                    bluetoothService.forceGenerateTestData();
                 } else {
                     showToast("Test mode disabled");
-                    // Hide test mode indicator
+
                     tvTestMode.setVisibility(View.GONE);
-                    // If connected in test mode, disconnect
+
                     if (viewModel.isConnected()) {
                         toggleConnectionState();
                     }
@@ -140,6 +156,9 @@ public class MainActivity extends AppCompatActivity {
         bluetoothService = new BluetoothService(viewModel, bluetoothManager);
 
         notificationUtils = new NotificationUtils(this);
+        
+
+        checkNotificationPermission();
     }
     // endregion
 
@@ -154,32 +173,69 @@ public class MainActivity extends AppCompatActivity {
 
         // btn click connection logic
         btnConnect.setOnClickListener(v -> toggleConnectionState());
-        
-        // Hide test mode indicator by default
+
+        //for now /dev (all test too)
         tvTestMode.setVisibility(View.GONE);
     }
     // endregion
 
     // region data observation
     private void setupObservers() {
-        //state change monitor, update status disp
+        // connection state obsv
         viewModel.getConnectionState().observe(this, state -> {
             tvStatus.setText(state);
             updateConnectionButton(state);
-        }); // toggle btn
+        });
         
-        // new data received
-        viewModel.getSensorData().observe(this, sensorData -> {
-            updateSensorDisplays(sensorData);
-            checkThresholdAlerts(sensorData);
+     // obsv for noise
+        viewModel.getDustSensorData().observe(this, dustData -> {
+
+            if (dustData != null) {
+                float value = dustData.getValue();
+                tvDust.setText(String.format("Dust: %.1f µg/m³", value));
+                Log.d(Constants.TAG_MAIN, "OBSERVED dust update: " + value);
+                
+                // red above
+                if (value > Constants.DUST_THRESHOLD) {
+                    tvDust.setTextColor(Color.RED);
+                    Log.d(Constants.TAG_MAIN, "HIGH DUST DETECTED: " + value + " µg/m³");
+                    
+                    // dust notif
+                    notificationUtils.sendAlert("Dust Alert", 
+                        String.format("Dust level of %.1f µg/m³ exceeds safe limit (50)", value));
+                } else {
+                    tvDust.setTextColor(Color.BLACK);
+                }
+            }
+        });
+        
+        // obsv for noise
+        viewModel.getNoiseSensorData().observe(this, noiseData -> {
+            if (noiseData != null) {
+                float value = noiseData.getValue();
+                tvNoise.setText(String.format("Noise: %.1f dB", value));
+                Log.d(Constants.TAG_MAIN, "OBSERVED noise update: " + value);
+                
+                // is above ->red text
+                if (value > Constants.NOISE_THRESHOLD) {
+                    tvNoise.setTextColor(Color.RED);
+                    Log.d(Constants.TAG_MAIN, "HIGH NOISE DETECTED: " + value + " dB");
+                    
+                    //high noise direct notif
+                    notificationUtils.sendAlert("Noise Alert", 
+                        String.format("Noise level of %.1f dB exceeds safe limit (85)", value));
+                } else {
+                    tvNoise.setTextColor(Color.BLACK);
+                }
+            }
         });
 
-        // error msg from viewmodel
+        // Error messages
         viewModel.getErrorMessage().observe(this, error -> {
             showToast(error);
             notificationUtils.sendAlert("Device Error", error);
         });
-    } 
+    }
     // endregion
 
     // region connection handling
@@ -348,30 +404,25 @@ public class MainActivity extends AppCompatActivity {
     private void updateConnectionButton(String state) {
         if (state.equals(Constants.STATE_CONNECTED)) {
             btnConnect.setText("Disconnect");
-            // If in test mode, update the test mode indicator
+            // case test mode update
             if (bluetoothService != null && bluetoothService.isTestModeEnabled()) {
                 tvTestMode.setText("TEST MODE - MOCK DATA ACTIVE");
                 tvTestMode.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_light));
             }
         } else {
             btnConnect.setText("Connect");
-            // If in test mode, update the test mode indicator
+
             if (bluetoothService != null && bluetoothService.isTestModeEnabled()) {
                 tvTestMode.setText("TEST MODE READY");
+
                 tvTestMode.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_light));
             }
         }
     }
     
     private void updateSensorDisplays(SensorData data) {
-        String sensorType = data.getSensorType();
-        float value = data.getValue();
-        
-        if (sensorType.equalsIgnoreCase("dust")) {
-            tvDust.setText(String.format("Dust: %.2f µg/m³", value));
-        } else if (sensorType.equalsIgnoreCase("noise")) {
-            tvNoise.setText(String.format("Noise: %.2f dB", value));
-        }
+        // no need just backward compat , will decide later
+
     }
     
     private void checkThresholdAlerts(SensorData data) {
@@ -392,5 +443,46 @@ public class MainActivity extends AppCompatActivity {
             bluetoothService.disconnect();
         }
         viewModel.cleanupResources();
+    }
+
+    private void checkNotificationPermission() {
+        // android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) 
+                    != PackageManager.PERMISSION_GRANTED) {
+                
+                // notification permission request
+                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 
+                        Constants.REQUEST_NOTIFICATION_PERMISSION);
+                
+            } else if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+                // case permitted but notif disabled
+                showNotificationDisabledDialog();
+            }
+        } else if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+            // android 13-
+            showNotificationDisabledDialog();
+        }
+    }
+    
+    private void showNotificationDisabledDialog() {
+        new AlertDialog.Builder(this)
+            .setTitle("Notifications Disabled")
+            .setMessage("Notifications are disabled for this app. You won't receive alerts when sensor values exceed thresholds. Would you like to enable them in settings?")
+            .setPositiveButton("Open Settings", (dialog, which) -> {
+                // app notif settings
+                Intent intent = new Intent();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+                    intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+                } else {
+                    intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+                    intent.putExtra("app_package", getPackageName());
+                    intent.putExtra("app_uid", getApplicationInfo().uid);
+                }
+                startActivity(intent);
+            })
+            .setNegativeButton("Not Now", null)
+            .show();
     }
 }
