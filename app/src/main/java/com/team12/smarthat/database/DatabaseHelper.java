@@ -27,6 +27,11 @@ public class DatabaseHelper {
     // if ble: will update dao query here, liveData for changes
     public LiveData<List<SensorData>> getAllReadings() {
         return dao.getAllData();
-
-    }}
+    }
+    
+    // get all threshold breaches
+    public LiveData<List<SensorData>> getThresholdBreaches(float dustThreshold, float noiseThreshold) {
+        return dao.getThresholdBreaches(dustThreshold, noiseThreshold);
+    }
+}
 

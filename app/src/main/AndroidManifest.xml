@@ -40,6 +40,11 @@
             </intent-filter>
         </activity>
 
+        <!-- Threshold History Activity -->
+        <activity
+            android:name=".activities.ThresholdHistoryActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.MainActivity" />
 
     </application>
 </manifest>

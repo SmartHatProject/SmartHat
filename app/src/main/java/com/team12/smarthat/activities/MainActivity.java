@@ -133,6 +133,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             return true;
+        } else if (id == R.id.action_history) {
+            // Launch threshold history activity
+            Intent historyIntent = new Intent(this, ThresholdHistoryActivity.class);
+            startActivity(historyIntent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

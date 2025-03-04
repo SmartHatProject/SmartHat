@@ -27,4 +27,8 @@ LiveData<List<SensorData>> getAllData();
 //clear db for test debug
   @Query("DELETE FROM sensor_data")
     void clearAll();
+
+// get all threshold breaches
+@Query("SELECT * FROM sensor_data WHERE (sensorType = 'dust' AND value > :dustThreshold) OR (sensorType = 'noise' AND value > :noiseThreshold) ORDER BY timestamp DESC")
+LiveData<List<SensorData>> getThresholdBreaches(float dustThreshold, float noiseThreshold);
 }

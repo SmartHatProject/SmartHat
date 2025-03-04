@@ -9,4 +9,10 @@
         android:checked="false"
         app:showAsAction="never" />
     
+    <item
+        android:id="@+id/action_history"
+        android:title="Threshold History"
+        android:icon="@android:drawable/ic_menu_recent_history"
+        app:showAsAction="never" />
+    
 </menu> 

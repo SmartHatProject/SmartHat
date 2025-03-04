@@ -45,8 +45,8 @@ public class BluetoothService {
             
             // schedule next data generation with variable timing for more natural feel
             if (testModeEnabled) {
-                // Random delay between 1-3 seconds (feels more natural than fixed intervals)
-                int randomDelay = 1000 + (int)(Math.random() * 2000);
+                // Random delay between 2-5 seconds (increased from 1-3 for slower generation)
+                int randomDelay = 2000 + (int)(Math.random() * 3000);
                 testModeHandler.postDelayed(this, randomDelay);
             }
         }
@@ -59,7 +59,7 @@ public class BluetoothService {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             try {
-                // Check for BLUETOOTH_CONNECT permission before accessing device name
+
                 BluetoothDevice device = result.getDevice();
                 String deviceName = null;
                 
@@ -76,7 +76,7 @@ public class BluetoothService {
                 if (deviceName != null && deviceName.contains("SmartHat")) {
                     Log.d(Constants.TAG_BLUETOOTH, "found device: " + deviceName);
                     
-                    // Check for BLUETOOTH_SCAN permission before stopping scan
+
                     if (ContextCompat.checkSelfPermission(bluetoothManager.getContext(), 
                             Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
                         bluetoothManager.stopScan();
@@ -124,7 +124,7 @@ public class BluetoothService {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             try {
-                // Check for BLUETOOTH_CONNECT permission
+
                 if (ContextCompat.checkSelfPermission(bluetoothManager.getContext(), 
                         Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                     Log.e(Constants.TAG_BLUETOOTH, "bluetooth connect permission not granted for connection state change");
@@ -169,7 +169,7 @@ public class BluetoothService {
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             try {
-                // Check for BLUETOOTH_CONNECT permission
+
                 if (ContextCompat.checkSelfPermission(bluetoothManager.getContext(), 
                         Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                     Log.e(Constants.TAG_BLUETOOTH, "bluetooth connect permission not granted for service discovery");
@@ -326,9 +326,7 @@ public class BluetoothService {
         }
     }
     
-    /**
-     * connect to the specified bluetoothdevice
-     */
+
     public void connect(BluetoothDevice device) {
         // in test mode, just simulate connection
         if (testModeEnabled) {
@@ -382,7 +380,7 @@ public class BluetoothService {
      */
     private void enableCharacteristicNotification(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
         try {
-            // Check fpermission before enabling notification
+            
             if (ContextCompat.checkSelfPermission(bluetoothManager.getContext(), 
                     Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                 Log.e(Constants.TAG_BLUETOOTH, "bluetooth connect permission not granted for enabling notifications");
@@ -587,62 +585,67 @@ public class BluetoothService {
         Log.d(Constants.TAG_BLUETOOTH, "Generating mock sensor data in test mode");
         
         try {
-            // Generate dust value with 25% chance of high reading
-            boolean highDustReading = Math.random() < 0.25;
-            float dustValue;
+            // Alternate between dust and noise data generation to reduce frequency
+            // Use system time to alternate: even seconds for dust, odd seconds for noise
+            boolean generateDustData = (System.currentTimeMillis() / 1000) % 2 == 0;
             
-            if (highDustReading) {
-                // High dust reading (50-120 μg/m³)
-                dustValue = Constants.DUST_THRESHOLD + (float)(Math.random() * 70);
-                Log.d(Constants.TAG_BLUETOOTH, "HIGH DUST generated: " + dustValue + " μg/m³");
-            } else {
-                // Normal dust reading (5-45 μg/m³)
-                dustValue = 5f + (float)(Math.random() * 40);
-                Log.d(Constants.TAG_BLUETOOTH, "Normal dust generated: " + dustValue + " μg/m³");
-            }
-            
-            // Create dust sensor data
-            final SensorData dustData = new SensorData("dust", dustValue);
-            
-            // Generate noise value with 25% chance of high reading
-            boolean highNoiseReading = Math.random() < 0.25;
-            float noiseValue;
-            
-            if (highNoiseReading) {
-                // High noise reading (85-120 dB)
-                noiseValue = Constants.NOISE_THRESHOLD + (float)(Math.random() * 35);
-                Log.d(Constants.TAG_BLUETOOTH, "HIGH NOISE generated: " + noiseValue + " dB");
-            } else {
-                // Normal noise reading (40-80 dB)
-                noiseValue = 40f + (float)(Math.random() * 40);
-                Log.d(Constants.TAG_BLUETOOTH, "Normal noise generated: " + noiseValue + " dB");
-            }
-            
-            // Create noise sensor data
-            final SensorData noiseData = new SensorData("noise", noiseValue);
-            
-            // Send both sensor data on the main thread to ensure UI updates
-            Handler mainHandler = new Handler(Looper.getMainLooper());
-            
-            // Post dust data update first
-            mainHandler.post(() -> {
-                try {
-                    viewModel.handleNewData(dustData);
-                    Log.d(Constants.TAG_BLUETOOTH, "Dust data sent to ViewModel: " + dustValue);
-                } catch (Exception e) {
-                    Log.e(Constants.TAG_BLUETOOTH, "Error sending dust data: " + e.getMessage(), e);
+            if (generateDustData) {
+                // Generate dust value with 25% chance of high reading
+                boolean highDustReading = Math.random() < 0.25;
+                float dustValue;
+                
+                if (highDustReading) {
+                    // High dust reading (50-120 μg/m³)
+                    dustValue = Constants.DUST_THRESHOLD + (float)(Math.random() * 70);
+                    Log.d(Constants.TAG_BLUETOOTH, "HIGH DUST generated: " + dustValue + " μg/m³");
+                } else {
+                    // Normal dust reading (5-45 μg/m³)
+                    dustValue = 5f + (float)(Math.random() * 40);
+                    Log.d(Constants.TAG_BLUETOOTH, "Normal dust generated: " + dustValue + " μg/m³");
                 }
-            });
-            
-            // Post noise data update after a short delay
-            mainHandler.postDelayed(() -> {
-                try {
-                    viewModel.handleNewData(noiseData);
-                    Log.d(Constants.TAG_BLUETOOTH, "Noise data sent to ViewModel: " + noiseValue);
-                } catch (Exception e) {
-                    Log.e(Constants.TAG_BLUETOOTH, "Error sending noise data: " + e.getMessage(), e);
+                
+                // Create dust sensor data
+                final SensorData dustData = new SensorData("dust", dustValue);
+                
+                // Send dust data on the main thread
+                Handler mainHandler = new Handler(Looper.getMainLooper());
+                mainHandler.post(() -> {
+                    try {
+                        viewModel.handleNewData(dustData);
+                        Log.d(Constants.TAG_BLUETOOTH, "Dust data sent to ViewModel: " + dustValue);
+                    } catch (Exception e) {
+                        Log.e(Constants.TAG_BLUETOOTH, "Error sending dust data: " + e.getMessage(), e);
+                    }
+                });
+            } else {
+                // Generate noise value with 25% chance of high reading
+                boolean highNoiseReading = Math.random() < 0.25;
+                float noiseValue;
+                
+                if (highNoiseReading) {
+                    // High noise reading (85-120 dB)
+                    noiseValue = Constants.NOISE_THRESHOLD + (float)(Math.random() * 35);
+                    Log.d(Constants.TAG_BLUETOOTH, "HIGH NOISE generated: " + noiseValue + " dB");
+                } else {
+                    // Normal noise reading (40-80 dB)
+                    noiseValue = 40f + (float)(Math.random() * 40);
+                    Log.d(Constants.TAG_BLUETOOTH, "Normal noise generated: " + noiseValue + " dB");
                 }
-            }, 200); // 200ms delay to ensure separate updates
+                
+                // Create noise sensor data
+                final SensorData noiseData = new SensorData("noise", noiseValue);
+                
+                // Send noise data on the main thread
+                Handler mainHandler = new Handler(Looper.getMainLooper());
+                mainHandler.post(() -> {
+                    try {
+                        viewModel.handleNewData(noiseData);
+                        Log.d(Constants.TAG_BLUETOOTH, "Noise data sent to ViewModel: " + noiseValue);
+                    } catch (Exception e) {
+                        Log.e(Constants.TAG_BLUETOOTH, "Error sending noise data: " + e.getMessage(), e);
+                    }
+                });
+            }
             
         } catch (Exception e) {
             Log.e(Constants.TAG_BLUETOOTH, "Error in generateMockSensorData: " + e.getMessage(), e);

@@ -6,21 +6,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="@android:color/white">
+    android:background="#F8F9FA">
 
-    <!-- App title -->
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
+    <!-- App title with logo -->
+    <LinearLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="SmartHat"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="#333333"
+        android:orientation="horizontal"
+        android:gravity="center"
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent">
+        
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SmartHat"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-light"
+            android:textColor="#263238"/>
+    </LinearLayout>
 
     <!-- Test Mode Indicator -->
     <TextView
@@ -28,15 +37,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TEST MODE ACTIVE"
-        android:textSize="16sp"
+        android:textSize="14sp"
+        android:letterSpacing="0.05"
+        android:fontFamily="sans-serif-medium"
         android:textStyle="bold"
         android:textColor="#FFFFFF"
-        android:background="#2196F3"
+        android:background="#448AFF"
         android:padding="8dp"
         android:gravity="center"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        app:layout_constraintTop_toBottomOf="@id/header_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -46,31 +57,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        android:layout_marginHorizontal="4dp"
         app:layout_constraintTop_toBottomOf="@id/tv_test_mode">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Connection Status"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#555555"/>
+                android:text="Status"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="#37474F"/>
 
             <TextView
                 android:id="@+id/tv_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textSize="18sp"
-                android:textColor="#FF2222"
+                android:layout_marginTop="10dp"
+                android:textSize="20sp"
+                android:textColor="#F44336"
+                android:fontFamily="sans-serif"
                 android:text="DISCONNECTED"
                 tools:text="DISCONNECTED"/>
         </LinearLayout>
@@ -81,47 +94,64 @@
         android:id="@+id/card_readings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp"
+        android:layout_marginTop="20dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        android:layout_marginHorizontal="4dp"
         app:layout_constraintTop_toBottomOf="@id/card_status">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Environmental Readings"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#555555"/>
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="#37474F"/>
 
             <!-- Dust reading with icon -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="20dp"
                 android:gravity="center_vertical">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:src="@android:drawable/ic_menu_compass"
                     android:tint="#3F51B5"/>
 
-                <TextView
-                    android:id="@+id/tv_dust"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:textSize="16sp"
-                    android:text="Dust: -- µg/m³"
-                    tools:text="Dust: 27.5 µg/m³"/>
+                    android:orientation="vertical"
+                    android:layout_marginStart="16dp">
+                    
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dust Level"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="#455A64"/>
+                        
+                    <TextView
+                        android:id="@+id/tv_dust"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:fontFamily="sans-serif"
+                        android:textColor="#212121"
+                        android:text="-- µg/m³"
+                        tools:text="27.5 µg/m³"/>
+                </LinearLayout>
             </LinearLayout>
 
             <!-- Noise reading with icon -->
@@ -129,47 +159,73 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="20dp"
                 android:gravity="center_vertical">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:src="@android:drawable/ic_lock_silent_mode_off"
                     android:tint="#FF9800"/>
 
-                <TextView
-                    android:id="@+id/tv_noise"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:textSize="16sp"
-                    android:text="Noise: -- dB"
-                    tools:text="Noise: 65.7 dB"/>
+                    android:orientation="vertical"
+                    android:layout_marginStart="16dp">
+                    
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Noise Level"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="#455A64"/>
+                        
+                    <TextView
+                        android:id="@+id/tv_noise"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:fontFamily="sans-serif"
+                        android:textColor="#212121"
+                        android:text="-- dB"
+                        tools:text="65.7 dB"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
     <!-- Connect button -->
-    <Button
-        android:id="@+id/btn_connect"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Connect"
-        android:textSize="16sp"
-        android:padding="12dp"
-        android:background="@android:color/holo_blue_dark"
-        android:textColor="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/card_readings"/>
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:layout_constraintTop_toBottomOf="@id/card_readings">
+        
+        <Button
+            android:id="@+id/btn_connect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Connect"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            android:paddingVertical="16dp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="#FFFFFF"
+            android:background="#3F51B5"/>
+    </androidx.cardview.widget.CardView>
 
     <!-- App version at bottom -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="v1.0 - Team 12"
-        android:textColor="#888888"
+        android:textColor="#78909C"
         android:textSize="12sp"
+        android:fontFamily="sans-serif-light"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
