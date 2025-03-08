@@ -40,6 +40,11 @@
        <action android:name="android.intent.action.MAIN" />
     <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- Stress test action filter -->
+            <intent-filter>
+                <action android:name="com.team12.smarthat.ACTION_RUN_STRESS_TEST" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
 
         <!-- Threshold History Activity -->

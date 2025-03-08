@@ -95,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private boolean isReceiverRegistered = false;
+
     // region lifecycle methods
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,9 +115,8 @@ public class MainActivity extends AppCompatActivity {
         // battery optimization request
         requestBatteryOptimizationException();
         
-        // stress test
-        IntentFilter filter = new IntentFilter("com.team12.smarthat.ACTION_RUN_STRESS_TEST");
-        registerReceiver(stressTestReceiver, filter);
+        // Register stress test receiver
+        registerStressTestReceiver();
         
         // force init values for sensor displays
         tvDust.setText("Dust: 0.0 µg/m³");
@@ -186,12 +187,8 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         cleanupResources();   // prevent resource/memory leaks
         
-        // unregistre stress test receiver
-        try {
-            unregisterReceiver(stressTestReceiver);
-        } catch (Exception e) {
-            Log.e(Constants.TAG_MAIN, "Error unregistering stress test receiver: " + e.getMessage());
-        }
+        // unregister stress test receiver
+        unregisterStressTestReceiver();
     }
 
     @Override
@@ -364,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
 
     // region permission handling
     private void checkPermissions() {
-        // handle location permissions separately since "while using app" is needed
+       
         if (checkAndRequestLocationPermissions()) {
             // only check other permissions if location is granted
             List<String> neededPermissions = PermissionUtils.getRequiredPermissions(this);
@@ -470,20 +467,20 @@ public class MainActivity extends AppCompatActivity {
         switch (state) {
             case Constants.STATE_CONNECTED:
                 tvStatus.setText("CONNECTED");
-                tvStatus.setTextColor(Color.parseColor("#4CAF50")); // Green
+                tvStatus.setTextColor(Color.parseColor("#4CAF50")); 
                 connectionIndicator.setBackgroundResource(R.drawable.circle_green);
                 connectionHelper.setText("Device connected");
                 break;
             case Constants.STATE_CONNECTING:
                 tvStatus.setText("CONNECTING...");
-                tvStatus.setTextColor(Color.parseColor("#FF9800")); // Orange
+                tvStatus.setTextColor(Color.parseColor("#FF9800")); 
                 connectionIndicator.setBackgroundResource(R.drawable.circle_red);
                 connectionHelper.setText("Please wait...");
                 break;
             case Constants.STATE_DISCONNECTED:
             default:
                 tvStatus.setText("DISCONNECTED");
-                tvStatus.setTextColor(Color.parseColor("#F44336")); // Red
+                tvStatus.setTextColor(Color.parseColor("#F44336"));
                 connectionIndicator.setBackgroundResource(R.drawable.circle_red);
                 connectionHelper.setText("Tap Connect to pair");
                 break;
@@ -506,17 +503,13 @@ public class MainActivity extends AppCompatActivity {
             notificationUtils.sendAlert("Noise Warning", 
                     String.format("Noise level (%.2f dB) exceeds threshold", value));
             
-            // Also check OSHA exposure standards for noise
+           
             checkOSHANoiseExposure(value);
         }
     }
     
-    /**
-     * Tracks and checks noise exposure according to OSHA standards
-     * Based on the ESP32 implementation from the hardware team
-     * @param currentDB The current noise level in dB
-     */
-    private long exposureStartTime = 0;  // Start time of exposure
+   
+    private long exposureStartTime = 0;  
     
     private void checkOSHANoiseExposure(float currentDB) {
         // Check if the current dB level exceeds any OSHA threshold
@@ -547,23 +540,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     
-    /**
-     * Triggers a notification alert for OSHA noise level standards
-     * @param dBLevel The dB level that was exceeded
-     * @param permissibleTime The permissible exposure time in milliseconds
-     */
+
     private void triggerOSHAAlert(float dBLevel, long permissibleTime) {
-        // Convert milliseconds to a human-readable format
+        
         String timeString = formatExposureTime(permissibleTime);
         
-        // Trigger an alert
         String title = "OSHA Noise Exposure Alert";
         String message = String.format("Noise level exceeded %.0f dB for %s! Move to a quieter environment immediately.", 
                                        dBLevel, timeString);
         
         notificationUtils.sendAlert(title, message);
         
-        // Also vibrate the phone to ensure the alert is noticed
         Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (vibrator != null && vibrator.hasVibrator()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -574,11 +561,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     
-    /**
-     * Formats milliseconds into a human-readable time string
-     * @param millis Time in milliseconds
-     * @return Formatted time string (e.g., "2 hours 30 minutes")
-     */
+   
     private String formatExposureTime(long millis) {
         long seconds = millis / 1000;
         long minutes = seconds / 60;
@@ -649,9 +632,7 @@ public class MainActivity extends AppCompatActivity {
             .show();
     }
 
-    /**
-     * Setup secret gestures for demo control
-     */
+    
     private void setupDemoGestures() {
         LinearLayout headerLayout = findViewById(R.id.header_layout);
         
@@ -682,8 +663,6 @@ public class MainActivity extends AppCompatActivity {
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
                 try {
                     float diffY = e2.getY() - e1.getY();
-                    
-                    // Swipe down detected
                     if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD && diffY > 0) {
                         triggerDemoThresholdAlert();
                         return true;
@@ -702,12 +681,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     
-    /**
-     * trigger a sim connection error for demo 1 only
-     */
+   
     private void triggerDemoConnectionError() {
         if (bluetoothService != null && viewModel.isConnected()) {
-            // Vibrate to acknowledge the gesture
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
             } else {
@@ -720,12 +697,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     
-    /**
-     * trigger a sim threshold alert demo 1
-     */
+   
     private void triggerDemoThresholdAlert() {
         if (bluetoothService != null) {
-            // Vibrate to acknowledge the gesture
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
             } else {
@@ -734,7 +709,7 @@ public class MainActivity extends AppCompatActivity {
             
             showToast("Simulating threshold breach...");
             
-            // Simulate both dust and noise threshold breaches
+
             bluetoothService.forceGenerateTestData();
         }
     }
@@ -790,6 +765,37 @@ public class MainActivity extends AppCompatActivity {
             bluetoothService.runBurstTest(30, 10);
         } else {
             showToast("Error: BluetoothService not initialized");
+        }
+    }
+
+    /**
+     * Registers the stress test broadcast receiver
+     */
+    private void registerStressTestReceiver() {
+        try {
+            if (!isReceiverRegistered) {
+                IntentFilter filter = new IntentFilter("com.team12.smarthat.ACTION_RUN_STRESS_TEST");
+                registerReceiver(stressTestReceiver, filter);
+                isReceiverRegistered = true;
+                Log.d(Constants.TAG_MAIN, "Stress test receiver registered successfully");
+            }
+        } catch (Exception e) {
+            Log.e(Constants.TAG_MAIN, "Error registering stress test receiver: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Unregisters the stress test broadcast receiver
+     */
+    private void unregisterStressTestReceiver() {
+        try {
+            if (isReceiverRegistered) {
+                unregisterReceiver(stressTestReceiver);
+                isReceiverRegistered = false;
+                Log.d(Constants.TAG_MAIN, "Stress test receiver unregistered successfully");
+            }
+        } catch (Exception e) {
+            Log.e(Constants.TAG_MAIN, "Error unregistering stress test receiver: " + e.getMessage());
         }
     }
 }
