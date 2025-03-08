@@ -9,7 +9,10 @@ import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanSettings;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
@@ -37,18 +40,34 @@ public class BluetoothManager {
     private ScanCallback scanCallback;
     private BluetoothDevice targetDevice;
 
+    // monitor bt state change
+    private final BroadcastReceiver bluetoothStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            
+            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 
+                                                 BluetoothAdapter.ERROR);
+                
+                handleBluetoothStateChange(state);
+            }
+        }
+    };
+
     public BluetoothManager(Context context) {
         this.context = context;
         this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter != null) {
             this.bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
         }
+        
+        // register receiver for bt state change
+        IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        context.registerReceiver(bluetoothStateReceiver, filter);
     }
     
-    /**
-     * Get the context for permission checks
-     * @return the context associated with this manager
-     */
+// getcontext permission check return context bt manager
     public Context getContext() {
         return context;
     }
@@ -216,6 +235,51 @@ public class BluetoothManager {
                 viewModel.handleError("permission denied when managing bluetooth connection");
             }
 
+        }
+    }
+
+    /**
+     * cleanup
+     */
+    public void cleanup() {
+        try {
+            // Unregister Bluetooth state receiver
+            context.unregisterReceiver(bluetoothStateReceiver);
+        } catch (Exception e) {
+            Log.e(Constants.TAG_BLUETOOTH, "Error unregistering receiver: " + e.getMessage());
+        }
+    }
+
+   //bt adapter state change handle
+    private void handleBluetoothStateChange(int state) {
+        switch (state) {
+            case BluetoothAdapter.STATE_OFF:
+                Log.d(Constants.TAG_BLUETOOTH, "Bluetooth turned OFF");
+                if (viewModel != null) {
+                    viewModel.updateConnectionState(Constants.STATE_DISCONNECTED);
+                    viewModel.handleError("Bluetooth was disabled");
+                    
+                    // force disc any active connection
+                    disconnect();
+                }
+                break;
+                
+            case BluetoothAdapter.STATE_TURNING_OFF:
+                Log.d(Constants.TAG_BLUETOOTH, "Bluetooth turning OFF");
+                // disc prep
+                if (viewModel != null) {
+                    viewModel.updateConnectionState(Constants.STATE_DISCONNECTED);
+                }
+                break;
+                
+            case BluetoothAdapter.STATE_ON:
+                Log.d(Constants.TAG_BLUETOOTH, "Bluetooth turned ON");
+                // autoreconnect case enable
+                break;
+                
+            case BluetoothAdapter.STATE_TURNING_ON:
+                Log.d(Constants.TAG_BLUETOOTH, "Bluetooth turning ON");
+                break;
         }
     }
 }

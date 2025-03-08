@@ -10,6 +10,11 @@
         app:showAsAction="never" />
     
     <item
+        android:id="@+id/action_test_formats"
+        android:title="Test Data Formats"
+        app:showAsAction="never" />
+    
+    <item
         android:id="@+id/action_history"
         android:title="Threshold History"
         android:icon="@android:drawable/ic_menu_recent_history"

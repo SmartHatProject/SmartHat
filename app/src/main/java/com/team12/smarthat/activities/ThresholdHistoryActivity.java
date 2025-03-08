@@ -30,7 +30,7 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_threshold_history);
         
-        // Enable back button in action bar
+        // back button
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Threshold Breach History");
@@ -56,7 +56,7 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
     }
     
     private void loadThresholdBreaches() {
-        // Observe threshold breaches from the database
+        // treashold from db
         databaseHelper.getThresholdBreaches(Constants.DUST_THRESHOLD, Constants.NOISE_THRESHOLD)
                 .observe(this, this::updateUI);
     }

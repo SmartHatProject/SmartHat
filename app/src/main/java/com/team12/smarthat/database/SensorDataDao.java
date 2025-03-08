@@ -31,4 +31,12 @@ LiveData<List<SensorData>> getAllData();
 // get all threshold breaches
 @Query("SELECT * FROM sensor_data WHERE (sensorType = 'dust' AND value > :dustThreshold) OR (sensorType = 'noise' AND value > :noiseThreshold) ORDER BY timestamp DESC")
 LiveData<List<SensorData>> getThresholdBreaches(float dustThreshold, float noiseThreshold);
+
+// get total count of records
+@Query("SELECT COUNT(*) FROM sensor_data")
+int getCount();
+
+// delete oldest records exceeding a limit
+@Query("DELETE FROM sensor_data WHERE id IN (SELECT id FROM sensor_data ORDER BY timestamp ASC LIMIT :count)")
+void deleteOldest(int count);
 }

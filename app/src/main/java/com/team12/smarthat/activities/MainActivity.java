@@ -4,17 +4,27 @@ package com.team12.smarthat.activities;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.provider.Settings;
+import android.net.Uri;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
     // region class components
     private BluetoothViewModel viewModel;
-    private final BluetoothManager bluetoothManager = new BluetoothManager(this);
+    private BluetoothManager bluetoothManager; // Removed initialization here
     private BluetoothService bluetoothService;
     private DatabaseHelper databaseHelper; // our local sqlite database access
     private NotificationUtils notificationUtils;
@@ -53,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvStatus, tvDust, tvNoise;
     private Button btnConnect;
     private TextView tvTestMode; // Test mode indicator
+    private View connectionIndicator; // Connection status indicator
+    private TextView connectionHelper; // Connection helper text
     // endregion
 
     // region activation system
@@ -67,22 +79,49 @@ public class MainActivity extends AppCompatActivity {
     });
     // endregion
 
+    // region demo cntrl
+    private GestureDetector gestureDetector;
+    private int logoTapCount = 0;
+    private long lastLogoTapTime = 0;
+    // endregion
+
+    // broadcast receiver for automated testing
+    private final BroadcastReceiver stressTestReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if ("com.team12.smarthat.ACTION_RUN_STRESS_TEST".equals(intent.getAction())) {
+                runStressTest();
+            }
+        }
+    };
+
     // region lifecycle methods
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+
+        bluetoothManager = new BluetoothManager(this);
+        
         // initialize components
         initializeComponents();
         setupUI();
         setupObservers();
+        setupDemoGestures();
+        
+        // battery optimization request
+        requestBatteryOptimizationException();
+        
+        // stress test
+        IntentFilter filter = new IntentFilter("com.team12.smarthat.ACTION_RUN_STRESS_TEST");
+        registerReceiver(stressTestReceiver, filter);
         
         // force init values for sensor displays
         tvDust.setText("Dust: 0.0 µg/m³");
         tvNoise.setText("Noise: 0.0 dB");
         
-        // check permissions needed for BLE
+        // check ble permissions
         checkPermissions();
     }
 
@@ -134,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         } else if (id == R.id.action_history) {
-            // Launch threshold history activity
+            // threshold history activity launch
             Intent historyIntent = new Intent(this, ThresholdHistoryActivity.class);
             startActivity(historyIntent);
             return true;
@@ -146,6 +185,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         cleanupResources();   // prevent resource/memory leaks
+        
+        // unregistre stress test receiver
+        try {
+            unregisterReceiver(stressTestReceiver);
+        } catch (Exception e) {
+            Log.e(Constants.TAG_MAIN, "Error unregistering stress test receiver: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        gestureDetector.onTouchEvent(ev);
+        return super.dispatchTouchEvent(ev);
     }
     // endregion
 
@@ -169,27 +221,35 @@ public class MainActivity extends AppCompatActivity {
 
     // region ui config
     private void setupUI() {
+        // init ui comp
         tvStatus = findViewById(R.id.tv_status);
         tvDust = findViewById(R.id.tv_dust);
         tvNoise = findViewById(R.id.tv_noise);
-        tvTestMode = findViewById(R.id.tv_test_mode); // Initialize test mode indicator
-
         btnConnect = findViewById(R.id.btn_connect);
-
-        // btn click connection logic
+        tvTestMode = findViewById(R.id.tv_test_mode);
+        connectionIndicator = findViewById(R.id.connection_indicator);
+        connectionHelper = findViewById(R.id.connection_helper);
+        
+        // setup button actions
         btnConnect.setOnClickListener(v -> toggleConnectionState());
-
-        //for now /dev (all test too)
-        tvTestMode.setVisibility(View.GONE);
+        
+        // Set initial status
+        updateConnectionUI(Constants.STATE_DISCONNECTED);
     }
     // endregion
 
     // region data observation
     private void setupObservers() {
-        // connection state obsv
+        // observe conn status
         viewModel.getConnectionState().observe(this, state -> {
-            tvStatus.setText(state);
-            updateConnectionButton(state);
+            Log.d(Constants.TAG_MAIN, "Connection state changed: " + state);
+            updateConnectionUI(state);
+            
+            if (Constants.STATE_CONNECTED.equals(state)) {
+                btnConnect.setText("Disconnect");
+            } else {
+                btnConnect.setText("Connect");
+            }
         });
         
      // obsv for noise
@@ -235,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Error messages
+        // error msg
         viewModel.getErrorMessage().observe(this, error -> {
             showToast(error);
             notificationUtils.sendAlert("Device Error", error);
@@ -319,13 +379,13 @@ public class MainActivity extends AppCompatActivity {
     }
     
     private boolean checkAndRequestLocationPermissions() {
-        // location is essential for BLE scanning, handle it specially
+        // location needed for ble!
         boolean hasLocationPermission = 
             (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) ||
             (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED);
         
         if (!hasLocationPermission) {
-            // explicitly request just location permissions first
+
             String[] locationPerms = {Manifest.permission.ACCESS_FINE_LOCATION};
             requestPermissions(locationPerms, Constants.REQUEST_LOCATION_PERMISSION);
             return false;
@@ -344,25 +404,25 @@ public class MainActivity extends AppCompatActivity {
         
         if (requestCode == Constants.REQUEST_LOCATION_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // location was granted, now check other permissions
+                // case location granted, other permisions
                 List<String> neededPermissions = PermissionUtils.getRequiredPermissions(this);
                 if (!neededPermissions.isEmpty()) {
                     requestPermissions(neededPermissions.toArray(new String[0]),
                         Constants.REQUEST_BLUETOOTH_PERMISSIONS);
                 } else {
-                    // all permissions granted
+                    // all granted
                     attemptDeviceConnection();
                 }
             } else {
                 showToast("Location permission required for BLE scanning. Please select 'Allow while using the app'");
             }
         } else if (requestCode == Constants.REQUEST_BLUETOOTH_PERMISSIONS) {
-            // check if all permissions were granted
+            // check if all granted
             if (grantResults.length > 0 && allPermissionsGranted(grantResults)) {
-                // retry now that permissions granted
+                // case granted retry
                 attemptDeviceConnection();
             } else {
-                // find which permission was denied
+                // not granted search
                 for (int i = 0; i < permissions.length; i++) {
                     if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                         if (permissions[i].equals(Manifest.permission.BLUETOOTH_SCAN)) {
@@ -406,22 +466,27 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
     
-    private void updateConnectionButton(String state) {
-        if (state.equals(Constants.STATE_CONNECTED)) {
-            btnConnect.setText("Disconnect");
-            // case test mode update
-            if (bluetoothService != null && bluetoothService.isTestModeEnabled()) {
-                tvTestMode.setText("TEST MODE - MOCK DATA ACTIVE");
-                tvTestMode.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_light));
-            }
-        } else {
-            btnConnect.setText("Connect");
-
-            if (bluetoothService != null && bluetoothService.isTestModeEnabled()) {
-                tvTestMode.setText("TEST MODE READY");
-
-                tvTestMode.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_light));
-            }
+    private void updateConnectionUI(String state) {
+        switch (state) {
+            case Constants.STATE_CONNECTED:
+                tvStatus.setText("CONNECTED");
+                tvStatus.setTextColor(Color.parseColor("#4CAF50")); // Green
+                connectionIndicator.setBackgroundResource(R.drawable.circle_green);
+                connectionHelper.setText("Device connected");
+                break;
+            case Constants.STATE_CONNECTING:
+                tvStatus.setText("CONNECTING...");
+                tvStatus.setTextColor(Color.parseColor("#FF9800")); // Orange
+                connectionIndicator.setBackgroundResource(R.drawable.circle_red);
+                connectionHelper.setText("Please wait...");
+                break;
+            case Constants.STATE_DISCONNECTED:
+            default:
+                tvStatus.setText("DISCONNECTED");
+                tvStatus.setTextColor(Color.parseColor("#F44336")); // Red
+                connectionIndicator.setBackgroundResource(R.drawable.circle_red);
+                connectionHelper.setText("Tap Connect to pair");
+                break;
         }
     }
     
@@ -444,10 +509,15 @@ public class MainActivity extends AppCompatActivity {
     }
     
     private void cleanupResources() {
+        // case connected ->disc
         if (bluetoothService != null) {
             bluetoothService.disconnect();
         }
-        viewModel.cleanupResources();
+        
+        // cleanup
+        if (bluetoothManager != null) {
+            bluetoothManager.cleanup();
+        }
     }
 
     private void checkNotificationPermission() {
@@ -489,5 +559,149 @@ public class MainActivity extends AppCompatActivity {
             })
             .setNegativeButton("Not Now", null)
             .show();
+    }
+
+    /**
+     * Setup secret gestures for demo control
+     */
+    private void setupDemoGestures() {
+        LinearLayout headerLayout = findViewById(R.id.header_layout);
+        
+        // triple tap on logo will continue later
+        headerLayout.setOnClickListener(v -> {
+            long currentTime = System.currentTimeMillis();
+            // case more than one sec apart taps reset count
+            if (currentTime - lastLogoTapTime > 1000) {
+                logoTapCount = 0;
+            }
+            
+            logoTapCount++;
+            lastLogoTapTime = currentTime;
+            
+            // triple tap detected
+            if (logoTapCount >= 3) {
+                logoTapCount = 0;
+                triggerDemoConnectionError();
+            }
+        });
+        
+        // swipe for treshold alert
+        gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+            private static final int SWIPE_THRESHOLD = 100;
+            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+            
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                try {
+                    float diffY = e2.getY() - e1.getY();
+                    
+                    // Swipe down detected
+                    if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD && diffY > 0) {
+                        triggerDemoThresholdAlert();
+                        return true;
+                    }
+                } catch (Exception e) {
+                    // ignore
+                }
+                return false;
+            }
+        });
+        
+        // long press
+        findViewById(R.id.card_readings).setOnLongClickListener(v -> {
+            clearDemoDatabase();
+            return true;
+        });
+    }
+    
+    /**
+     * trigger a sim connection error for demo 1 only
+     */
+    private void triggerDemoConnectionError() {
+        if (bluetoothService != null && viewModel.isConnected()) {
+            // Vibrate to acknowledge the gesture
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(100);
+            }
+            
+            showToast("Simulating connection error...");
+            viewModel.handleError("Demo: Simulated connection error");
+            bluetoothService.disconnect();
+        }
+    }
+    
+    /**
+     * trigger a sim threshold alert demo 1
+     */
+    private void triggerDemoThresholdAlert() {
+        if (bluetoothService != null) {
+            // Vibrate to acknowledge the gesture
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(100);
+            }
+            
+            showToast("Simulating threshold breach...");
+            
+            // Simulate both dust and noise threshold breaches
+            bluetoothService.forceGenerateTestData();
+        }
+    }
+    
+    /**
+     * clear database for demo
+     */
+    private void clearDemoDatabase() {
+        if (databaseHelper != null) {
+            // Vibrate to acknowledge the gesture
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(200);
+            }
+            
+            showToast("Clearing database...");
+            databaseHelper.clearAllData();
+        }
+    }
+
+    /**
+     * request exceptions from battery optimization
+     */
+    private void requestBatteryOptimizationException() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+            if (pm != null && !pm.isIgnoringBatteryOptimizations(getPackageName())) {
+                try {
+                    Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                    intent.setData(Uri.parse("package:" + getPackageName()));
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Log.e(Constants.TAG_MAIN, "Failed to request battery optimization exception: " + e.getMessage());
+                }
+            }
+        }
+    }
+
+    /**
+     * stress test with high data run
+     */
+    private void runStressTest() {
+        // enable test mode
+        if (bluetoothService != null && !bluetoothService.isTestModeEnabled()) {
+            bluetoothService.setTestMode(true);
+        }
+        
+        if (bluetoothService != null) {
+            showToast("Starting stress test: 10 readings/sec for 30 seconds");
+            
+            // 30 sec burts test 10 reading per sec
+            bluetoothService.runBurstTest(30, 10);
+        } else {
+            showToast("Error: BluetoothService not initialized");
+        }
     }
 }

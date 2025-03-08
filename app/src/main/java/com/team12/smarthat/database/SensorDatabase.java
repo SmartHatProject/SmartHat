@@ -11,7 +11,7 @@ import com.team12.smarthat.models.SensorData;
 //room database config class
 //database version,entities,access point definition
 // ble case: will update our sensordata model
-@Database(entities = {SensorData.class}, version = 1)
+@Database(entities = {SensorData.class}, version = 2, exportSchema = false)
 public abstract class SensorDatabase extends RoomDatabase {
 public abstract SensorDataDao sensorDataDao(); // dao interface
 

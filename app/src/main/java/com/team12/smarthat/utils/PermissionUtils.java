@@ -38,7 +38,7 @@ requiredPermissions.add(Manifest.permission.BLUETOOTH);
         }
 
 // not checking location permissions here anymore handled separately in MainActivity
-// for case "while using app" support
+
 
 //android 13+ api 33+
 

@@ -45,7 +45,7 @@ public class ThresholdBreachAdapter extends RecyclerView.Adapter<ThresholdBreach
         SensorData data = breaches.get(position);
         boolean isDustSensor = data.getSensorType().equals("dust");
         
-        // Configure icon based on sensor type
+        // icon
         holder.ivSensorIcon.setImageResource(
             isDustSensor ? android.R.drawable.ic_menu_compass : android.R.drawable.ic_lock_silent_mode_off
         );
@@ -55,17 +55,17 @@ public class ThresholdBreachAdapter extends RecyclerView.Adapter<ThresholdBreach
             )
         );
         
-        // Format sensor type
+        // sensor type
         String sensorTypeText = isDustSensor ? "Dust Sensor" : "Noise Sensor";
         holder.tvSensorType.setText(sensorTypeText);
         
-        // Format sensor value with unit
+        // val & unit
         String valueWithUnit = isDustSensor
                 ? String.format(Locale.getDefault(), "%.1f µg/m³", data.getValue())
                 : String.format(Locale.getDefault(), "%.1f dB", data.getValue());
         holder.tvSensorValue.setText(valueWithUnit);
         
-        // Format timestamp
+        //timestamp
         String formattedDate = dateFormat.format(new Date(data.getTimestamp()));
         holder.tvTimestamp.setText(formattedDate);
     }
