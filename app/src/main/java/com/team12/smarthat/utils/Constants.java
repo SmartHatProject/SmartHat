@@ -12,11 +12,11 @@ public class Constants {
     
 
     //UUIDS UPDATE WHEN HW READY
-    public static final UUID SERVICE_UUID = UUID.fromString("4fafc201-1fb5-459e-8fcc-c5c9c331914b");
+    public static final UUID SERVICE_UUID = UUID.fromString("12345678-1234-5678-1234-56789abcdef0");
     
     // charuuids for sensor data
-    public static final UUID DUST_CHARACTERISTIC_UUID = UUID.fromString("beb5483e-36e1-4688-b7f5-ea07361b26a8"); // Dust sensor readings (µg/m³)
-    public static final UUID NOISE_CHARACTERISTIC_UUID = UUID.fromString("beb5483e-36e1-4688-b7f5-ea07361b26a9"); // Noise sensor readings (dB)
+    public static final UUID DUST_CHARACTERISTIC_UUID = UUID.fromString("dcba4321-8765-4321-8765-654321fedcba"); // Dust sensor readings (µg/m³)
+    public static final UUID SOUND_CHARACTERISTIC_UUID = UUID.fromString("abcd1234-5678-1234-5678-abcdef123456"); // Sound sensor readings (dB)
     
     // notification enable uuid
     public static final UUID CLIENT_CONFIG_DESCRIPTOR_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
