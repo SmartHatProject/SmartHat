@@ -17,6 +17,9 @@
     <!-- Notifications (Android 13+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     
+    <!-- Vibration for alerts -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    
     <!-- BLE feature required -->
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
 
