@@ -505,6 +505,94 @@ public class MainActivity extends AppCompatActivity {
         } else if (sensorType.equalsIgnoreCase("noise") && value > Constants.NOISE_THRESHOLD) {
             notificationUtils.sendAlert("Noise Warning", 
                     String.format("Noise level (%.2f dB) exceeds threshold", value));
+            
+            // Also check OSHA exposure standards for noise
+            checkOSHANoiseExposure(value);
+        }
+    }
+    
+    /**
+     * Tracks and checks noise exposure according to OSHA standards
+     * Based on the ESP32 implementation from the hardware team
+     * @param currentDB The current noise level in dB
+     */
+    private long exposureStartTime = 0;  // Start time of exposure
+    
+    private void checkOSHANoiseExposure(float currentDB) {
+        // Check if the current dB level exceeds any OSHA threshold
+        for (int i = 0; i < Constants.OSHA_NOISE_LEVELS.length; i++) {
+            if (currentDB >= Constants.OSHA_NOISE_LEVELS[i]) {
+                // Start or continue exposure timer
+                if (exposureStartTime == 0) {
+                    exposureStartTime = System.currentTimeMillis();  // Start the timer
+                    Log.d(Constants.TAG_MAIN, "OSHA exposure timer started");
+                }
+
+                // Calculate elapsed time
+                long elapsedTime = System.currentTimeMillis() - exposureStartTime;
+
+                // Check if the exposure time exceeds the permissible limit
+                if (elapsedTime >= Constants.OSHA_EXPOSURE_TIMES[i]) {
+                    triggerOSHAAlert(Constants.OSHA_NOISE_LEVELS[i], Constants.OSHA_EXPOSURE_TIMES[i]);
+                    exposureStartTime = 0;  // Reset the timer
+                    break;
+                }
+            }
+        }
+
+        // Reset the timer if the noise level drops below all thresholds
+        if (currentDB < Constants.OSHA_NOISE_LEVELS[0] && exposureStartTime != 0) {
+            exposureStartTime = 0;  // Reset the timer
+            Log.d(Constants.TAG_MAIN, "OSHA exposure timer reset");
+        }
+    }
+    
+    /**
+     * Triggers a notification alert for OSHA noise level standards
+     * @param dBLevel The dB level that was exceeded
+     * @param permissibleTime The permissible exposure time in milliseconds
+     */
+    private void triggerOSHAAlert(float dBLevel, long permissibleTime) {
+        // Convert milliseconds to a human-readable format
+        String timeString = formatExposureTime(permissibleTime);
+        
+        // Trigger an alert
+        String title = "OSHA Noise Exposure Alert";
+        String message = String.format("Noise level exceeded %.0f dB for %s! Move to a quieter environment immediately.", 
+                                       dBLevel, timeString);
+        
+        notificationUtils.sendAlert(title, message);
+        
+        // Also vibrate the phone to ensure the alert is noticed
+        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        if (vibrator != null && vibrator.hasVibrator()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                vibrator.vibrate(1000);
+            }
+        }
+    }
+    
+    /**
+     * Formats milliseconds into a human-readable time string
+     * @param millis Time in milliseconds
+     * @return Formatted time string (e.g., "2 hours 30 minutes")
+     */
+    private String formatExposureTime(long millis) {
+        long seconds = millis / 1000;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        
+        minutes %= 60;
+        
+        if (hours > 0) {
+            return String.format("%d hour%s %d minute%s", 
+                hours, hours == 1 ? "" : "s", 
+                minutes, minutes == 1 ? "" : "s");
+        } else {
+            return String.format("%d minute%s", 
+                minutes, minutes == 1 ? "" : "s");
         }
     }
     
