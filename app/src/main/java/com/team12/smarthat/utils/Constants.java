@@ -12,11 +12,11 @@ public class Constants {
     
 
     //UUIDS UPDATE WHEN HW READY
-    public static final UUID SERVICE_UUID = UUID.fromString("4fafc201-1fb5-459e-8fcc-c5c9c331914b");
+    public static final UUID SERVICE_UUID = UUID.fromString("12345678-1234-5678-1234-56789abcdef0");
     
     // charuuids for sensor data
-    public static final UUID DUST_CHARACTERISTIC_UUID = UUID.fromString("beb5483e-36e1-4688-b7f5-ea07361b26a8"); // Dust sensor readings (µg/m³)
-    public static final UUID NOISE_CHARACTERISTIC_UUID = UUID.fromString("beb5483e-36e1-4688-b7f5-ea07361b26a9"); // Noise sensor readings (dB)
+    public static final UUID DUST_CHARACTERISTIC_UUID = UUID.fromString("dcba4321-8765-4321-8765-654321fedcba"); // Dust sensor readings (µg/m³)
+    public static final UUID SOUND_CHARACTERISTIC_UUID = UUID.fromString("abcd1234-5678-1234-5678-abcdef123456"); // Sound sensor readings (dB)
     
     // notification enable uuid
     public static final UUID CLIENT_CONFIG_DESCRIPTOR_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
@@ -46,6 +46,20 @@ public class Constants {
     public static final float DUST_PM25_THRESHOLD = 50.0f; // microg/m^3
     public static final float NOISE_THRESHOLD = 85.0f; // dB
     public static final float DUST_THRESHOLD = DUST_PM25_THRESHOLD;
+    
+    // OSHA noise exposure standards
+    public static final float[] OSHA_NOISE_LEVELS = {90.0f, 92.0f, 95.0f, 97.0f, 100.0f, 102.0f, 105.0f, 110.0f, 115.0f};
+    public static final long[] OSHA_EXPOSURE_TIMES = {
+        8 * 60 * 60 * 1000,  // 8 hours in milliseconds
+        6 * 60 * 60 * 1000,  // 6 hours
+        4 * 60 * 60 * 1000,  // 4 hours
+        3 * 60 * 60 * 1000,  // 3 hours
+        2 * 60 * 60 * 1000,  // 2 hours
+        1 * 60 * 60 * 1000 + 30 * 60 * 1000,  // 1.5 hours
+        1 * 60 * 60 * 1000,  // 1 hour
+        30 * 60 * 1000,      // 30 minutes
+        15 * 60 * 1000       // 15 minutes
+    };
     
     // sensor value ranges (for validation)
     public static final float DUST_MIN_VALUE = 0.0f;

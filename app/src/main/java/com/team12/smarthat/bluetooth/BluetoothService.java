@@ -267,15 +267,15 @@ public class BluetoothService {
     private void enableSensorNotifications(BluetoothGatt gatt, BluetoothGattService service) {
         // get characteristics
         BluetoothGattCharacteristic dustChar = service.getCharacteristic(Constants.DUST_CHARACTERISTIC_UUID);
-        BluetoothGattCharacteristic noiseChar = service.getCharacteristic(Constants.NOISE_CHARACTERISTIC_UUID);
+        BluetoothGattCharacteristic soundChar = service.getCharacteristic(Constants.SOUND_CHARACTERISTIC_UUID);
         
         // enable notifications for both sensors
         if (dustChar != null) {
             enableCharacteristicNotification(gatt, dustChar);
         }
         
-        if (noiseChar != null) {
-            enableCharacteristicNotification(gatt, noiseChar);
+        if (soundChar != null) {
+            enableCharacteristicNotification(gatt, soundChar);
         }
     }
     
@@ -496,7 +496,7 @@ public class BluetoothService {
         String characteristicName = "Unknown";
         if (characteristic.getUuid().equals(Constants.DUST_CHARACTERISTIC_UUID)) {
             characteristicName = "Dust";
-        } else if (characteristic.getUuid().equals(Constants.NOISE_CHARACTERISTIC_UUID)) {
+        } else if (characteristic.getUuid().equals(Constants.SOUND_CHARACTERISTIC_UUID)) {
             characteristicName = "Noise";
         }
         
@@ -720,7 +720,7 @@ public class BluetoothService {
         
         // sim missing fields
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            simulateCharacteristicData(Constants.NOISE_CHARACTERISTIC_UUID, "{\"messageType\":\"SOUND_SENSOR_DATA\"}");
+            simulateCharacteristicData(Constants.SOUND_CHARACTERISTIC_UUID, "{\"messageType\":\"SOUND_SENSOR_DATA\"}");
         }, 500);
     }
     
@@ -744,7 +744,7 @@ public class BluetoothService {
             );
             
             simulateCharacteristicData(
-                Constants.NOISE_CHARACTERISTIC_UUID,
+                Constants.SOUND_CHARACTERISTIC_UUID,
                 "{\"messageType\":\"" + Constants.MESSAGE_TYPE_SOUND + "\",\"data\":75.8,\"timeStamp\":123456790}"
             );
             
@@ -755,7 +755,7 @@ public class BluetoothService {
             );
             
             simulateCharacteristicData(
-                Constants.NOISE_CHARACTERISTIC_UUID,
+                Constants.SOUND_CHARACTERISTIC_UUID,
                 "78.5"
             );
             
@@ -766,7 +766,7 @@ public class BluetoothService {
             );
             
             simulateCharacteristicData(
-                Constants.NOISE_CHARACTERISTIC_UUID,
+                Constants.SOUND_CHARACTERISTIC_UUID,
                 "{\"noise\":80.1}"
             );
             
@@ -777,7 +777,7 @@ public class BluetoothService {
             );
             
             simulateCharacteristicData(
-                Constants.NOISE_CHARACTERISTIC_UUID,
+                Constants.SOUND_CHARACTERISTIC_UUID,
                 String.valueOf(Constants.NOISE_THRESHOLD + 5.0f)
             );
             
@@ -811,7 +811,7 @@ public class BluetoothService {
             String sensorType;
             if (characteristicUuid.equals(Constants.DUST_CHARACTERISTIC_UUID)) {
                 sensorType = "dust";
-            } else if (characteristicUuid.equals(Constants.NOISE_CHARACTERISTIC_UUID)) {
+            } else if (characteristicUuid.equals(Constants.SOUND_CHARACTERISTIC_UUID)) {
                 sensorType = "noise";
             } else {
                 Log.e(Constants.TAG_BLUETOOTH, "Unknown characteristic UUID: " + characteristicUuid);
@@ -991,20 +991,20 @@ public class BluetoothService {
      */
     private void validateHardwareSpecs() {
         // service uuid
-        if (!Constants.SERVICE_UUID.toString().equals("4fafc201-1fb5-459e-8fcc-c5c9c331914b")) {
+        if (!Constants.SERVICE_UUID.toString().equals("12345678-1234-5678-1234-56789abcdef0")) {
             Log.e(Constants.TAG_BLUETOOTH, "ERROR: SERVICE_UUID mismatch with hardware specs!");
             throw new RuntimeException("SERVICE_UUID mismatch with hardware specs!");
         }
         
         // characteristic uuid
-        if (!Constants.DUST_CHARACTERISTIC_UUID.toString().equals("beb5483e-36e1-4688-b7f5-ea07361b26a8")) {
+        if (!Constants.DUST_CHARACTERISTIC_UUID.toString().equals("dcba4321-8765-4321-8765-654321fedcba")) {
             Log.e(Constants.TAG_BLUETOOTH, "ERROR: DUST_CHARACTERISTIC_UUID mismatch with hardware specs!");
             throw new RuntimeException("DUST_CHARACTERISTIC_UUID mismatch with hardware specs!");
         }
         
-        if (!Constants.NOISE_CHARACTERISTIC_UUID.toString().equals("beb5483e-36e1-4688-b7f5-ea07361b26a9")) {
-            Log.e(Constants.TAG_BLUETOOTH, "ERROR: NOISE_CHARACTERISTIC_UUID mismatch with hardware specs!");
-            throw new RuntimeException("NOISE_CHARACTERISTIC_UUID mismatch with hardware specs!");
+        if (!Constants.SOUND_CHARACTERISTIC_UUID.toString().equals("abcd1234-5678-1234-5678-abcdef123456")) {
+            Log.e(Constants.TAG_BLUETOOTH, "ERROR: SOUND_CHARACTERISTIC_UUID mismatch with hardware specs!");
+            throw new RuntimeException("SOUND_CHARACTERISTIC_UUID mismatch with hardware specs!");
         }
         
         Log.d(Constants.TAG_BLUETOOTH, "Hardware specs validation successful");
