@@ -27,26 +27,7 @@ import org.json.JSONObject;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-/**
- * BluetoothService handles all BLE communication with the SmartHat device.
- * 
- * Expected BLE Service and Characteristics:
- * - Service UUID: 4fafc201-1fb5-459e-8fcc-c5c9c331914b
- * - Dust Characteristic UUID: beb5483e-36e1-4688-b7f5-ea07361b26a8
- * - Noise Characteristic UUID: beb5483e-36e1-4688-b7f5-ea07361b26a9
- * 
- * Supported Data Formats from ESP32:
- * 
- * 1. Simple Format (recommended for efficiency):
- *    - Plain numeric string: "42.5"
- * 
- * 2. JSON Formats (all supported):
- *    - Hardware team format: {"messageType": "DUST_SENSOR_DATA", "data": 42.5, "timeStamp": 123456789}
- *    - Simple sensor format: {"sensor": "dust", "value": 42.5}
- *    - Type format: {"type": "dust", "reading": 42.5}
- *    - Direct property format: {"dust": 42.5} or {"noise": 42.5}
- *    - Value-only format (using characteristic UUID to determine type): {"value": 42.5}
- */
+
 public class BluetoothService {
     // ble connection
     private BluetoothGatt bluetoothGatt;
@@ -82,7 +63,7 @@ public class BluetoothService {
                 }
                 
                 // Check if device is our SmartHat
-                if (deviceName != null && deviceName.contains("SmartHat")) {
+                if (deviceName != null && (deviceName.contains("SmartHat") || deviceName.contains("ESP32_BLE_Device") || deviceName.contains("ESP32"))) {
                     Log.d(Constants.TAG_BLUETOOTH, "Found device: " + deviceName);
                     
                     if (ContextCompat.checkSelfPermission(bluetoothManager.getContext(), 
@@ -265,145 +246,161 @@ public class BluetoothService {
      * enable notif for sensor vlaues
      */
     private void enableSensorNotifications(BluetoothGatt gatt, BluetoothGattService service) {
-        // get characteristics
-        BluetoothGattCharacteristic dustChar = service.getCharacteristic(Constants.DUST_CHARACTERISTIC_UUID);
-        BluetoothGattCharacteristic soundChar = service.getCharacteristic(Constants.SOUND_CHARACTERISTIC_UUID);
-        
-        // enable notifications for both sensors
-        if (dustChar != null) {
-            enableCharacteristicNotification(gatt, dustChar);
-        }
-        
-        if (soundChar != null) {
-            enableCharacteristicNotification(gatt, soundChar);
+        try {
+            // Get characteristics
+            BluetoothGattCharacteristic soundChar = service.getCharacteristic(Constants.SOUND_CHARACTERISTIC_UUID);
+            BluetoothGattCharacteristic dustChar = service.getCharacteristic(Constants.DUST_CHARACTERISTIC_UUID);
+            
+            // Enable notifications for sound sensor
+            if (soundChar != null) {
+                boolean success = enableCharacteristicNotification(gatt, soundChar);
+                Log.d(Constants.TAG_BLUETOOTH, "Sound notification setup " + (success ? "succeeded" : "failed"));
+                if (!success) {
+                    viewModel.handleError("Failed to set up sound sensor notifications");
+                }
+            } else {
+                Log.e(Constants.TAG_BLUETOOTH, "Sound characteristic not found");
+                viewModel.handleError("Device missing sound sensor capability");
+            }
+            
+            // Enable notifications for dust sensor
+            if (dustChar != null) {
+                boolean success = enableCharacteristicNotification(gatt, dustChar);
+                Log.d(Constants.TAG_BLUETOOTH, "Dust notification setup " + (success ? "succeeded" : "failed"));
+                if (!success) {
+                    viewModel.handleError("Failed to set up dust sensor notifications");
+                }
+            } else {
+                Log.e(Constants.TAG_BLUETOOTH, "Dust characteristic not found");
+                viewModel.handleError("Device missing dust sensor capability");
+            }
+        } catch (Exception e) {
+            Log.e(Constants.TAG_BLUETOOTH, "Error enabling sensor notifications: " + e.getMessage());
+            viewModel.handleError("Error setting up sensor notifications");
         }
     }
     
     /**
-     * helper to enable notifications 
+     * Enable notifications for a characteristic
+     * @return true if successful, false otherwise
      */
-    private void enableCharacteristicNotification(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+    private boolean enableCharacteristicNotification(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
         try {
-            
             if (ContextCompat.checkSelfPermission(bluetoothManager.getContext(), 
                     Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                Log.e(Constants.TAG_BLUETOOTH, "bluetooth connect permission not granted for enabling notifications");
-                viewModel.handleError("permission issue when enabling sensor notifications");
-                return;
+                Log.e(Constants.TAG_BLUETOOTH, "Bluetooth connect permission not granted for enabling notifications");
+                return false;
             }
             
-            // enable notification
-            gatt.setCharacteristicNotification(characteristic, true);
+            // Try to enable notifications
+            boolean success = gatt.setCharacteristicNotification(characteristic, true);
             
-            // ble config descriptor
-            BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
-                    Constants.CLIENT_CONFIG_DESCRIPTOR_UUID);
-            
-            if (descriptor != null) {
-
-                descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                gatt.writeDescriptor(descriptor);
+            if (success) {
+                Log.d(Constants.TAG_BLUETOOTH, "Notification enabled for characteristic: " + characteristic.getUuid());
+                
+                // Write to the descriptor to enable notifications
+                BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
+                        Constants.CLIENT_CONFIG_DESCRIPTOR_UUID);
+                
+                if (descriptor != null) {
+                    descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                    return gatt.writeDescriptor(descriptor);
+                } else {
+                    Log.e(Constants.TAG_BLUETOOTH, "Client config descriptor not found");
+                    return false;
+                }
+            } else {
+                Log.e(Constants.TAG_BLUETOOTH, "Failed to enable notifications for characteristic: " + characteristic.getUuid());
+                return false;
             }
         } catch (SecurityException e) {
-            Log.e(Constants.TAG_BLUETOOTH, "security exception while enabling notifications: " + e.getMessage());
-            viewModel.handleError("permission denied for bluetooth operation");
+            Log.e(Constants.TAG_BLUETOOTH, "Security exception while enabling notifications: " + e.getMessage());
+            return false;
         } catch (Exception e) {
-            Log.e(Constants.TAG_BLUETOOTH, "error enabling notifications: " + e.getMessage());
-            viewModel.handleError("error setting up sensor notifications");
-        }  
+            Log.e(Constants.TAG_BLUETOOTH, "Error enabling notifications: " + e.getMessage());
+            return false;
+        }
     }
     
     /**
-     *  support for multiple json formats 
-     * @param rawData the json string to parse
-     * @param fallbackSensorType the sensor type to use if not specified in json
+     * Process data in the recommended JSON format from the hardware team
      */
     private void processJsonData(String rawData, String fallbackSensorType) throws JSONException {
-        // validate json
-        if (!validateSensorJson(rawData)) {
-            Log.e(Constants.TAG_BLUETOOTH, "Invalid JSON format: " + rawData);
-            viewModel.handleError("Invalid sensor data format received");
-            return;
-        }
-        
-        // parse json string
+        // Validate JSON
         JSONObject json = new JSONObject(rawData);
-        //ATTENTION ?!:
-        // hw team's format -> {"messageType": "DUST_SENSOR_DATA", "data": 25.4, "timeStamp": 123456789}
+        Log.d(Constants.TAG_BLUETOOTH, "Processing JSON data: " + rawData);
+        
+        // Parse according to hardware team's format {"messageType": "SOUND_SENSOR_DATA", "data": 75.8, "timeStamp": 123456789}
         if (json.has("messageType") && json.has("data")) {
             String messageType = json.getString("messageType");
             float value = (float) json.getDouble("data");
             
-            //reading range validations
+            // Validate value is within acceptable range
             if (!isValidSensorValue(messageType, value)) {
                 Log.w(Constants.TAG_BLUETOOTH, "Ignoring out-of-range sensor value: " + value + " for type " + messageType);
                 return;
             }
             
-            // their message types -> our sensor types
+            // Determine sensor type based on message type
             String sensorType;
             if (messageType.equals(Constants.MESSAGE_TYPE_DUST)) {
                 sensorType = "dust";
             } else if (messageType.equals(Constants.MESSAGE_TYPE_SOUND)) {
                 sensorType = "noise";
             } else {
-                // case unknown type
-                Log.w(Constants.TAG_BLUETOOTH, "Unknown messageType received: " + messageType);
+                Log.w(Constants.TAG_BLUETOOTH, "Unknown message type: " + messageType);
                 return;
             }
             
+            // Create data object and process
             SensorData data = new SensorData(sensorType, value);
             viewModel.handleNewData(data);
-            return;
+            
+            // Log threshold crossing
+            if (sensorType.equals("dust") && value > Constants.DUST_THRESHOLD) {
+                Log.d(Constants.TAG_BLUETOOTH, "Dust threshold exceeded: " + value);
+            } else if (sensorType.equals("noise") && value > Constants.NOISE_THRESHOLD) {
+                Log.d(Constants.TAG_BLUETOOTH, "Noise threshold exceeded: " + value);
+            }
+        } else {
+            Log.w(Constants.TAG_BLUETOOTH, "JSON missing required fields: " + rawData);
         }
-        //ATTENTION WILL finalize when hw code ready
-        // support multiple json formats from the arduino
-        //might remove/change when sensor repo is ready
-        // format 1 -> {"sensor": "dust", "value": 25.4}
-        if (json.has("sensor") && json.has("value")) {
-            SensorData data = new SensorData(
-                    json.getString("sensor"),
-                    (float) json.getDouble("value")
-            );
-            viewModel.handleNewData(data);
-            return;
-        }
+    }
+
+    @Override
+    public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+        String value = characteristic.getStringValue(0);
+        Log.d(Constants.TAG_BLUETOOTH, "Characteristic notification received: " + characteristic.getUuid() + " = " + value);
         
-        // format 2 -> {"dust": 25.4} or {"noise": 65.7}
-        if (json.has("dust")) {
-            SensorData data = new SensorData("dust", (float) json.getDouble("dust"));
-            viewModel.handleNewData(data);
-            return;
+        try {
+            // Process as JSON
+            processJsonData(value, null);
+        } catch (JSONException e) {
+            Log.e(Constants.TAG_BLUETOOTH, "Error processing JSON data: " + e.getMessage());
+            viewModel.handleError("Invalid data format received");
         }
-        
-        if (json.has("noise")) {
-            SensorData data = new SensorData("noise", (float) json.getDouble("noise"));
-            viewModel.handleNewData(data);
-            return;
+    }
+    
+    @Override
+    public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+        if (status == BluetoothGatt.GATT_SUCCESS) {
+            Log.d(Constants.TAG_BLUETOOTH, "Services discovered successfully");
+            
+            // Get the service
+            BluetoothGattService service = gatt.getService(Constants.SERVICE_UUID);
+            if (service != null) {
+                Log.d(Constants.TAG_BLUETOOTH, "Found our custom service");
+                
+                // Enable notifications for both characteristics
+                enableSensorNotifications(gatt, service);
+            } else {
+                Log.e(Constants.TAG_BLUETOOTH, "Custom service not found");
+                viewModel.handleError("Device is not a compatible SmartHat");
+            }
+        } else {
+            Log.e(Constants.TAG_BLUETOOTH, "Service discovery failed with status: " + status);
+            viewModel.handleError("Failed to discover services");
         }
-        
-        // format 3 -> {"type": "dust", "reading": 25.4}
-        if (json.has("type") && json.has("reading")) {
-            SensorData data = new SensorData(
-                    json.getString("type"),
-                    (float) json.getDouble("reading")
-            );
-            viewModel.handleNewData(data);
-            return;
-        }
-        
-        // format 4 -> {"value": 25.4} - use fallback sensor type from characteristic uuid
-        if (json.has("value")) {
-            SensorData data = new SensorData(
-                    fallbackSensorType,
-                    (float) json.getDouble("value")
-            );
-            viewModel.handleNewData(data);
-            return;
-        }
-        
-        //case the json format wasn't recognized
-        throw new JSONException("unrecognized json format: " + rawData);
     }
     
     /**
