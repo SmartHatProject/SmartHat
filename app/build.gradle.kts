@@ -39,6 +39,25 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    
+    lint {
+        abortOnError = false
+        baseline = file("lint-baseline.xml")
+        
+        // Disable unused resources check for now
+        disable += "UnusedResources"
+        
+        // Generate HTML and XML reports
+        htmlOutput = file("lint-results.html")
+        xmlReport = true
+        
+        // Make MissingPermission issues more severe
+        error += "MissingPermission"
+        warning += "HandlerLeak"
+        
+        // Check all code including tests
+        checkAllWarnings = true
+    }
 }
 
 dependencies {

@@ -12,6 +12,8 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.team12.smarthat.models.SensorData;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +26,7 @@ public class NotificationUtils {
     
     //alert cooldown periods
     private static final long ALERT_COOLDOWN = 30000; // 30s sametype
-    private static final long GENERAL_COOLDOWN = 5000; // 5s
+    private static final long GENERAL_COOLDOWN = 10000; // 10s
 
     public NotificationUtils(Context context) {
         this.context = context;
@@ -161,5 +163,31 @@ public class NotificationUtils {
      */
     public void sendAlert(String title, String message) {
         sendThresholdAlert(title, message);
+    }
+
+    /**
+     * Show an alert for dust sensor threshold breach
+     * @param data the dust sensor data that triggered the alert
+     */
+    public void showDustAlert(SensorData data) {
+        // Show notification for both real and test data
+        float value = data.getValue();
+        String title = "Dust Alert";
+        String message = String.format("Dust level of %.1f µg/m³ exceeds safe limit (%d µg/m³)", 
+                                      value, (int)Constants.DUST_THRESHOLD);
+        sendAlert(title, message);
+    }
+
+    /**
+     * Show an alert for noise sensor threshold breach
+     * @param data the noise sensor data that triggered the alert
+     */
+    public void showNoiseAlert(SensorData data) {
+        // Show notification for both real and test data
+        float value = data.getValue();
+        String title = "Noise Alert";
+        String message = String.format("Noise level of %.1f dB exceeds safe limit (%d dB)", 
+                                      value, (int)Constants.NOISE_THRESHOLD);
+        sendAlert(title, message);
     }
 }

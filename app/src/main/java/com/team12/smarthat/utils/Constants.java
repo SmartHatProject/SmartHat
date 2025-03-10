@@ -7,25 +7,29 @@ import java.util.UUID;
 public class Constants {
     public static final boolean DEV_MODE = true;
     
-    // bluetooth setup
-    public static final String ESP32_MAC_ADDRESS = "00:11:22:33:44:55"; // gotta get the real one from rasham
+    // Enable this to log all available services/characteristics when the exact UUIDs aren't found
+    // This can help identify the correct UUIDs used by your ESP32
+    public static final boolean ENABLE_SERVICE_DISCOVERY_DEBUG = true;
     
-
-    //UUIDS UPDATE WHEN HW READY
+    // SmartHat device MAC address - used as fallback when UUID-based scanning doesn't find a device
+    // IMPORTANT: UUID-based scanning is now the primary method for device discovery
+    public static final String ESP32_MAC_ADDRESS = "EC:94:CB:4D:91:E2";
+    
+    // BLE Service and Characteristic UUIDs - DEVICE DISCOVERY IS NOW BASED ON SERVICE_UUID
+    // NOTE: These must match exactly what is used on your ESP32 device
+    // The app will scan for devices advertising this specific service UUID
     public static final UUID SERVICE_UUID = UUID.fromString("12345678-1234-5678-1234-56789abcdef0");
+    public static final UUID DUST_CHARACTERISTIC_UUID = UUID.fromString("dcba4321-8765-4321-8765-654321fedcba");
+    public static final UUID SOUND_CHARACTERISTIC_UUID = UUID.fromString("abcd1234-5678-1234-5678-abcdef123456");
     
-    // charuuids for sensor data
-    public static final UUID DUST_CHARACTERISTIC_UUID = UUID.fromString("dcba4321-8765-4321-8765-654321fedcba"); // Dust sensor readings (µg/m³)
-    public static final UUID SOUND_CHARACTERISTIC_UUID = UUID.fromString("abcd1234-5678-1234-5678-abcdef123456"); // Sound sensor readings (dB)
-    
-    // notification enable uuid
+    // Standard Client Configuration Descriptor UUID for enabling notifications
     public static final UUID CLIENT_CONFIG_DESCRIPTOR_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
     
     // ble constants
-    public static final int SCAN_PERIOD = 10000; // 10sec scan timeout
-    public static final int CONNECTION_TIMEOUT = 10000; // 10sec connection timeout
+    public static final long SCAN_PERIOD = 10000; // 10 seconds
+    public static final long CONNECTION_TIMEOUT = 8000; // 8 seconds (optimized for Pixel 4a)
+    public static final long RETRY_DELAY = 1000; // 1 second delay between retry attempts
     public static final int MAX_CONNECTION_RETRIES = 3;
-    public static final int RETRY_DELAY = 2000; // 2sec between retries
 
     // HW TYPE !!!!
     public static final String MESSAGE_TYPE_DUST = "DUST_SENSOR_DATA";
@@ -68,24 +72,22 @@ public class Constants {
     public static final float NOISE_MAX_VALUE = 140.0f;
 
     // connection states
-    public static final String STATE_CONNECTED = "CONNECTED";
-    public static final String STATE_DISCONNECTED = "DISCONNECTED";
-    public static final String STATE_CONNECTING = "CONNECTING"; // added for ble
+    public static final int STATE_DISCONNECTED = 0;
+    public static final int STATE_CONNECTING = 1;
+    public static final int STATE_CONNECTED = 2;
 
-    // permission codes
-    public static final int REQUEST_BLUETOOTH_PERMISSIONS = 101;
-    public static final int REQUEST_NOTIFICATION_PERMISSION = 102;
-    public static final int REQUEST_LOCATION_PERMISSION = 103; // needed for ble scan
+    // permission request codes
+    // Note: Location permission is also required for BLE scanning on most Android versions
+    public static final int REQUEST_BLUETOOTH_CONNECT = 999;
+    public static final int REQUEST_NOTIFICATION_PERMISSION = 998;
+    public static final int REQUEST_ENABLE_BT = 1;
 
     // log tags
     public static final String TAG_MAIN = "MainActivity";
     public static final String TAG_BLUETOOTH = "Bluetooth";
     public static final String TAG_DATABASE = "Database";
-    public static final String TAG_PERMISSIONS = "Permissions";
     
     // database constants
     public static final int MAX_DATABASE_RECORDS = 10000; // max records
     public static final long DATABASE_CLEANUP_INTERVAL = 86400000;
-    public static final int REQUEST_ENABLE_BT = 201;
-    public static final String INVALID_MAC = "Invalid MAC address";
 }

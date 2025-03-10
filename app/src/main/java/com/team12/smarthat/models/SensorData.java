@@ -6,6 +6,10 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "sensor_data")
 public class SensorData {
+    // Constants for data source
+    public static final String SOURCE_REAL = "REAL";
+    public static final String SOURCE_TEST = "TEST";
+    
     @PrimaryKey(autoGenerate = true)
     private int id;
 
@@ -13,6 +17,7 @@ public class SensorData {
     private float value;
     private long timestamp;
     private String metadata; // json string
+    private String source = SOURCE_REAL; // Default to real data
 
     public SensorData(String sensorType, float value) {
         this.sensorType = sensorType;
@@ -73,5 +78,29 @@ public class SensorData {
     
     public void setMetadata(String metadata) {
         this.metadata = metadata;
+    }
+    
+    /**
+     * Get the source of this data (real or test)
+     * @return The source identifier
+     */
+    public String getSource() {
+        return source;
+    }
+    
+    /**
+     * Set the source of this data
+     * @param source The source identifier (use SOURCE_REAL or SOURCE_TEST constants)
+     */
+    public void setSource(String source) {
+        this.source = source;
+    }
+    
+    /**
+     * Check if this data is from a test source
+     * @return true if test data, false if real data
+     */
+    public boolean isTestData() {
+        return SOURCE_TEST.equals(source);
     }
 }

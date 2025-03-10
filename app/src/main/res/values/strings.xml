@@ -1,4 +1,7 @@
 <resources>
+    <!-- App Name -->
+    <string name="app_name">SmartHat</string>
+    
     <!-- Connection Status -->
     <string name="bluetooth_required">Bluetooth is required</string>
     <string name="connecting">Connecting…</string>
@@ -6,6 +9,10 @@
     <string name="disconnected">Disconnected</string>
     <string name="connect">Connect</string>
     <string name="disconnect">Disconnect</string>
+    <string name="cancel">Cancel</string>
+    <string name="helper_connected">Receiving data</string>
+    <string name="helper_connecting">Please wait…</string>
+    <string name="helper_disconnected">Tap Connect to pair</string>
 
     <!-- Errors -->
     <string name="connection_timeout">Connection timed out</string>
