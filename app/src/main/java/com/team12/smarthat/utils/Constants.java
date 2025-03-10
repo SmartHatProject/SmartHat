@@ -90,4 +90,7 @@ public class Constants {
     // database constants
     public static final int MAX_DATABASE_RECORDS = 10000; // max records
     public static final long DATABASE_CLEANUP_INTERVAL = 86400000;
+    
+    // preferences constants
+    public static final String PREF_NOTIFICATIONS_ENABLED = "notifications_enabled";
 }

@@ -54,6 +54,12 @@ public class NotificationUtils {
 
         new Handler(Looper.getMainLooper()).post(() -> {
             try {
+                // First check if notifications are enabled in app preferences
+                if (!areNotificationsEnabled()) {
+                    Log.d(Constants.TAG_MAIN, "Alert suppressed because notifications are disabled: " + title);
+                    return;
+                }
+                
                 String alertType = getAlertTypeFromTitle(title);
                 if (!shouldShowAlert(alertType)) {
                     Log.d(Constants.TAG_MAIN, "Alert suppressed due to cooldown: " + alertType);
@@ -72,20 +78,16 @@ public class NotificationUtils {
                     .setDefaults(NotificationCompat.DEFAULT_ALL)
                     .build();
                 
-
-                if (NotificationManagerCompat.from(context).areNotificationsEnabled()) {
-                    try {
-
-                        recordAlertTime(alertType);
-                        // id notifications
-                        int notificationId = getNotificationIdForType(alertType);
-                        manager.notify(notificationId, notification);
-                        Log.d(Constants.TAG_MAIN, "Alert sent: " + title);
-                    } catch (SecurityException e) {
-                        Log.e(Constants.TAG_MAIN, "Notification permission denied: " + e.getMessage());
-                    } catch (Exception e) {
-                        Log.e(Constants.TAG_MAIN, "Failed to send notification: " + e.getMessage());
-                    }
+                try {
+                    recordAlertTime(alertType);
+                    // id notifications
+                    int notificationId = getNotificationIdForType(alertType);
+                    manager.notify(notificationId, notification);
+                    Log.d(Constants.TAG_MAIN, "Alert sent: " + title);
+                } catch (SecurityException e) {
+                    Log.e(Constants.TAG_MAIN, "Notification permission denied: " + e.getMessage());
+                } catch (Exception e) {
+                    Log.e(Constants.TAG_MAIN, "Failed to send notification: " + e.getMessage());
                 }
             } catch (Exception e) {
                 Log.e(Constants.TAG_MAIN, "Error in sendThresholdAlert: " + e.getMessage());
@@ -148,7 +150,7 @@ public class NotificationUtils {
      * @return notification id constant
      */
     private int getNotificationIdForType(String alertType) {
-        switch (alertType) {
+        switch (alertType.toLowerCase()) {
             case "dust":
                 return Constants.NOTIFICATION_ID_DUST;
             case "noise":
@@ -189,5 +191,31 @@ public class NotificationUtils {
         String message = String.format("Noise level of %.1f dB exceeds safe limit (%d dB)", 
                                       value, (int)Constants.NOISE_THRESHOLD);
         sendAlert(title, message);
+    }
+
+    /**
+     * Check if notifications are enabled in app preferences
+     * @return true if notifications are enabled, false otherwise
+     */
+    public boolean areNotificationsEnabled() {
+        // Check both system permission and app preference
+        boolean systemEnabled = NotificationManagerCompat.from(context).areNotificationsEnabled();
+        boolean appEnabled = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                .getBoolean(Constants.PREF_NOTIFICATIONS_ENABLED, true); // Default to enabled
+        
+        return systemEnabled && appEnabled;
+    }
+    
+    /**
+     * Set notification enabled/disabled state in app preferences
+     * @param enabled true to enable notifications, false to disable
+     */
+    public void setNotificationsEnabled(boolean enabled) {
+        context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                .edit()
+                .putBoolean(Constants.PREF_NOTIFICATIONS_ENABLED, enabled)
+                .apply();
+        
+        Log.d(Constants.TAG_MAIN, "Notifications " + (enabled ? "enabled" : "disabled") + " by user");
     }
 }

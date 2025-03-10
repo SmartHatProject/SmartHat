@@ -30,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.team12.smarthat.AppController;
 import com.team12.smarthat.R;
 import com.team12.smarthat.database.DatabaseHelper;
 import com.team12.smarthat.models.SensorData;
@@ -116,41 +117,67 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        // Set test mode checkbox state
         MenuItem testModeItem = menu.findItem(R.id.action_test_mode);
         if (testModeItem != null && bluetoothService != null) {
             testModeItem.setChecked(bluetoothService.isTestModeEnabled());
         }
+        
+        // Set notifications checkbox state
+        MenuItem notificationsItem = menu.findItem(R.id.action_notifications);
+        if (notificationsItem != null && notificationUtils != null) {
+            notificationsItem.setChecked(notificationUtils.areNotificationsEnabled());
+            // Update menu title based on current state
+            notificationsItem.setTitle(notificationsItem.isChecked() ? 
+                    "Disable Notifications" : "Enable Notifications");
+        }
+        
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        
         if (id == R.id.action_test_mode) {
-            boolean newState = !item.isChecked();
-            item.setChecked(newState);
-            
-            if (bluetoothService != null) {
-                if (newState) {
-
-                    enableFullTestMode();
-                } else {
-
-                    bluetoothService.setTestMode(false);
-                    
-                    // Reset UI
-                    showToast("Test mode disabled - Ready to connect to real device");
-                    tvTestMode.setVisibility(View.GONE);
-                    updateConnectionUI(Constants.STATE_DISCONNECTED);
-                }
+            // Toggle test mode
+            if (item.isChecked()) {
+                // Already checked, so uncheck and disable test mode
+                bluetoothService.setTestMode(false);
+                showToast("Test mode disabled");
+                tvTestMode.setVisibility(View.GONE);
+            } else {
+                // Not checked, so check and enable full test mode
+                enableFullTestMode();
+                showToast("Test mode enabled");
             }
+            return true;
+        } else if (id == R.id.action_test_formats) {
+            // Launch test data formats
+            bluetoothService.testDataFormats();
             return true;
         } else if (id == R.id.action_history) {
             // threshold history activity launch
             Intent historyIntent = new Intent(this, ThresholdHistoryActivity.class);
             startActivity(historyIntent);
             return true;
+        } else if (id == R.id.action_notifications) {
+            // Toggle notifications
+            boolean newState = !item.isChecked();
+            item.setChecked(newState);
+            
+            // Update notification state
+            if (notificationUtils != null) {
+                notificationUtils.setNotificationsEnabled(newState);
+                // Update menu title based on new state
+                item.setTitle(newState ? "Disable Notifications" : "Enable Notifications");
+                
+                // Show confirmation to user
+                showToast("Notifications " + (newState ? "enabled" : "disabled"));
+            }
+            return true;
         }
+        
         return super.onOptionsItemSelected(item);
     }
 
@@ -335,6 +362,14 @@ public class MainActivity extends AppCompatActivity {
         
         // Initialize notification utils
         notificationUtils = new NotificationUtils(this);
+        
+        // Initialize notification state from preferences (or default to enabled)
+        boolean notificationsEnabled = getSharedPreferences("app_prefs", MODE_PRIVATE)
+                .getBoolean(Constants.PREF_NOTIFICATIONS_ENABLED, true);
+        notificationUtils.setNotificationsEnabled(notificationsEnabled);
+        
+        // Initialize database (using application context to get the DatabaseHelper)
+        databaseHelper = ((AppController) getApplicationContext()).getDatabaseHelper();
     }
     // endregion
 
