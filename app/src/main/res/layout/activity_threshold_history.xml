@@ -4,37 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="#F8F9FA">
+    android:background="#F8F9FA"
+    android:padding="16dp">
 
     <!-- Title with icon -->
     <LinearLayout
         android:id="@+id/history_header_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-        
+        app:layout_constraintTop_toTopOf="parent">
+
         <ImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="12dp"
             android:src="@android:drawable/ic_menu_recent_history"
-            android:tint="#3F51B5"
-            android:layout_marginEnd="12dp"/>
-            
+            android:tint="#3F51B5" />
+
         <TextView
             android:id="@+id/tv_history_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Threshold History"
-            android:textSize="26sp"
-            android:textStyle="bold"
             android:fontFamily="sans-serif-light"
-            android:textColor="#263238"/>
+            android:text="Threshold History"
+            android:textColor="#1B3441"
+            android:textSize="26sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <!-- Horizontal rule -->
@@ -42,9 +42,9 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#E0E0E0"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/history_header_layout"/>
+        android:background="#E0E0E0"
+        app:layout_constraintTop_toBottomOf="@id/history_header_layout" />
 
     <!-- RecyclerView for history items -->
     <androidx.recyclerview.widget.RecyclerView
@@ -54,26 +54,26 @@
         android:layout_marginTop="16dp"
         android:clipToPadding="false"
         android:paddingBottom="8dp"
-        app:layout_constraintTop_toBottomOf="@id/divider"
         app:layout_constraintBottom_toTopOf="@id/tv_no_data"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/divider" />
 
     <!-- No data message -->
     <TextView
         android:id="@+id/tv_no_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
         android:text="No threshold breaches recorded yet"
+        android:textColor="#78909C"
         android:textSize="16sp"
         android:textStyle="italic"
-        android:fontFamily="sans-serif"
-        android:textColor="#78909C"
-        android:gravity="center"
         android:visibility="gone"
-        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout> 

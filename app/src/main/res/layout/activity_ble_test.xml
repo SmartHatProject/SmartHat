@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".bluetooth.test.BleTestActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/ble_test_title"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/tv_connection_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/connection_state_placeholder"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/tv_rssi_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/rssi_placeholder"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/tv_signal_quality"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/signal_quality_placeholder"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/tv_connection_metrics"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/connection_metrics_placeholder"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/btn_connect"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/connect"
+            android:layout_marginEnd="8dp"
+            style="?android:attr/buttonBarButtonStyle"/>
+
+        <Button
+            android:id="@+id/btn_disconnect"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/disconnect"
+            style="?android:attr/buttonBarButtonStyle"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_read_rssi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/read_rssi"/>
+        
+    <Button
+        android:id="@+id/btn_monitor_rssi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/start_rssi_monitoring"
+        android:layout_marginTop="8dp"/>
+        
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="16dp">
+        
+        <TextView
+            android:id="@+id/tv_log"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:fontFamily="monospace"
+            android:text="@string/test_log_initial"/>
+    </ScrollView>
+
+</LinearLayout> 

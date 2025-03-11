@@ -20,10 +20,10 @@
             android:id="@+id/iv_sensor_icon"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:padding="4dp"
             android:background="@android:drawable/dialog_holo_light_frame"
+            android:padding="4dp"
             android:src="@android:drawable/ic_menu_compass"
-            android:tint="#3F51B5"/>
+            android:tint="#73757F" />
             
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,25 +36,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                
+
                 <TextView
                     android:id="@+id/tv_sensor_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
                     android:fontFamily="sans-serif-medium"
-                    android:textColor="#3F51B5"
-                    android:text="Dust Sensor"/>
-                    
+                    android:text="Dust Sensor"
+                    android:textColor="#071353"
+                    android:textSize="18sp" />
+
                 <TextView
                     android:id="@+id/tv_sensor_value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:textColor="#F44336"
+                    android:fontFamily="monospace"
                     android:gravity="end"
-                    android:text="75.0 µg/m³"/>
+                    android:text="75.0 µg/m³"
+                    android:textColor="#F44336"
+                    android:textSize="18sp" />
             </LinearLayout>
             
             <!-- Date and time -->
@@ -73,13 +73,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:background="#FDF3E5"
+                android:fontFamily="sans-serif-medium"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="2dp"
-                android:background="#FFF3E0"
-                android:textSize="12sp"
-                android:fontFamily="sans-serif-medium"
-                android:textColor="#E65100"
-                android:text="Exceeded threshold"/>
+                android:text="Exceeded threshold"
+                android:textColor="#EF553A"
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView> 

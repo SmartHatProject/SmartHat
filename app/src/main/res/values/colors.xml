@@ -1,13 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Material 3 color system for Android 12 -->
+    <color name="primary">#1F6E8C</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="primary_container">#C1EBFF</color>
+    <color name="on_primary_container">#001F2A</color>
+    
+    <color name="secondary">#4C616B</color>
+    <color name="on_secondary">#FFFFFF</color>
+    <color name="secondary_container">#CFE6F1</color>
+    <color name="on_secondary_container">#071E26</color>
+    
+    <color name="error">#BA1A1A</color>
+    <color name="error_container">#FFDAD6</color>
+    <color name="on_error">#FFFFFF</color>
+    <color name="on_error_container">#410002</color>
+    
+    <color name="background">#F8F9FA</color>
+    <color name="on_background">#191C1E</color>
+    <color name="surface">#FBFDFD</color>
+    <color name="on_surface">#191C1E</color>
+    
+    <!-- Legacy colors maintained for backward compatibility -->
     <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
+    <color name="purple_500">#1F6E8C</color>
+    <color name="purple_700">#0A4B66</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="connected_green">#4CAF50</color>
-    <color name="connecting_yellow">#FFC107</color>
-    <color name="disconnected_red">#F44336</color>
+    
+    <!-- Connection status colors - optimized for Android 12 -->
+    <color name="connected">#4CAF50</color>
+    <color name="connecting">#FFC107</color>
+    <color name="disconnected">#F44336</color>
+    
+    <!-- Sensor colors - enhanced for visibility on Pixel 4a -->
+    <color name="sensor_normal">#4CAF50</color>
+    <color name="sensor_alert">#F44336</color>
+    
+    <!-- UI colors optimized for Android 12 on Pixel 4a -->
+    <color name="test_mode_background">#1F6E8C</color>
+    <color name="test_mode_text">#FFFFFF</color>
+    <color name="status_text_color">#191C1E</color>
+    <color name="disconnected_text">#F44336</color>
+    <color name="helper_text">#5D6569</color>
+    <color name="dust_icon_tint">#574F7D</color>
+    <color name="noise_icon_tint">#E3B323</color>
+    <color name="sensor_label">#455A64</color>
+    <color name="sensor_value">#212121</color>
+    <color name="connect_button_bg">@color/primary</color>
+    <color name="connect_button_text">@color/on_primary</color>
+    <color name="footer_text">#78909C</color>
 </resources>

@@ -1,18 +1,19 @@
 package com.team12.smarthat.activities;
-// using ble for communication with the smarthat
 
-import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.le.ScanResult;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
@@ -28,75 +29,87 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.team12.smarthat.AppController;
 import com.team12.smarthat.R;
+import com.team12.smarthat.bluetooth.core.BleConnectionManager;
+import com.team12.smarthat.bluetooth.core.BluetoothServiceIntegration;
+import com.team12.smarthat.bluetooth.core.MockBleConnectionManager;
+import com.team12.smarthat.bluetooth.devices.esp32.ESP32BluetoothSpec;
 import com.team12.smarthat.database.DatabaseHelper;
 import com.team12.smarthat.models.SensorData;
+import com.team12.smarthat.permissions.BluetoothPermissionManager;
 import com.team12.smarthat.utils.Constants;
 import com.team12.smarthat.utils.NotificationUtils;
-import com.team12.smarthat.utils.PermissionUtils;
-import com.team12.smarthat.viewmodels.BluetoothViewModel;
-import com.team12.smarthat.bluetooth.BluetoothService;
-// Note: We use the fully qualified name for our custom BluetoothManager in the code to avoid conflicts
+import com.team12.smarthat.utils.TestDataGenerator;
+
+import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
- * Main activity for the SmartHat app
- * 
- * Handles UI interactions, Bluetooth connections, and sensor data visualization
- */
-public class MainActivity extends AppCompatActivity {
+ * main activity is handling a lot might consider moving to different classses later
 
-    // View model for data sharing between fragments
-    private BluetoothViewModel bluetoothViewModel;
-    
-    // Android system Bluetooth components
+ */
+public class MainActivity extends AppCompatActivity implements 
+        BluetoothServiceIntegration.SensorDataListener,
+        BluetoothPermissionManager.PermissionCallback,
+        TestDataGenerator.TestDataListener {
+
+
     private BluetoothManager systemBluetoothManager;
     private BluetoothAdapter bluetoothAdapter;
     
-    // SmartHat custom Bluetooth components
-    private com.team12.smarthat.bluetooth.BluetoothManager smartHatBluetoothManager;
-    private BluetoothService bluetoothService;
+    // permission management
+    private BluetoothPermissionManager permissionManager;
     
-    // Database helper
+    // database
     private DatabaseHelper databaseHelper; // our local sqlite database access
     private NotificationUtils notificationUtils;
     
-    // UI components
-    private TextView tvStatus, tvDust, tvNoise;
+    // uI components
+    private TextView tvStatus, tvDust, tvNoise, tvTestMode;
     private Button btnConnect;
-    private TextView tvTestMode; // Test mode indicator
-    private View connectionIndicator; // Connection status indicator
-    private TextView connectionHelper; // Connection helper text
+    private View connectionIndicator;
+    private TextView connectionHelper;
+    
+    // ble connection management
+    private BleConnectionManager connectionManager;
+    private BluetoothServiceIntegration btIntegration;
+    
+    // added to support switching between real and mock ble managers
+    private MockBleConnectionManager mockConnectionManager;
+    private boolean testModeActive = false;
     
     // region activation system
     private ActivityResultLauncher<Intent> bluetoothEnableLauncher = registerForActivityResult(
         new ActivityResultContracts.StartActivityForResult(),
         result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
-                // Bluetooth was enabled, proceed with connection
+
                 Log.d(Constants.TAG_MAIN, "Bluetooth enabled successfully via system dialog");
-                connectToSmartHat();
+                startScanAndConnect();
             } else {
-                // User declined to enable Bluetooth
+                // case user declined
                 Log.d(Constants.TAG_MAIN, "User declined to enable Bluetooth via system dialog");
                 showToast("Bluetooth is required to connect to SmartHat device");
-                updateConnectionUI(Constants.STATE_DISCONNECTED);
+                updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
             }
         }
     );
     // endregion
+
+    //a singlethreadexecutor for db operations
+    private final ExecutorService dbExecutor = Executors.newSingleThreadExecutor();
+
+    private TestDataGenerator testDataGenerator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        // Set title for the app
-        setTitle("SmartHat");
-        
-        // Initialize components
+        // initialize components
         initializeComponents();
         
         // Setup UI components
@@ -104,9 +117,6 @@ public class MainActivity extends AppCompatActivity {
         
         // Setup observers for data changes
         setupObservers();
-        
-        // Check and request necessary permissions
-        checkAndRequestPermissions();
     }
 
     @Override
@@ -117,19 +127,29 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        // Set test mode checkbox state
-        MenuItem testModeItem = menu.findItem(R.id.action_test_mode);
-        if (testModeItem != null && bluetoothService != null) {
-            testModeItem.setChecked(bluetoothService.isTestModeEnabled());
-        }
-        
-        // Set notifications checkbox state
+        // notif state
         MenuItem notificationsItem = menu.findItem(R.id.action_notifications);
         if (notificationsItem != null && notificationUtils != null) {
             notificationsItem.setChecked(notificationUtils.areNotificationsEnabled());
-            // Update menu title based on current state
+            //update menu
             notificationsItem.setTitle(notificationsItem.isChecked() ? 
                     "Disable Notifications" : "Enable Notifications");
+        }
+        
+        // update test mode menu items
+        if (testDataGenerator != null) {
+            TestDataGenerator.TestMode currentMode = testDataGenerator.getCurrentMode();
+            MenuItem offItem = menu.findItem(R.id.action_test_mode_off);
+            MenuItem normalItem = menu.findItem(R.id.action_test_mode_normal);
+            MenuItem highDustItem = menu.findItem(R.id.action_test_mode_high_dust);
+            MenuItem highNoiseItem = menu.findItem(R.id.action_test_mode_high_noise);
+            MenuItem randomItem = menu.findItem(R.id.action_test_mode_random);
+            
+            if (offItem != null) offItem.setChecked(currentMode == TestDataGenerator.TestMode.OFF);
+            if (normalItem != null) normalItem.setChecked(currentMode == TestDataGenerator.TestMode.NORMAL);
+            if (highDustItem != null) highDustItem.setChecked(currentMode == TestDataGenerator.TestMode.HIGH_DUST);
+            if (highNoiseItem != null) highNoiseItem.setChecked(currentMode == TestDataGenerator.TestMode.HIGH_NOISE);
+            if (randomItem != null) randomItem.setChecked(currentMode == TestDataGenerator.TestMode.RANDOM);
         }
         
         return super.onPrepareOptionsMenu(menu);
@@ -139,42 +159,44 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         
-        if (id == R.id.action_test_mode) {
-            // Toggle test mode
-            if (item.isChecked()) {
-                // Already checked, so uncheck and disable test mode
-                bluetoothService.setTestMode(false);
-                showToast("Test mode disabled");
-                tvTestMode.setVisibility(View.GONE);
-            } else {
-                // Not checked, so check and enable full test mode
-                enableFullTestMode();
-                showToast("Test mode enabled");
-            }
-            return true;
-        } else if (id == R.id.action_test_formats) {
-            // Launch test data formats
-            bluetoothService.testDataFormats();
-            return true;
-        } else if (id == R.id.action_history) {
+        if (id == R.id.action_history) {
             // threshold history activity launch
             Intent historyIntent = new Intent(this, ThresholdHistoryActivity.class);
             startActivity(historyIntent);
             return true;
         } else if (id == R.id.action_notifications) {
-            // Toggle notifications
+            // toggle notif
             boolean newState = !item.isChecked();
             item.setChecked(newState);
             
-            // Update notification state
-            if (notificationUtils != null) {
-                notificationUtils.setNotificationsEnabled(newState);
-                // Update menu title based on new state
+            // update title
                 item.setTitle(newState ? "Disable Notifications" : "Enable Notifications");
                 
-                // Show confirmation to user
-                showToast("Notifications " + (newState ? "enabled" : "disabled"));
-            }
+
+            // update notification state
+                notificationUtils.setNotificationsEnabled(newState);
+            
+            // save preference
+            getSharedPreferences("app_prefs", MODE_PRIVATE)
+                    .edit()
+                    .putBoolean(Constants.PREF_NOTIFICATIONS_ENABLED, newState)
+                    .apply();
+            
+            return true;
+        } else if (id == R.id.action_test_mode_off) {
+            setTestMode(TestDataGenerator.TestMode.OFF);
+            return true;
+        } else if (id == R.id.action_test_mode_normal) {
+            setTestMode(TestDataGenerator.TestMode.NORMAL);
+            return true;
+        } else if (id == R.id.action_test_mode_high_dust) {
+            setTestMode(TestDataGenerator.TestMode.HIGH_DUST);
+            return true;
+        } else if (id == R.id.action_test_mode_high_noise) {
+            setTestMode(TestDataGenerator.TestMode.HIGH_NOISE);
+            return true;
+        } else if (id == R.id.action_test_mode_random) {
+            setTestMode(TestDataGenerator.TestMode.RANDOM);
             return true;
         }
         
@@ -182,65 +204,143 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        
+     //bt state changes registrereceiver
+        IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        registerReceiver(bluetoothStateReceiver, filter);
+        
+
+        if (permissionManager.hasRequiredPermissions()) {
+            try {
+                // enable check
+                if (bluetoothAdapter != null && !bluetoothAdapter.isEnabled()) {
+                    // update the ui
+                    updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+                    connectionHelper.setText(R.string.bluetooth_disabled);
+                } else if (connectionManager != null) {
+                    updateConnectionUI(connectionManager.getCurrentState());
+                    
+                    // auto recon connected/ disc / previous connection exists
+                    if (connectionManager.getCurrentState() == BleConnectionManager.ConnectionState.DISCONNECTED
+                        && connectionManager.getLastConnectedDevice() != null) {
+                        // reconnection after short delay
+                        mainHandler.postDelayed(this::startReconnectionProcess, 1000);
+                    }
+                }
+            } catch (SecurityException e) {
+                // handle security exception from bt adapter operations
+                Log.e(Constants.TAG_MAIN, "Security exception in onResume: " + e.getMessage());
+                updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+            }
+        } else {
+            //no permissions yet just update ui
+            updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+            connectionHelper.setText(R.string.permission_required);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        
+        //unregiter bt state receiver
+        try {
+            unregisterReceiver(bluetoothStateReceiver);
+        } catch (IllegalArgumentException e) {
+            // ignore
+            Log.d(Constants.TAG_MAIN, "BluetoothStateReceiver was not registered");
+        }
+        
+        // cancel pending ui updates/ delays
+        mainHandler.removeCallbacksAndMessages(null);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        // no auto disconnec to allow background operation
+        // android 12 background restrictions spec
+        
+        // saving to restore
+        if (databaseHelper != null) {
+            databaseHelper.saveAppState(connectionManager.getCurrentState().name());
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (bluetoothService != null) {
-            bluetoothService.disconnect();
-        }
-        if (bluetoothViewModel != null) {
-            bluetoothViewModel.cleanupResources();
+        
+        // clean up resources
+        try {
+            // clean up test data generator
+            if (testDataGenerator != null) {
+                testDataGenerator.cleanup();
+                testDataGenerator = null;
+            }
+            
+
+            
+            // remove listeners to prevent callbacks during cleanup
+            if (btIntegration != null) {
+                btIntegration.removeSensorDataListener(this);
+            }
+            //cleanup BLE integration
+            if (btIntegration != null) {
+                btIntegration.cleanup();
+                btIntegration = null;
+            }
+            
+            // clean up both connection managers
+            if (connectionManager != null) {
+                connectionManager.cleanup();
+                BleConnectionManager.resetInstanceForTesting();
+            }
+            
+            if (mockConnectionManager != null) {
+                mockConnectionManager.cleanup();
+                MockBleConnectionManager.resetInstance();
+            }
+
+            mainHandler.removeCallbacksAndMessages(null);
+            
+            // shut down db executor service if exists
+            if (dbExecutor != null && !dbExecutor.isShutdown()) {
+                Log.d(Constants.TAG_MAIN, "Shutting down database executor service");
+                dbExecutor.shutdown();
+                
+                try {
+                    // timeout
+                    if (!dbExecutor.awaitTermination(500, TimeUnit.MILLISECONDS)) {
+                        dbExecutor.shutdownNow();
+                    }
+                    Log.d(Constants.TAG_MAIN, "Database executor service shut down");
+                } catch (InterruptedException e) {
+                    dbExecutor.shutdownNow();
+                    Thread.currentThread().interrupt();
+                    Log.e(Constants.TAG_MAIN, "Database executor shutdown interrupted");
+                }
+            }
+        } catch (Exception e) {
+            Log.e(Constants.TAG_MAIN, "Error during cleanup: " + e.getMessage(), e);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        
-        if (requestCode == Constants.REQUEST_BLUETOOTH_CONNECT) {
-            boolean allPermissionsGranted = true;
-            boolean anyPermanentlyDenied = false;
-            
-            Log.d(Constants.TAG_MAIN, "Permission result received for " + permissions.length + " permissions");
-            
-            // Check if all requested permissions were granted
-            for (int i = 0; i < permissions.length; i++) {
-                boolean granted = grantResults[i] == PackageManager.PERMISSION_GRANTED;
-                boolean permanentlyDenied = !granted && !shouldShowRequestPermissionRationale(permissions[i]);
-                
-                Log.d(Constants.TAG_MAIN, "Permission: " + permissions[i] + 
-                      " - " + (granted ? "GRANTED" : "DENIED") + 
-                      (permanentlyDenied ? " (PERMANENTLY)" : ""));
-                
-                if (!granted) {
-                    allPermissionsGranted = false;
-                    
-                    // Check for permanent denial
-                    if (permanentlyDenied) {
-                        anyPermanentlyDenied = true;
-                    }
-                }
-            }
-            
-            if (allPermissionsGranted) {
-                // All permissions granted, connect to device
-                Log.d(Constants.TAG_MAIN, "All required BLE permissions granted, connecting to device");
-                connectToSmartHat();
-            } else if (anyPermanentlyDenied) {
-                // At least one permission was permanently denied, show settings dialog
-                Log.d(Constants.TAG_MAIN, "Some permissions permanently denied, showing settings dialog");
-                showSettingsPermissionDialog();
-            } else {
-                // Some permissions denied but not permanently, explain again
-                Log.e(Constants.TAG_MAIN, "Some required BLE permissions denied, requesting again");
-                showToast("Bluetooth permissions are required to connect to your SmartHat device");
-                checkAndRequestPermissions(); // Try again with better explanation
-            }
+        if (!permissionManager.handlePermissionResult(requestCode, permissions, grantResults)) {
+            // if not handled by our permis manager -> parent
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
     
     /**
-     * Shows a dialog explaining how to enable permissions from Settings
-     * when user has permanently denied a permission
+     * shows a dialog explaining how to enable permissions from settings
+     * case denied permission
      */
     private void showSettingsPermissionDialog() {
         Log.d(Constants.TAG_MAIN, "Showing settings permission dialog");
@@ -258,421 +358,771 @@ public class MainActivity extends AppCompatActivity {
             })
             .setNegativeButton("Cancel", (dialog, which) -> {
                 Log.d(Constants.TAG_MAIN, "User canceled settings dialog");
-                updateConnectionUI(Constants.STATE_DISCONNECTED);
+                updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
                 showToast("Cannot connect without required permissions");
             })
             .setCancelable(false)
             .show();
     }
-    
-    private void checkAndRequestPermissions() {
-        Log.d(Constants.TAG_MAIN, "Checking permissions on Android " + Build.VERSION.SDK_INT);
-        
-        // Use utility methods to check if we have necessary permissions
-        boolean hasPermissions = PermissionUtils.hasRequiredBluetoothPermissions(this);
-        Log.d(Constants.TAG_MAIN, "Has all required permissions: " + hasPermissions);
-        
-        if (hasPermissions) {
-            // All permissions granted, connect to device
-            Log.d(Constants.TAG_MAIN, "All required Bluetooth permissions granted, connecting to device");
-            connectToSmartHat();
-        } else {
-            // Request appropriate permissions based on Android version
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                Log.d(Constants.TAG_MAIN, "Missing permissions on Android 12+, showing explanation dialog");
-                showBluetoothPermissionExplanationDialog();
-            } else {
-                Log.d(Constants.TAG_MAIN, "Missing permissions on pre-Android 12, showing explanation dialog");
-                showLocationPermissionExplanationDialog();
-            }
-        }
-    }
-    
-    /**
-     * Shows an explanatory dialog before requesting Bluetooth permissions on Android 12+
-     */
-    private void showBluetoothPermissionExplanationDialog() {
-        Log.d(Constants.TAG_MAIN, "Showing Bluetooth permission explanation dialog");
-        new AlertDialog.Builder(this)
-            .setTitle("Bluetooth permission required")
-            .setMessage("SmartHat needs permission to access Bluetooth in order to connect to your SmartHat device.")
-            .setCancelable(false)
-            .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                // Request necessary Bluetooth permissions
-                Log.d(Constants.TAG_MAIN, "User accepted permission explanation, requesting permissions");
-                requestPermissions(new String[]{
-                    Manifest.permission.BLUETOOTH_CONNECT,
-                    Manifest.permission.BLUETOOTH_SCAN
-                }, Constants.REQUEST_BLUETOOTH_CONNECT);
-            })
-            .show();
-    }
-    
-    /**
-     * Shows an explanatory dialog before requesting Location permissions on Android 6-11
-     */
-    private void showLocationPermissionExplanationDialog() {
-        Log.d(Constants.TAG_MAIN, "Showing Location permission explanation dialog");
-        new AlertDialog.Builder(this)
-            .setTitle("Location permission required")
-            .setMessage("On Android 6-11, location permission is required to scan for Bluetooth devices. " +
-                        "SmartHat doesn't track or store your location data.")
-            .setCancelable(false)
-            .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                // Request location permission
-                Log.d(Constants.TAG_MAIN, "User accepted location explanation, requesting permission");
-                requestPermissions(new String[]{
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                }, Constants.REQUEST_BLUETOOTH_CONNECT);
-            })
-            .show();
-    }
 
     // region component init
     private void initializeComponents() {
-
-        bluetoothViewModel = new ViewModelProvider(this).get(BluetoothViewModel.class);
-        
-
+        // find ui components
         tvStatus = findViewById(R.id.tv_status);
         tvDust = findViewById(R.id.tv_dust);
         tvNoise = findViewById(R.id.tv_noise);
-        btnConnect = findViewById(R.id.btn_connect);
         tvTestMode = findViewById(R.id.tv_test_mode);
+        btnConnect = findViewById(R.id.btn_connect);
         connectionIndicator = findViewById(R.id.connection_indicator);
         connectionHelper = findViewById(R.id.connection_helper);
         
-
-        databaseHelper = new DatabaseHelper(this);
+        // init db helper singleton
+        databaseHelper = DatabaseHelper.getInstance();
         
-
-        bluetoothViewModel.initialize(databaseHelper);
-        
-
+        // init bt system components
         systemBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         if (systemBluetoothManager != null) {
             bluetoothAdapter = systemBluetoothManager.getAdapter();
         }
         
+        // init permission manager for android 12
+        permissionManager = new BluetoothPermissionManager(this);
+        
+        //  singleton
+        connectionManager = BleConnectionManager.getInstance(this, permissionManager);
+        
+        // don't use it yet
+        mockConnectionManager = MockBleConnectionManager.getInstance(this, permissionManager);
 
-        smartHatBluetoothManager = new com.team12.smarthat.bluetooth.BluetoothManager(this);
+        btIntegration = new BluetoothServiceIntegration(connectionManager);
+        btIntegration.addSensorDataListener(this);
         
-        // Initialize bte with our custom manager
-        bluetoothService = new BluetoothService(bluetoothViewModel, smartHatBluetoothManager);
-        
-        // Initialize notification utils
+        // set up lifecycle aware connection state observation
+        btIntegration.observeConnectionState(this);
+
         notificationUtils = new NotificationUtils(this);
         
-        // Initialize notification state from preferences (or default to enabled)
         boolean notificationsEnabled = getSharedPreferences("app_prefs", MODE_PRIVATE)
                 .getBoolean(Constants.PREF_NOTIFICATIONS_ENABLED, true);
         notificationUtils.setNotificationsEnabled(notificationsEnabled);
-        
-        // Initialize database (using application context to get the DatabaseHelper)
-        databaseHelper = ((AppController) getApplicationContext()).getDatabaseHelper();
     }
     // endregion
 
     // region ui config
     private void setupUI() {
-        // Set initial text values for UI components
-        tvDust.setText("Dust: 0.0 µg/m³");
-        tvNoise.setText("Noise: 0.0 dB");
+
+        tvStatus.setText(R.string.status_disconnected);
+        tvDust.setText(R.string.dust_initial);
+        tvNoise.setText(R.string.noise_initial);
         
-        // Hide test mode indicator initially
+        // hide test mode indicator initially
         tvTestMode.setVisibility(View.GONE);
         
-        // Set up connect button click handler
-        btnConnect.setOnClickListener(v -> toggleConnectionState());
+        // set up connectbtn click handler
+        btnConnect.setOnClickListener(v -> toggleConnection());
     }
     // endregion
 
     // region observers
     private void setupObservers() {
-        // Observe connection state changes
-        bluetoothViewModel.getConnectionState().observe(this, this::updateConnectionUI);
+        if (connectionManager == null || btIntegration == null) {
+            Log.e(Constants.TAG_MAIN, "Cannot setup observers - components not initialized");
+            return;
+        }
+
+        // Observe the real connection manager
+        connectionManager.getConnectionState().observe(this, state -> {
+            if (!testModeActive) {
+                updateConnectionUI(state);
+            }
+        });
         
-        // Observe sensor data changes - observe both dust and noise separately
-        bluetoothViewModel.getDustSensorData().observe(this, data -> {
-            if (data != null) {
-                updateSensorDisplays(data);
+        // Observe mock connection manager
+        mockConnectionManager.getConnectionState().observe(this, state -> {
+            if (testModeActive) {
+                updateConnectionUI(state);
                 
-                // Check threshold and show notification if needed
-                if (data.getValue() > Constants.DUST_THRESHOLD) {
-                    notificationUtils.showDustAlert(data);
+                // Start/stop test data generation based on connection state
+                if (state == BleConnectionManager.ConnectionState.CONNECTED) {
+                    // Start generating test data when connected
+                    if (testDataGenerator != null && 
+                        testDataGenerator.getCurrentMode() != TestDataGenerator.TestMode.OFF) {
+                        // Only start if not already running
+                        if (!testDataGenerator.isTestModeActive()) {
+                            TestDataGenerator.TestMode currentMode = testDataGenerator.getCurrentMode();
+                            testDataGenerator.startTestMode(currentMode);
+                            
+                            // Update UI to reflect current mode
+                            updateTestModeUI(currentMode);
+                        }
+                    }
+                } else if (state == BleConnectionManager.ConnectionState.DISCONNECTED) {
+                    // Stop generating test data when disconnected
+                    if (testDataGenerator != null && testDataGenerator.isTestModeActive()) {
+                        testDataGenerator.stopTestMode();
+                    }
                 }
             }
         });
         
-        bluetoothViewModel.getNoiseSensorData().observe(this, data -> {
-            if (data != null) {
-                updateSensorDisplays(data);
-                
-                // Check threshold and show notification if needed
-                if (data.getValue() > Constants.NOISE_THRESHOLD) {
-                    notificationUtils.showNoiseAlert(data);
-                }
+        // Error message observers
+        connectionManager.getConnectionError().observe(this, error -> {
+            if (!testModeActive) {
+                showToast(error);
             }
         });
         
-        // Observe test mode changes
-        bluetoothViewModel.getTestModeStatus().observe(this, this::updateTestModeDisplay);
-        
-        // Observe error messages
-        bluetoothViewModel.getErrorMessage().observe(this, message -> {
-            if (message != null && !message.isEmpty()) {
-                showToast(message);
+        mockConnectionManager.getConnectionError().observe(this, error -> {
+            if (testModeActive) {
+                showToast(error);
             }
         });
+
+        // Setup Bluetooth service integration
+        btIntegration.observeConnectionState(this);
+        
+        Log.d(Constants.TAG_MAIN, "Observers setup complete");
     }
     // endregion
+
+    /**
+     * Update the UI to reflect the current test mode
+     */
+    private void updateTestModeUI(TestDataGenerator.TestMode mode) {
+        if (tvTestMode == null) {
+            Log.e(Constants.TAG_MAIN, "tvTestMode is null, cannot update UI");
+            return;
+        }
+        
+        if (mode == TestDataGenerator.TestMode.OFF) {
+            tvTestMode.setVisibility(View.GONE);
+            return;
+        }
+        
+        tvTestMode.setVisibility(View.VISIBLE);
+        
+        String modeText = "TEST MODE: UNKNOWN";
+        switch (mode) {
+            case NORMAL:
+                modeText = "TEST MODE: NORMAL";
+                break;
+            case HIGH_DUST:
+                modeText = "TEST MODE: HIGH DUST";
+                break;
+            case HIGH_NOISE:
+                modeText = "TEST MODE: HIGH NOISE";
+                break;
+            case RANDOM:
+                modeText = "TEST MODE: RANDOM";
+                break;
+        }
+        
+        tvTestMode.setText(modeText);
+        Log.d(Constants.TAG_MAIN, "Updated test mode UI: " + modeText);
+    }
 
     // region connection management
     /**
-     * Toggle connection state between connected and disconnected
+     * toggle connection state
+     * for both real and test mode connections
      */
-    private void toggleConnectionState() {
-        Log.d(Constants.TAG_MAIN, "Toggle connection state requested");
-        int currentState = bluetoothViewModel.getConnectionState().getValue();
+    private void toggleConnection() {
+        // determine which manager to use
+        BleConnectionManager activeManager = testModeActive ? mockConnectionManager : connectionManager;
         
-        if (currentState == Constants.STATE_CONNECTED) {
-            // If connected, disconnect
-            Log.d(Constants.TAG_MAIN, "Currently connected, disconnecting");
-            if (bluetoothService != null) {
-                bluetoothService.disconnect();
-            }
-        } else if (currentState == Constants.STATE_DISCONNECTED) {
-            // If disconnected, start the connection process
-            Log.d(Constants.TAG_MAIN, "Currently disconnected, starting connection process");
-            
-            // Use PermissionUtils to safely handle Bluetooth operations
-            PermissionUtils.runWithBluetoothPermission(
-                this,
-                () -> {
-                    // Check if Bluetooth is enabled and prompt if not
-                    if (!isBluetoothEnabled()) {
-                        promptEnableBluetooth();
+        if (activeManager == null) {
+            showToast("BLE connection manager not initialized");
+            return;
+        }
+        
+        BleConnectionManager.ConnectionState currentState = activeManager.getConnectionState().getValue();
+        if (currentState == null) {
+            currentState = BleConnectionManager.ConnectionState.DISCONNECTED;
+        }
+        
+        try {
+            switch (currentState) {
+                case CONNECTED:
+                    Log.d(Constants.TAG_MAIN, "User requested disconnect from connected state");
+                    activeManager.disconnect();
+                    break;
+                    
+                case CONNECTING:
+                    Log.d(Constants.TAG_MAIN, "User requested cancel during connection attempt");
+                    showToast("Cancelling connection attempt...");
+                    activeManager.disconnect();
+                    break;
+                    
+                case DISCONNECTING:
+                    Log.d(Constants.TAG_MAIN, "User pressed connect while disconnecting - ignoring");
+                    showToast("Already disconnecting...");
+                    break;
+                    
+                case DISCONNECTED:
+                    Log.d(Constants.TAG_MAIN, "User requested connect from disconnected state");
+                    
+                    if (testModeActive) {
+                        Log.d(Constants.TAG_MAIN, "Using mock connection in test mode");
+                        mockConnectionManager.connect(null); // null device is fine for mock
                     } else {
-                        // Bluetooth is enabled, proceed with connection
-                        startConnectionProcess();
-                    }
-                },
-                () -> {
-                    // Handle permission errors
-                    Log.e(Constants.TAG_MAIN, "Missing Bluetooth permissions, checking and requesting");
-                    checkAndRequestPermissions();
-                },
-                true,  // Requires BLUETOOTH_CONNECT
-                true   // Requires BLUETOOTH_SCAN for discovery
-            );
+                        // in real mode check permissions and start real connection process
+                        if (permissionManager.hasRequiredPermissions()) {
+                            if (bluetoothAdapter != null) {
+
+                                if (!bluetoothAdapter.isEnabled()) {
+                                    requestBluetoothEnable();
+                                } else {
+                                    startScanAndConnect();
+                                }
+                            } else {
+                                showToast("Bluetooth not available on this device");
+                            }
         } else {
-            // If connecting or disconnecting, don't do anything
-            Log.d(Constants.TAG_MAIN, "Already connecting/disconnecting, ignoring toggle request");
+                            Log.d(Constants.TAG_MAIN, "Requesting permissions before connection");
+                            permissionManager.requestPermissions(this);
+                        }
+                    }
+                    break;
+            }
+        } catch (SecurityException e) {
+            //update : handle permission issues explicitly required by lint
+            Log.e(Constants.TAG_MAIN, "Security exception in toggleConnection: " + e.getMessage());
+            showToast("Permission denied: " + e.getMessage());
+            updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+            permissionManager.requestPermissions(this);
         }
     }
     
     /**
-     * Check if Bluetooth is enabled
+     * start scanning for ESP32 & connect to found device
+     * updates for android 12 on Pixel 4a spec
      */
-    private boolean isBluetoothEnabled() {
-        boolean enabled = bluetoothAdapter != null && bluetoothAdapter.isEnabled();
-        Log.d(Constants.TAG_MAIN, "Bluetooth enabled check: " + enabled);
-        return enabled;
-    }
-    
-    /**
-     * Prompt the user to enable Bluetooth
-     */
-    private void promptEnableBluetooth() {
-        Log.d(Constants.TAG_MAIN, "Prompting user to enable Bluetooth");
-        
-        // Use PermissionUtils to safely handle Bluetooth operations
-        PermissionUtils.runWithBluetoothPermission(
-            this,
-            () -> {
-                try {
-                    // Make sure we have a valid adapter
+    private void startScanAndConnect() {
+        if (connectionManager == null) return;
+
                     if (bluetoothAdapter == null) {
-                        Log.e(Constants.TAG_MAIN, "BluetoothAdapter is null, cannot enable Bluetooth");
                         showToast("Bluetooth not available on this device");
+            updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
                         return;
                     }
                     
-                    Log.d(Constants.TAG_MAIN, "Launching Bluetooth enable intent");
-                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    bluetoothEnableLauncher.launch(enableBtIntent);
-                } catch (Exception e) {
-                    Log.e(Constants.TAG_MAIN, "Error requesting Bluetooth enable: " + e.getMessage(), e);
-                    showToast("Error requesting Bluetooth enable: " + e.getMessage());
+        if (!permissionManager.hasRequiredPermissions()) {
+            Log.d(Constants.TAG_MAIN, "Requesting Bluetooth permissions");
+            permissionManager.requestPermissions(this);
+            return;
+        }
+        
+        startScanAndConnectInternal();
+    }
+    
+    /**
+     *
+     * this method assumes permissions have been checked
+     */
+    private void startScanAndConnectInternal() {
+        try {
+            // Safe to call after permissions check
+            if (!bluetoothAdapter.isEnabled()) {
+                requestBluetoothEnable();
+            return;
+        }
+              //scanning state
+            updateConnectionUI(BleConnectionManager.ConnectionState.CONNECTING);
+            
+            //timeout
+            final long SCAN_TIMEOUT = 10000; // 10 seconds
+            connectionManager.scanForESP32(new BleConnectionManager.ScanResultCallback() {
+                @Override
+                public void onDeviceFound(BluetoothDevice device, ScanResult result) {
+
+                    if (device != null) {
+                        Log.d(Constants.TAG_MAIN, "ESP32 device found: " + 
+                              device.getAddress() + ", connecting...");
+                        connectionManager.connect(device);
+                    }
                 }
-            },
-            () -> {
-                // Handle permission errors
-                Log.e(Constants.TAG_MAIN, "BLUETOOTH_CONNECT permission denied, cannot enable Bluetooth");
-                checkAndRequestPermissions();
-            },
-            true,  // Requires BLUETOOTH_CONNECT
-            false  // Doesn't require BLUETOOTH_SCAN
-        );
-    }
-    
-    /**
-     * Start the connection process by checking permissions first
-     */
-    private void startConnectionProcess() {
-        Log.d(Constants.TAG_MAIN, "Starting connection process");
-        
-        // Check if bluetooth adapter is available
-        if (bluetoothAdapter == null) {
-            Log.e(Constants.TAG_MAIN, "BluetoothAdapter not available");
-            showToast("Bluetooth not available on this device");
-            return;
-        }
-        
-        // Call directly to permission check, which will connect if permissions granted
-        checkAndRequestPermissions();
-    }
-    
-    private void connectToSmartHat() {
-        Log.d(Constants.TAG_MAIN, "Attempting to connect to SmartHat device");
-        showToast("Connecting to SmartHat...");
-        
-        if (bluetoothService != null) {
-            // Use PermissionUtils to safely handle connection operation
-            PermissionUtils.runWithBluetoothPermission(
-                this,
-                () -> {
-                    // Try to connect to the specific SmartHat device by MAC address
-                    Log.d(Constants.TAG_MAIN, "BluetoothService available, calling connectToSpecificSmartHat()");
-                    bluetoothService.connectToSpecificSmartHat();
-                },
-                () -> {
-                    Log.e(Constants.TAG_MAIN, "Bluetooth permissions denied, cannot connect to SmartHat");
-                    showToast("Bluetooth permissions required to connect to SmartHat");
-                    checkAndRequestPermissions();
-                },
-                true,  // Requires BLUETOOTH_CONNECT
-                true   // Requires BLUETOOTH_SCAN for discovery
-            );
-        } else {
-            Log.e(Constants.TAG_MAIN, "BluetoothService not initialized");
-            showToast("Error: Bluetooth service not available");
-        }
-    }
-    
-    /**
-     * Enable test mode with simulated data
-     * @param fullyEnabled if true, connect automatically and generate data, otherwise just prepare test mode
-     */
-    private void enableTestMode(boolean fullyEnabled) {
-        if (bluetoothService == null) {
-            Log.e(Constants.TAG_MAIN, "BluetoothService not available for test mode");
-            return;
-        }
-        
-        Log.d(Constants.TAG_MAIN, "Setting up test mode (fully enabled: " + fullyEnabled + ")");
-        
-        // First disconnect from any real device
-        bluetoothService.disconnect();
-        
-        if (fullyEnabled) {
-            // Enable test mode and connect
-            bluetoothService.setTestMode(true);
-            bluetoothService.forceGenerateTestData();
+                
+                @Override
+                public void onScanFailed(int errorCode, String errorMessage) {
+                    Log.e(Constants.TAG_MAIN, "Scan failed: " + errorMessage);
+                    showToast("Scan failed: " + errorMessage);
+                    updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+                }
+                
+                @Override
+                public void onScanTimeout() {
+                    Log.d(Constants.TAG_MAIN, "Scan timed out, no ESP32 devices found");
+                    showToast("No ESP32 devices found nearby");
+                    updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+                }
+            }, SCAN_TIMEOUT);
             
-            // Update UI for connected state
-            tvTestMode.setVisibility(View.VISIBLE);
-            tvTestMode.setText("TEST MODE");
-            updateConnectionUI(Constants.STATE_CONNECTED);
-            showToast("Test mode enabled - using simulated data");
-        } else {
-            // Just prepare test mode without connecting
-            bluetoothService.prepareTestMode();
+        } catch (SecurityException e) {
+            // update handling SecurityException explicit required by lint
+            Log.e(Constants.TAG_MAIN, "Security exception: " + e.getMessage());
+            showToast("Permission denied: " + e.getMessage());
+            updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
             
-            // Update UI for disconnected state
-            tvTestMode.setVisibility(View.VISIBLE);
-            tvTestMode.setText("DEMO MODE");
-            updateConnectionUI(Constants.STATE_DISCONNECTED);
-            showToast("Demo mode ready - press connect to start simulation");
+            // this shouldn't happen since we check permission but just in case
+            permissionManager.requestPermissions(this);
+                } catch (Exception e) {
+            Log.e(Constants.TAG_MAIN, "Error starting scan: " + e.getMessage());
+            showToast("Error: " + e.getMessage());
+            updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
         }
     }
-
-    /**
-     * Enable full test mode with automatic connection
-     */
-    private void enableFullTestMode() {
-        enableTestMode(true);
-    }
-
-    /**
-     * Prepare test mode without connecting, so user can control connection
-     */
-    private void prepareTestMode() {
-        enableTestMode(false);
-    }
-    // endregion
     
-    // region ui updates
-    private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-    
-    private void updateConnectionUI(int connectionState) {
+    /**
+     * update the connection ui based on the current state
+     *
+     */
+    private void updateConnectionUI(BleConnectionManager.ConnectionState state) {
+        if (isFinishing() || isDestroyed()) return;
+        
         runOnUiThread(() -> {
-            switch (connectionState) {
-                case Constants.STATE_CONNECTED:
-                    tvStatus.setText(R.string.connected);
-                    tvStatus.setTextColor(ContextCompat.getColor(this, R.color.connected_green));
-                    btnConnect.setText(R.string.disconnect);
-                    connectionIndicator.setBackgroundResource(R.drawable.circle_green);
-                    connectionHelper.setText(R.string.helper_connected);
+            try {
+                // update btn text based on state
+                if (btnConnect != null) {
+                    switch (state) {
+                        case CONNECTED:
+                            btnConnect.setText(R.string.disconnect);
+                            btnConnect.setEnabled(true);
+                            break;
+                        case CONNECTING:
+                            btnConnect.setText(R.string.cancel);
+                            btnConnect.setEnabled(true);
+                            break;
+                        case DISCONNECTING:
+                            btnConnect.setText(R.string.disconnecting);
+                            btnConnect.setEnabled(false);
+                            break;
+                        case DISCONNECTED:
+                            btnConnect.setText(R.string.connect);
+                            btnConnect.setEnabled(true);
+                            break;
+                    }
+                }
+                
+
+                if (connectionIndicator != null) {
+                    int drawableResId;
+                    switch (state) {
+                        case CONNECTED:
+                            drawableResId = R.drawable.circle_green;
+                            break;
+                        case CONNECTING:
+                            drawableResId = R.drawable.circle_yellow;
+                            break;
+                        case DISCONNECTING:
+                        case DISCONNECTED:
+                        default:
+                            drawableResId = R.drawable.circle_red;
+                            break;
+                    }
+                    connectionIndicator.setBackground(ContextCompat.getDrawable(this, drawableResId));
+                }
+
+                if (tvStatus != null) {
+                    tvStatus.setText(getString(R.string.status_format, state.name()));
+                }
+
+                if (connectionHelper != null) {
+                    int helperTextResId;
+                    switch (state) {
+                        case CONNECTED:
+                            helperTextResId = R.string.helper_text_connected;
+                            break;
+                        case CONNECTING:
+                            helperTextResId = R.string.helper_text_connecting;
+                            break;
+                        case DISCONNECTING:
+                            helperTextResId = R.string.helper_text_disconnecting;
+                            break;
+                        case DISCONNECTED:
+                            helperTextResId = R.string.helper_text_disconnected;
+                            break;
+                        default:
+                            helperTextResId = R.string.helper_text_disconnected;
+                            break;
+                    }
+                    connectionHelper.setText(helperTextResId);
+                }
+            } catch (Exception e) {
+                Log.e(Constants.TAG_MAIN, "Error updating connection UI: " + e.getMessage());
+            }
+        });
+    }
+
+    private void updateSensorDisplays(SensorData data) {
+        try {
+            if (data.isDustData()) {
+                String dustText = getString(R.string.dust_format, data.getValue());
+                tvDust.setText(dustText);
+                if (data.getValue() > Constants.DUST_THRESHOLD) { //test can trigger notif
+                    notificationUtils.showDustAlert(data);
+                    
+                    // log for test data
+                    if (data.isTestData()) {
+                        Log.d(Constants.TAG_MAIN, "Test dust data triggered notification: " + data.getValue());
+                    }
+                }
+            } else if (data.isNoiseData()) {
+
+                String noiseText = getString(R.string.noise_format, data.getValue());
+                tvNoise.setText(noiseText);
+
+                if (data.getValue() > Constants.NOISE_THRESHOLD) {
+
+                    notificationUtils.showNoiseAlert(data);
+                    
+                    // log for test data
+                    if (data.isTestData()) {
+                        Log.d(Constants.TAG_MAIN, "Test noise data triggered notification: " + data.getValue());
+                    }
+                }
+            }
+            
+            // update db in background only save real data by default
+            if (!data.isTestData()) {
+                saveDataToDatabase(data);
+            }
+        } catch (Exception e) {
+            Log.e(Constants.TAG_MAIN, "Error updating sensor displays: " + e.getMessage());
+        }
+    }
+
+    /**
+     * sensor data from BluetoothServiceIntegration
+     *
+     */
+    @Override
+    public void onSensorData(SensorData data, String sensorType) {
+        if (data == null) {
+            Log.w(Constants.TAG_MAIN, "Received null sensor data");
+            return;
+        }
+
+        mainHandler.post(() -> {
+            try {
+                if (isFinishing() || isDestroyed()) {
+                    Log.d(Constants.TAG_MAIN, "Activity finishing/destroyed, skipping UI update");
+                    return;
+                }
+                
+                // update ui
+                updateSensorDisplays(data);
+                
+                // log4debug
+                if (data.isTestData()) {
+                    Log.d(Constants.TAG_MAIN, "Test data displayed: " + sensorType + "=" + data.getValue());
+        } else {
+                    Log.d(Constants.TAG_MAIN, "Sensor data displayed: " + sensorType + "=" + data.getValue());
+                }
+            } catch (Exception e) {
+                Log.e(Constants.TAG_MAIN, "Error handling sensor data: " + e.getMessage());
+            }
+        });
+    }
+
+    /**
+     * show a toast message
+     */
+    private void showToast(String message) {
+        if (message == null || message.isEmpty()) return;
+        
+        runOnUiThread(() -> {
+            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private final BroadcastReceiver bluetoothStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            
+            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+
+                mainHandler.post(() -> {
+                    switch (state) {
+                        case BluetoothAdapter.STATE_OFF:
+                            Log.d(Constants.TAG_MAIN, "Bluetooth turned off");
+                            updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+                            connectionHelper.setText(R.string.bluetooth_disabled);
+                            if (!isFinishing() && !isDestroyed()) {
+                                showToast("Bluetooth turned off");
+                            }
+                            break;
+                            
+                        case BluetoothAdapter.STATE_TURNING_OFF:
+                            Log.d(Constants.TAG_MAIN, "Bluetooth turning off");
                     break;
                     
-                case Constants.STATE_CONNECTING:
-                    tvStatus.setText(R.string.connecting);
-                    tvStatus.setTextColor(ContextCompat.getColor(this, R.color.connecting_yellow));
-                    btnConnect.setText(R.string.cancel);
-                    connectionIndicator.setBackgroundResource(R.drawable.circle_yellow);
-                    connectionHelper.setText(R.string.helper_connecting);
+                        case BluetoothAdapter.STATE_TURNING_ON:
+                            Log.d(Constants.TAG_MAIN, "Bluetooth turning on");
+                            connectionHelper.setText(R.string.bluetooth_enabling);
                     break;
                     
-                case Constants.STATE_DISCONNECTED:
-                default:
-                    tvStatus.setText(R.string.disconnected);
-                    tvStatus.setTextColor(ContextCompat.getColor(this, R.color.disconnected_red));
-                    btnConnect.setText(R.string.connect);
-                    connectionIndicator.setBackgroundResource(R.drawable.circle_red);
-                    connectionHelper.setText(R.string.helper_disconnected);
+                        case BluetoothAdapter.STATE_ON:
+                            Log.d(Constants.TAG_MAIN, "Bluetooth turned on");
+                            boolean autoReconnect = getSharedPreferences("app_prefs", MODE_PRIVATE)
+                                    .getBoolean("auto_reconnect", true);
+                            
+                            if (autoReconnect && connectionManager.getLastConnectedDevice() != null) {
+
+                                mainHandler.postDelayed(() -> {
+                                    if (!isFinishing() && !isDestroyed()) {
+                                        startReconnectionProcess();
+                                    }
+                                }, 1500);
+        } else {
+                                connectionHelper.setText(R.string.ready_to_connect);
+                            }
+                            
+                            // Only show toast if app is in foreground
+                            if (!isFinishing() && !isDestroyed()) {
+                                showToast("Bluetooth turned on");
+                            }
                     break;
             }
         });
     }
-    
-    private void updateSensorDisplays(SensorData data) {
-        if (data == null) return;
+        }
+    };
 
-        String type = data.getSensorType();
-        float value = data.getValue();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+
+    private void startReconnectionProcess() {
+
+        BluetoothDevice lastDevice = connectionManager.getLastConnectedDevice();
+        if (lastDevice == null) {
+            Log.d(Constants.TAG_MAIN, "No previous device to reconnect to");
+            return;
+        }
+
+        if (connectionManager.getCurrentState() == BleConnectionManager.ConnectionState.CONNECTING) {
+            Log.d(Constants.TAG_MAIN, "Already in the process of connecting, skipping reconnection");
+            return;
+        }
+
+        if (!permissionManager.hasRequiredPermissions()) {
+            Log.d(Constants.TAG_MAIN, "Missing permissions for reconnection");
+            permissionManager.requestPermissions(this);
+            return;
+        }
         
-        // Add test mode indicator if this is test data
-        String sourceIndicator = data.isTestData() ? " [TEST]" : "";
+        try {
+
+            if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
+                Log.d(Constants.TAG_MAIN, "Bluetooth not enabled, cannot reconnect");
+                connectionHelper.setText(R.string.bluetooth_disabled);
+                return;
+            }
+
+            updateConnectionUI(BleConnectionManager.ConnectionState.CONNECTING);
+            showToast("Reconnecting to SmartHat...");
+
+            Log.d(Constants.TAG_MAIN, "Attempting reconnection to: " + lastDevice.getAddress());
+            connectionManager.connect(lastDevice);
+            
+        } catch (SecurityException e) {
+            Log.e(Constants.TAG_MAIN, "Security exception during reconnection: " + e.getMessage());
+            showToast("Permission denied: " + e.getMessage());
+            updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+            permissionManager.requestPermissions(this);
+        } catch (Exception e) {
+            Log.e(Constants.TAG_MAIN, "Error during reconnection: " + e.getMessage());
+            showToast("Error: " + e.getMessage());
+            updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+        }
+    }
+
+    private void requestBluetoothEnable() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && 
+                !permissionManager.hasBluetoothConnectPermission()) {
+            Log.d(Constants.TAG_MAIN, "Requesting BLUETOOTH_CONNECT permission");
+            permissionManager.requestRequiredPermissions();
+            return;
+        }
         
-        if ("dust".equalsIgnoreCase(type)) {
-            tvDust.setText(String.format("Dust: %.1f µg/m³%s", value, sourceIndicator));
-        } else if ("noise".equalsIgnoreCase(type)) {
-            tvNoise.setText(String.format("Noise: %.1f dB%s", value, sourceIndicator));
+        try {
+            // Use the activity result launcher to request Bluetooth enable
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            bluetoothEnableLauncher.launch(enableBtIntent);
+        } catch (SecurityException e) {
+            // this shouldnot happen since we check for permissions above
+            // but handle it explicitly since required by lint
+            Log.e(Constants.TAG_MAIN, "Security exception requesting Bluetooth enable: " + e.getMessage());
+            showToast("Permission denied: " + e.getMessage());
+            updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+            permissionManager.requestRequiredPermissions();
+        } catch (Exception e) {
+            Log.e(Constants.TAG_MAIN, "Error requesting Bluetooth enable: " + e.getMessage());
+            showToast("Error: " + e.getMessage());
+            updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+        }
+    }
+
+    private void saveDataToDatabase(SensorData data) {
+        if (data == null) {
+            Log.w(Constants.TAG_MAIN, "Attempted to save null data to database");
+            return;
+        }
+
+        if (data.isTestData()) {
+            Log.d(Constants.TAG_MAIN, "Skipping database save for test data");
+            return;
+        }
+        // avoid main thread block
+        dbExecutor.execute(() -> {
+            try {
+                long startTime = System.currentTimeMillis();
+                
+                // Get the db helper
+                DatabaseHelper db = DatabaseHelper.getInstance();
+                if (db == null) {
+                    Log.e(Constants.TAG_MAIN, "Database helper is null");
+                    return;
+                }
+
+                db.insertSensorData(data);
+                
+                // calc operation time for performance tracking
+                long operationTime = System.currentTimeMillis() - startTime;
+
+                String sensorType = data.getSensorType(); //instead of getType
+                Log.d(Constants.TAG_MAIN, "Saved " + sensorType + " data to database in " + operationTime + "ms");
+
+                if (Math.random() < 0.01) {
+                    Log.d(Constants.TAG_MAIN, "Running database maintenance");
+                    db.performMaintenance();
+                }
+            } catch (Exception e) {
+                Log.e(Constants.TAG_MAIN, "Error saving data to database: " + e.getMessage(), e);
+            }
+        });
+    }
+
+    @Override
+    public void onPermissionsGranted() {
+        Log.d(Constants.TAG_MAIN, "Bluetooth permissions granted");
+        // continue the operation that was waiting for permissions
+        continueOperationAfterPermissions();
+    }
+    
+
+    @Override
+    public void onPermissionsDenied(boolean somePermissionsPermanentlyDenied) {
+        Log.d(Constants.TAG_MAIN, "Bluetooth permissions denied");
+        
+        if (somePermissionsPermanentlyDenied) {
+            showSettingsPermissionDialog();
+        } else {
+            updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+            showToast("Cannot connect without required permissions");
         }
     }
     
-    private void updateTestModeDisplay(Boolean testModeEnabled) {
-        if (testModeEnabled != null) {
-            if (testModeEnabled) {
-                tvTestMode.setVisibility(View.VISIBLE);
-                tvTestMode.setText("TEST MODE");
-            } else {
-                tvTestMode.setVisibility(View.GONE);
+
+    private void continueOperationAfterPermissions() {
+        if (connectionManager != null) {
+            BleConnectionManager.ConnectionState currentState = connectionManager.getConnectionState().getValue();
+            
+            if (currentState == BleConnectionManager.ConnectionState.DISCONNECTED) {
+                startScanAndConnectInternal();
             }
         }
+    }
+
+    // region test mode
+    /**
+     * set the test mode state and config
+     * sim connection workflow
+     */
+    private void setTestMode(TestDataGenerator.TestMode mode) {
+        boolean wasTestModeActive = testModeActive;
+        boolean enableTestMode = mode != TestDataGenerator.TestMode.OFF;
+
+        // Initialize testDataGenerator if it doesn't exist
+        if (enableTestMode && testDataGenerator == null) {
+            testDataGenerator = new TestDataGenerator();
+            testDataGenerator.setListener(this);
+        }
+        
+        // Always update the current mode, even if not changing active state
+        if (testDataGenerator != null) {
+            testDataGenerator.setCurrentMode(mode);
+        }
+
+        // Toggling between test mode and normal mode
+        if (enableTestMode != wasTestModeActive) {
+            BleConnectionManager currentConnectionState = enableTestMode ? connectionManager : mockConnectionManager;
+            BleConnectionManager.ConnectionState state = currentConnectionState.getCurrentState();
+            
+            if (state == BleConnectionManager.ConnectionState.DISCONNECTED) {
+                if (enableTestMode) {
+                    testDataGenerator.setMockBleManager(mockConnectionManager);
+                    btIntegration.cleanup();
+                    btIntegration = new BluetoothServiceIntegration(mockConnectionManager);
+                    btIntegration.addSensorDataListener(this);
+                    testModeActive = true;
+                    updateTestModeUI(mode);
+                    showToast("Test mode enabled - Use Connect button to simulate connection");
+                } else {
+                    if (testDataGenerator != null) {
+                        testDataGenerator.stopTestMode();
+                    }
+                    btIntegration.cleanup();
+                    btIntegration = new BluetoothServiceIntegration(connectionManager);
+                    btIntegration.addSensorDataListener(this);
+                    tvTestMode.setVisibility(View.GONE);
+                    testModeActive = false;
+                    showToast("Test mode disabled - Real BLE connection mode");
+                }
+            } else {
+                // Revert test data generator's mode if can't change mode
+                if (testDataGenerator != null) {
+                    testDataGenerator.setCurrentMode(wasTestModeActive ? testDataGenerator.getCurrentMode() : TestDataGenerator.TestMode.OFF);
+                }
+                showToast("Please disconnect before changing test mode");
+                invalidateOptionsMenu(); // Update menu to reflect reverted state
+                return;
+            }
+        }
+        
+        // Update test mode UI and functionality regardless of whether we were already in test mode
+        if (testModeActive) {
+            if (mode == TestDataGenerator.TestMode.OFF) {
+                testDataGenerator.stopTestMode();
+                tvTestMode.setVisibility(View.GONE);
+                testModeActive = false;
+            } else {
+                updateTestModeUI(mode);
+                
+                // If already connected in test mode, restart data generation with new mode
+                if (mockConnectionManager.getCurrentState() == BleConnectionManager.ConnectionState.CONNECTED) {
+                    testDataGenerator.stopTestMode(); // Stop current generation
+                    testDataGenerator.startTestMode(mode); // Restart with new mode
+                    // Show toast to indicate mode change
+                    showToast("Test mode changed to: " + mode.name());
+                }
+            }
+        }
+        
+        // Force menu to update
+        invalidateOptionsMenu();
+    }
+    
+    // legacy method for backward compatibility
+    @Override
+    public void onTestDataGenerated(SensorData data) {
+        // for backward compat
+        // the data will flow through the BluetoothServiceIntegration now
+        if (data == null) return;
+        
+        // process the test data in the same way as real data
+        onSensorData(data, data.getSensorType());
     }
     // endregion
 }

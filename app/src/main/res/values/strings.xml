@@ -13,6 +13,24 @@
     <string name="helper_connected">Receiving data</string>
     <string name="helper_connecting">Please wait…</string>
     <string name="helper_disconnected">Tap Connect to pair</string>
+    <string name="status_disconnected">Disconnected</string>
+    <string name="bluetooth_disabled">Bluetooth is disabled</string>
+    <string name="bluetooth_enabling">Enabling Bluetooth...</string>
+    <string name="ready_to_connect">Ready to connect</string>
+    <string name="reconnecting">Reconnecting...</string>
+    <string name="permission_required">Permission required</string>
+    <string name="disconnecting">Disconnecting...</string>
+    <string name="status_format">Status: %s</string>
+    
+    <!-- Initial Values -->
+    <string name="dust_initial">Dust: 0.0 µg/m³</string>
+    <string name="noise_initial">Noise: 0.0 dB</string>
+    
+    <!-- Connection Helper Messages -->
+    <string name="helper_text_connected">Connected to SmartHat. Receiving data...</string>
+    <string name="helper_text_connecting">Scanning for nearby SmartHat devices...</string>
+    <string name="helper_text_disconnecting">Disconnecting from SmartHat...</string>
+    <string name="helper_text_disconnected">Press Connect to find and connect to your SmartHat</string>
 
     <!-- Errors -->
     <string name="connection_timeout">Connection timed out</string>
@@ -21,4 +39,30 @@
     <!-- Sensor Displays -->
     <string name="dust_display">PM2.5: %.1f µg/m³</string>
     <string name="noise_display">Noise: %.1f dB</string>
+    
+    <!-- Sensor Format Strings - Optimized for Android 12 -->
+    <string name="dust_format">Dust: %.1f µg/m³</string>
+    <string name="noise_format">Noise: %.1f dB</string>
+    
+    <!-- Main Layout Strings -->
+    <string name="app_title">SmartHat</string>
+    <string name="test_mode_active">TEST MODE ACTIVE</string>
+    <string name="status_label">Status</string>
+    <string name="tap_to_pair">Tap Connect to pair</string>
+    <string name="environmental_readings">Environmental Readings</string>
+    <string name="dust_level">Dust Level</string>
+    <string name="dust_placeholder">-- µg/m³</string>
+    <string name="noise_level">Noise Level</string>
+    <string name="noise_placeholder">-- dB</string>
+    <string name="footer_text">SmartHat</string>
+    
+    <!-- BLE Test Activity Strings -->
+    <string name="ble_test_title">BLE Test Activity</string>
+    <string name="connection_state_placeholder">Connection State: Disconnected</string>
+    <string name="rssi_placeholder">RSSI: N/A</string>
+    <string name="signal_quality_placeholder">Signal Quality: Unknown</string>
+    <string name="connection_metrics_placeholder">Connection Metrics: N/A</string>
+    <string name="read_rssi">Read RSSI</string>
+    <string name="start_rssi_monitoring">Start RSSI Monitoring</string>
+    <string name="test_log_initial">Test Log:\n</string>
 </resources>

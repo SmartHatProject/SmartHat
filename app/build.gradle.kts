@@ -58,6 +58,29 @@ android {
         // Check all code including tests
         checkAllWarnings = true
     }
+    
+    // Configure test options for unit tests
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+            
+            // Add this for better Mockito compatibility
+            all {
+                it.useJUnitPlatform()
+            }
+        }
+    }
+}
+
+// Add force resolution for Mockito dependencies
+configurations.all {
+    resolutionStrategy {
+        force("org.mockito:mockito-core:5.4.0")
+        force("org.mockito:mockito-inline:5.2.0")
+        force("net.bytebuddy:byte-buddy:1.14.10")
+        force("net.bytebuddy:byte-buddy-agent:1.14.10")
+    }
 }
 
 dependencies {
@@ -80,8 +103,32 @@ dependencies {
     // Java 8+ desugaring
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 
-    // Testing
+    // Testing - JUnit
     testImplementation("junit:junit:4.13.2")
+    
+    // Update Mockito configurations
+    testImplementation("org.mockito:mockito-core:5.4.0")
+    testImplementation("org.mockito:mockito-inline:5.2.0")
+    testImplementation("net.bytebuddy:byte-buddy:1.14.10")
+    testImplementation("net.bytebuddy:byte-buddy-agent:1.14.10")
+    
+    // Robolectric for Android framework in unit tests
+    testImplementation("org.robolectric:robolectric:4.10.3")
+    
+    // androidx test for LiveData testing
+    testImplementation("androidx.arch.core:core-testing:2.2.0") // LiveData testing
+    testImplementation("androidx.test:core:1.5.0")
+    testImplementation("androidx.test:runner:1.5.2")
+    testImplementation("androidx.test.ext:junit:1.1.5")
+    
+    // Hamcrest for better assertions
+    testImplementation("org.hamcrest:hamcrest:2.2")
+    
+    // AndroidX test libraries for instrumented tests
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test:core:1.5.0")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("org.mockito:mockito-android:5.4.0")
 }

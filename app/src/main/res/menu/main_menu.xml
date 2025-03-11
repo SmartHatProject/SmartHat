@@ -3,18 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     
     <item
-        android:id="@+id/action_test_mode"
-        android:title="Test Mode"
-        android:checkable="true"
-        android:checked="false"
-        app:showAsAction="never" />
-    
-    <item
-        android:id="@+id/action_test_formats"
-        android:title="Test Data Formats"
-        app:showAsAction="never" />
-    
-    <item
         android:id="@+id/action_history"
         android:title="Threshold History"
         android:icon="@android:drawable/ic_menu_recent_history"
@@ -27,5 +15,32 @@
         android:checked="true"
         android:icon="@android:drawable/ic_popup_reminder"
         app:showAsAction="never" />
+    
+    <item
+        android:id="@+id/action_test_mode"
+        android:title="Test Mode"
+        android:icon="@android:drawable/ic_menu_manage"
+        app:showAsAction="never">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/action_test_mode_off"
+                    android:title="Off"
+                    android:checked="true" />
+                <item
+                    android:id="@+id/action_test_mode_normal"
+                    android:title="Normal Values" />
+                <item
+                    android:id="@+id/action_test_mode_high_dust"
+                    android:title="High Dust Values" />
+                <item
+                    android:id="@+id/action_test_mode_high_noise"
+                    android:title="High Noise Values" />
+                <item
+                    android:id="@+id/action_test_mode_random"
+                    android:title="Random Values" />
+            </group>
+        </menu>
+    </item>
     
 </menu> 

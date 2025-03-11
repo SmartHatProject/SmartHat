@@ -12,15 +12,71 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-/**safe database access*/
+/**
+ *db access using singleton pattern
+ */
 public class DatabaseHelper {
- private final SensorDataDao dao;
+    private static volatile DatabaseHelper instance;
+    private static Context appContext;
+    
+    private final SensorDataDao dao;
     private final Executor executor = Executors.newSingleThreadExecutor();
     // max records# in db
     public static final int MAX_RECORDS = 10000;
     
-//init the database and dao
- public DatabaseHelper(Context context) {
+    /**
+     * initialize the DatabaseHelper with application context
+     * call this method once in AppController.onCreate()
+     * @param context application context
+     */
+    public static synchronized void initialize(Context context) {
+        if (appContext == null) {
+            appContext = context.getApplicationContext();
+        }
+    }
+    
+    /**
+     * get the singleton instance of DatabaseHelper
+     * @return the DatabaseHelper instance
+     * @throws IllegalStateException if initialize() not called before
+     */
+    public static DatabaseHelper getInstance() {
+        if (instance == null) {
+            synchronized (DatabaseHelper.class) {
+                if (instance == null) {
+                    if (appContext == null) {
+                        // track where the error occurs for easier debugging
+                        String callerInfo = "";
+                        try {
+                            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+                            if (stackTrace.length >= 3) {
+                                callerInfo = " (called from " + stackTrace[3].getClassName() + 
+                                           "." + stackTrace[3].getMethodName() + ":" + 
+                                           stackTrace[3].getLineNumber() + ")";
+                            }
+                        } catch (Exception e) {
+                            // ignore stack trace processing errors
+                        }
+                        
+                        throw new IllegalStateException("DatabaseHelper not initialized! Call initialize() first." + callerInfo);
+                    }
+                    
+                    // create singleton instance
+                    instance = new DatabaseHelper(appContext);
+                    Log.d(Constants.TAG_DATABASE, "DatabaseHelper singleton instance created");
+                }
+            }
+        }
+        
+        return instance;
+    }
+    
+    /**
+     * private constructor to enforce singleton pattern
+     * never call directly
+     * @param context application context for database creation
+     */
+    private DatabaseHelper(Context context) {
         SensorDatabase db = SensorDatabase.getInstance(context);
         dao = db.sensorDataDao();
         // schedule initial cleanup
@@ -35,6 +91,24 @@ public class DatabaseHelper {
             checkAndCleanupDatabase();
         });
     }
+    
+    /**
+     * insert sensor data into the database
+     * @param data the sensor data to insert
+     */
+    public void insertSensorData(SensorData data) {
+        insertData(data);
+    }
+    
+    /**
+     * save the current app state
+     * @param state the state to save
+     */
+    public void saveAppState(String state) {
+        Log.d(Constants.TAG_DATABASE, "Saving app state: " + state);
+        // implementation can be expanded as needed
+    }
+    
     // if ble: will update dao query here, liveData for changes
     public LiveData<List<SensorData>> getAllReadings() {
         return dao.getAllData();
@@ -72,6 +146,26 @@ public class DatabaseHelper {
      */
     public void clearAllData() {
         executor.execute(dao::clearAll);
+    }
+    
+    /**
+     * db maintenance operations
+     *
+     */
+    public void performMaintenance() {
+        executor.execute(() -> {
+            checkAndCleanupDatabase();
+            
+
+            try {
+                Log.d(Constants.TAG_DATABASE, "Performing additional database maintenance");
+                androidx.sqlite.db.SimpleSQLiteQuery vacuumQuery = new androidx.sqlite.db.SimpleSQLiteQuery("VACUUM");
+                dao.vacuum(vacuumQuery);
+                Log.d(Constants.TAG_DATABASE, "Database VACUUM completed successfully");
+            } catch (Exception e) {
+                Log.e(Constants.TAG_DATABASE, "Error during database maintenance: " + e.getMessage());
+            }
+        });
     }
 }
 

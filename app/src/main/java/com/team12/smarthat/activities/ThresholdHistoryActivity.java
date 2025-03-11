@@ -51,8 +51,8 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
         adapter = new ThresholdBreachAdapter(this);
         recyclerView.setAdapter(adapter);
         
-        // dbhelper
-        databaseHelper = new DatabaseHelper(this);
+    //dbsingletone
+        databaseHelper = DatabaseHelper.getInstance();
     }
     
     private void loadThresholdBreaches() {

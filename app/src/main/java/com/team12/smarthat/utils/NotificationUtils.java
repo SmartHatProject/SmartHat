@@ -1,5 +1,7 @@
 package com.team12.smarthat.utils;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -9,14 +11,21 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import androidx.annotation.RequiresPermission;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import com.team12.smarthat.models.SensorData;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Utility class for handling notifications in the SmartHat app
+ * Optimized for Android 12+ with proper permission handling
+ */
+@SuppressLint("MissingPermission")
 public class NotificationUtils {
     private final Context context;
     private final NotificationManagerCompat manager;
@@ -37,21 +46,23 @@ public class NotificationUtils {
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
-                Constants.NOTIFICATION_CHANNEL_ID,
-                "Sensor Alerts",
-                NotificationManager.IMPORTANCE_HIGH
-            );
-            channel.setDescription("Alerts for environmental threshold breaches");
-            channel.enableLights(true);
+                    Constants.NOTIFICATION_CHANNEL_ID,
+                    "SmartHat Alerts",
+                    NotificationManager.IMPORTANCE_HIGH);
+            channel.setDescription("Alerts for dust and noise levels");
             channel.enableVibration(true);
-            channel.setBypassDnd(true); // notif can bypass do not disturb
-            channel.setShowBadge(true); // app icon
+            channel.enableLights(true);
+            
             manager.createNotificationChannel(channel);
         }
     }
 
+    /**
+     * Send a threshold alert notification
+     * This method checks for notification permissions and respects cooldown periods
+     */
+    @SuppressLint("MissingPermission")
     public void sendThresholdAlert(String title, String message) {
-
         new Handler(Looper.getMainLooper()).post(() -> {
             try {
                 // First check if notifications are enabled in app preferences
@@ -82,8 +93,14 @@ public class NotificationUtils {
                     recordAlertTime(alertType);
                     // id notifications
                     int notificationId = getNotificationIdForType(alertType);
-                    manager.notify(notificationId, notification);
-                    Log.d(Constants.TAG_MAIN, "Alert sent: " + title);
+                    
+                    // Check for notification permission on Android 13+
+                    if (hasNotificationPermission()) {
+                        manager.notify(notificationId, notification);
+                        Log.d(Constants.TAG_MAIN, "Alert sent: " + title);
+                    } else {
+                        Log.e(Constants.TAG_MAIN, "POST_NOTIFICATIONS permission not granted");
+                    }
                 } catch (SecurityException e) {
                     Log.e(Constants.TAG_MAIN, "Notification permission denied: " + e.getMessage());
                 } catch (Exception e) {
@@ -161,8 +178,11 @@ public class NotificationUtils {
     }
     
     /**
-     * treshold alerts
+     * Send an alert with the given title and message
+     * @param title the alert title
+     * @param message the alert message
      */
+    @SuppressLint("MissingPermission")
     public void sendAlert(String title, String message) {
         sendThresholdAlert(title, message);
     }
@@ -171,12 +191,17 @@ public class NotificationUtils {
      * Show an alert for dust sensor threshold breach
      * @param data the dust sensor data that triggered the alert
      */
+    @SuppressLint("MissingPermission")
     public void showDustAlert(SensorData data) {
-        // Show notification for both real and test data
+        // Check if this is test data and adjust the title
+        boolean isTestData = data.isTestData();
         float value = data.getValue();
-        String title = "Dust Alert";
-        String message = String.format("Dust level of %.1f µg/m³ exceeds safe limit (%d µg/m³)", 
-                                      value, (int)Constants.DUST_THRESHOLD);
+        
+        String title = isTestData ? "Test Dust Alert" : "Dust Alert";
+        String message = String.format("Dust level of %.1f µg/m³ exceeds safe limit (%d µg/m³)%s", 
+                                      value, (int)Constants.DUST_THRESHOLD,
+                                      isTestData ? " [TEST DATA]" : "");
+        
         sendAlert(title, message);
     }
 
@@ -184,26 +209,45 @@ public class NotificationUtils {
      * Show an alert for noise sensor threshold breach
      * @param data the noise sensor data that triggered the alert
      */
+    @SuppressLint("MissingPermission")
     public void showNoiseAlert(SensorData data) {
-        // Show notification for both real and test data
+        // Check if this is test data and adjust the title
+        boolean isTestData = data.isTestData();
         float value = data.getValue();
-        String title = "Noise Alert";
-        String message = String.format("Noise level of %.1f dB exceeds safe limit (%d dB)", 
-                                      value, (int)Constants.NOISE_THRESHOLD);
+        
+        String title = isTestData ? "Test Noise Alert" : "Noise Alert";
+        String message = String.format("Noise level of %.1f dB exceeds safe limit (%d dB)%s", 
+                                      value, (int)Constants.NOISE_THRESHOLD,
+                                      isTestData ? " [TEST DATA]" : "");
+        
         sendAlert(title, message);
     }
 
+    /**
+     * Check if the app has POST_NOTIFICATIONS permission on Android 13+
+     * @return true if permission is granted or not needed (Android < 13), false otherwise
+     */
+    private boolean hasNotificationPermission() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            return androidx.core.content.ContextCompat.checkSelfPermission(context, 
+                    android.Manifest.permission.POST_NOTIFICATIONS) == 
+                    android.content.pm.PackageManager.PERMISSION_GRANTED;
+        }
+        return true; // Permission not needed on older Android versions
+    }
+    
     /**
      * Check if notifications are enabled in app preferences
      * @return true if notifications are enabled, false otherwise
      */
     public boolean areNotificationsEnabled() {
-        // Check both system permission and app preference
+        // Check system permission, POST_NOTIFICATIONS permission on Android 13+, and app preference
         boolean systemEnabled = NotificationManagerCompat.from(context).areNotificationsEnabled();
+        boolean permissionGranted = hasNotificationPermission();
         boolean appEnabled = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
                 .getBoolean(Constants.PREF_NOTIFICATIONS_ENABLED, true); // Default to enabled
         
-        return systemEnabled && appEnabled;
+        return systemEnabled && appEnabled && permissionGranted;
     }
     
     /**
