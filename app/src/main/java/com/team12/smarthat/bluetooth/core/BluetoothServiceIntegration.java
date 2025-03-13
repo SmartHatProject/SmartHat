@@ -177,6 +177,9 @@ public class BluetoothServiceIntegration implements
             
             String stringData = new String(data);
             
+            // Add debug log to show raw data from ESP32
+            Log.d(TAG, "Raw data from ESP32: " + stringData);
+            
             // determine sensor type from uuid with null safety
             String sensorType = null;
             if (dustCharacteristicUuid.equals(uuid)) {
@@ -438,11 +441,14 @@ public class BluetoothServiceIntegration implements
             // parse json data
             JSONObject json = new JSONObject(jsonData);
             
+            // Log full JSON for debugging
+            Log.d(TAG, "Parsing JSON: " + jsonData);
+            
             // normalize sensor type to lowercase for consistency
             final String normalizedType = sensorType.toLowerCase();
             
             // extract the data value with bounds checking
-            float value = (float) json.optDouble("value", 0.0);
+            float value = (float) json.optDouble("data", 0.0);
             
             // validate and normalize values based on sensor type
             if (SENSOR_TYPE_DUST.equals(normalizedType)) {
@@ -461,7 +467,7 @@ public class BluetoothServiceIntegration implements
             }
             
             // get timestamp or use current time
-            long timestamp = json.optLong("timestamp", System.currentTimeMillis());
+            long timestamp = json.optLong("timeStamp", System.currentTimeMillis());
             
             // create sensor data object with normalized type
             final SensorData data = new SensorData(normalizedType, value, timestamp);
@@ -501,9 +507,9 @@ public class BluetoothServiceIntegration implements
             });
             
         } catch (JSONException e) {
-            Log.e(TAG, "Error parsing sensor JSON: " + e.getMessage(), e);
+            Log.e(TAG, "Error parsing sensor JSON: " + e.getMessage() + ", Raw data: " + jsonData);
         } catch (Exception e) {
-            Log.e(TAG, "Error processing sensor data: " + e.getMessage(), e);
+            Log.e(TAG, "Error processing sensor data: " + e.getMessage() + ", Raw data: " + jsonData);
         }
     }
     
