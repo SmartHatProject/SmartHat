@@ -5,9 +5,8 @@ import android.app.Application;
 import com.team12.smarthat.database.DatabaseHelper;
 
 /** 
- * Application lifecycle manager that initializes shared resources
  * 
- * IMPORTANT NOTES FOR DEVELOPERS:
+ * NOTE ALSO MENTIONED IN CONFIG FILE
  * 1. This is the ONLY place where DatabaseHelper.initialize() should be called
  * 2. This initialization must occur before any calls to DatabaseHelper.getInstance()
  * 3. All components should use DatabaseHelper.getInstance() to access the singleton instance
@@ -17,8 +16,6 @@ public class AppController extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        // Initialize the DatabaseHelper with application context
-        // This is a critical initialization that the entire app depends on
         DatabaseHelper.initialize(this);
     }
 }

@@ -6,10 +6,6 @@ import androidx.room.PrimaryKey;
 
 import android.util.Log;
 
-/**
- * Model class for sensor data
- * Enhanced with validation for Android 12 on Pixel 4a
- */
 @Entity(tableName = "sensor_data")
 public class SensorData {
     private static final String TAG = "SensorData";
@@ -18,11 +14,11 @@ public class SensorData {
     public static final String SOURCE_REAL = "REAL";
     public static final String SOURCE_TEST = "TEST";
     
-    // Constants for sensor types (matching BluetoothServiceIntegration)
+    // matching BluetoothServiceIntegration
     public static final String TYPE_DUST = "dust";
     public static final String TYPE_NOISE = "noise";
     
-    // Validation constants
+    // validation constants
     private static final float MAX_DUST_VALUE = 1000.0f;
     private static final float MAX_NOISE_VALUE = 150.0f;
     private static final long MAX_FUTURE_TIMESTAMP = 60000; // 1 minute in the future
@@ -34,7 +30,7 @@ public class SensorData {
     private float value;
     private long timestamp;
     private String metadata; // json string
-    private String source = SOURCE_REAL; // Default to real data
+    private String source = SOURCE_REAL; // default to real data
 
     public SensorData(String sensorType, float value) {
         this.sensorType = normalizeSensorType(sensorType);
@@ -44,7 +40,7 @@ public class SensorData {
     }
     
     /**
-     * Constructor with additional metadata support
+     * 
      * @param sensorType The type of sensor
      * @param value The sensor reading value
      * @param metadata Additional JSON data as string
@@ -58,7 +54,7 @@ public class SensorData {
     }
 
     /**
-     * Constructor with timestamp
+     * 
      * @param sensorType The type of sensor
      * @param value The sensor reading value
      * @param timestamp The timestamp of the reading
@@ -72,7 +68,7 @@ public class SensorData {
     }
 
     /**
-     * Normalize sensor type to lowercase for consistency
+     * 
      * @param type The sensor type to normalize
      * @return Normalized sensor type
      */
@@ -85,7 +81,7 @@ public class SensorData {
     }
     
     /**
-     * Validate and normalize sensor value based on type
+     * 
      * @param type The sensor type
      * @param value The value to validate
      * @return Validated and normalized value
@@ -106,20 +102,20 @@ public class SensorData {
     }
     
     /**
-     * Validate timestamp to prevent future timestamps
+     * 
      * @param timestamp The timestamp to validate
      * @return Validated timestamp
      */
     private long validateTimestamp(long timestamp) {
         long currentTime = System.currentTimeMillis();
         
-        // Check if timestamp is too far in the future
+        
         if (timestamp > currentTime + MAX_FUTURE_TIMESTAMP) {
             Log.w(TAG, "Future timestamp detected: " + timestamp + ", using current time");
             return currentTime;
         }
         
-        // Check if timestamp is too far in the past (1 day)
+        
         if (timestamp < currentTime - 86400000) {
             Log.w(TAG, "Very old timestamp detected: " + timestamp + ", might be incorrect");
         }
@@ -168,7 +164,7 @@ public class SensorData {
     }
     
     /**
-     * Get the source of this data (real or test)
+     * 
      * @return The source identifier
      */
     public String getSource() {
@@ -176,7 +172,7 @@ public class SensorData {
     }
     
     /**
-     * Set the source of this data
+     * 
      * @param source The source identifier (use SOURCE_REAL or SOURCE_TEST constants)
      */
     public void setSource(String source) {
@@ -184,7 +180,7 @@ public class SensorData {
     }
     
     /**
-     * Check if this data is from a test source
+     * 
      * @return true if test data, false if real data
      */
     public boolean isTestData() {
@@ -192,7 +188,7 @@ public class SensorData {
     }
     
     /**
-     * Check if this is dust sensor data
+     * 
      * @return true if dust data
      */
     public boolean isDustData() {
@@ -200,7 +196,7 @@ public class SensorData {
     }
     
     /**
-     * Check if this is noise sensor data
+     * 
      * @return true if noise data
      */
     public boolean isNoiseData() {
@@ -208,7 +204,7 @@ public class SensorData {
     }
     
     /**
-     * Format the value with appropriate units based on sensor type
+     * 
      * @return Formatted value with units
      */
     public String getFormattedValue() {

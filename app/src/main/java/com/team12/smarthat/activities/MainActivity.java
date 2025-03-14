@@ -1018,7 +1018,7 @@ public class MainActivity extends AppCompatActivity implements
         
         if (somePermissionsPermanentlyDenied) {
             showSettingsPermissionDialog();
-        } else {
+            } else {
             updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
             showToast("Cannot connect without required permissions");
         }
@@ -1076,7 +1076,7 @@ public class MainActivity extends AppCompatActivity implements
                     btIntegration.cleanup();
                     btIntegration = new BluetoothServiceIntegration(connectionManager);
                     btIntegration.addSensorDataListener(this);
-                    tvTestMode.setVisibility(View.GONE);
+                tvTestMode.setVisibility(View.GONE);
                     testModeActive = false;
                     showToast("Test mode disabled - Real BLE connection mode");
                 }
