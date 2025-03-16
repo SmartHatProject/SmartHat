@@ -6,11 +6,11 @@ import com.team12.smarthat.database.DatabaseHelper;
 
 /** 
  * 
- * NOTE ALSO MENTIONED IN CONFIG FILE
- * 1. This is the ONLY place where DatabaseHelper.initialize() should be called
- * 2. This initialization must occur before any calls to DatabaseHelper.getInstance()
- * 3. All components should use DatabaseHelper.getInstance() to access the singleton instance
- * 4. Never create new instances of DatabaseHelper directly
+ * note: also mentioned in config file
+ * 1. this is the only place where databasehelper.initialize() should be called
+ * 2. this initialization must happen before any calls to databasehelper.getinstance()
+ * 3. all components should use databasehelper.getinstance() to access the singleton instance
+ * 4. never create new instances of databasehelper directly
  */
 public class AppController extends Application {
     @Override

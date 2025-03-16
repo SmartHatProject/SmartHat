@@ -219,7 +219,7 @@ public class BleConnectionManager {
     
     /**
      * helper method to perform state update on main thread
-     * optimized for android 12 on pixel 4a
+     * 
      */
     private void doUpdateState(ConnectionState newState) {
         // update livedata first
@@ -239,8 +239,8 @@ public class BleConnectionManager {
     
     /**
      * execute an operation with permission check
-     * this method handles permission verification before executing ble operations
-     * optimized for android 12 on pixel 4a
+     * handles permission verification before ble operation
+     * 
      */
     private void executeWithPermissionCheck(Runnable operation, String operationName) {
         try {
@@ -251,7 +251,7 @@ public class BleConnectionManager {
                 return;
             }
             
-            // for android 12+ (pixel 4a), check bluetooth_connect permission specifically
+            // for 12+ check bluetooth_connect permission specifically
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (!permissionManager.hasBluetoothConnectPermission()) {
                     Log.e(TAG, "Cannot perform " + operationName + ": BLUETOOTH_CONNECT permission not granted");
@@ -260,7 +260,7 @@ public class BleConnectionManager {
                     return;
                 }
             } else {
-                // for older android versions, check through the permission manager
+                // for older android versions permission manager
                 if (!hasRequiredPermissions()) {
                     Log.e(TAG, "Cannot perform " + operationName + ": Required permissions not granted");
                     reportError("Permission denied for " + operationName);
@@ -289,7 +289,7 @@ public class BleConnectionManager {
     
     /**
      * connect to specified device with retry and exponential backoff
-     * optimized for android 12 on pixel 4a connecting to esp32
+     *
      */
     public void connect(BluetoothDevice device) {
         if (device == null) {
@@ -314,7 +314,7 @@ public class BleConnectionManager {
     
     /**
      * connect with retry and exponential backoff
-     * enhanced for android 12 on pixel 4a with esp32
+     * 
      */
     private void connectWithRetry() {
         // clear any existing connection
@@ -362,7 +362,7 @@ public class BleConnectionManager {
                     updateState(ConnectionState.DISCONNECTED);
                 });
             } else {
-                // connection initiated (but not yet established)
+                // connection initiated 
                 Log.d(TAG, "Connection initiated to " + targetDevice.getAddress());
             }
         }, "connect to device");
@@ -370,15 +370,15 @@ public class BleConnectionManager {
     
     /**
      * calculate backoff delay for reconnection attempts
-     * uses exponential backoff with jitter
-     * optimized for android 12 on pixel 4a with esp32
+     * exponential backoff with jitter
+     * 
      */
     private long calculateBackoffDelay() {
         // base delay increased by retry count using exponential backoff
         long baseDelay = BASE_RECONNECTION_DELAY * (1L << Math.min(reconnectionAttempts, 6)); // cap at 64x
         
-        // add jitter (±20%) to prevent multiple devices reconnecting simultaneously
-        // which is important for android 12's bluetooth stack
+      //jitter
+       
         double jitterFactor = 0.8 + (Math.random() * 0.4); // 0.8-1.2 range
         
         long delay = (long)(baseDelay * jitterFactor);
@@ -387,22 +387,22 @@ public class BleConnectionManager {
         Log.d(TAG, "Reconnection attempt " + reconnectionAttempts + 
               ", backoff delay: " + delay + "ms");
               
-        // define the maximum reconnection delay (added here since it's not defined as a constant)
-        final long MAX_RECONNECTION_DELAY = 60000; // 60 seconds
+        // added here since it's not defined as a constant
+        final long MAX_RECONNECTION_DELAY = 60000; // 60 sec
         
         // cap at a reasonable maximum to prevent excessive delays
         return Math.min(delay, MAX_RECONNECTION_DELAY);
     }
     
     /**
-     * request optimal connection parameters for esp32 on android 12
-     * this improves battery life and connection stability on pixel 4a
+     * request optimal connection parameters for esp32 for battery 
+     * 
      */
     private void requestConnectionParameters(BluetoothGatt gatt) {
         if (gatt == null) return;
         
         executeWithPermissionCheck(() -> {
-            // Request connection priority first - this improves reliability on Android 12
+            // Request connection priority first 
             boolean priorityResult = gatt.requestConnectionPriority(
                 BluetoothGatt.CONNECTION_PRIORITY_BALANCED);
             Log.d(TAG, "Connection priority request result: " + priorityResult);
@@ -417,15 +417,15 @@ public class BleConnectionManager {
                 // Only log on debug - no need to handle errors here as it's not critical
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     try {
-                        // On Android 12+, we use more battery-friendly parameters for ESP32
+                        // On Android 12+
                         int interval = ESP32BluetoothSpec.ConnectionParams.ANDROID12_CONN_INTERVAL;
                         int latency = ESP32BluetoothSpec.ConnectionParams.ANDROID12_SLAVE_LATENCY; 
                         int timeout = ESP32BluetoothSpec.ConnectionParams.ANDROID12_SUPERVISION_TIMEOUT;
                         
-                        // Call setPreferredPhy - doesn't return a result in Android 12
+                        // doesn't return a result in Android 12
                         gatt.setPreferredPhy(
-                            BluetoothDevice.PHY_LE_1M,  // TX PHY - 1M is more reliable on Pixel 4a
-                            BluetoothDevice.PHY_LE_1M,  // RX PHY
+                            BluetoothDevice.PHY_LE_1M, 
+                            BluetoothDevice.PHY_LE_1M,  
                             BluetoothDevice.PHY_OPTION_NO_PREFERRED
                         );
                         Log.d(TAG, "Requested preferred PHY: 1M");
@@ -434,14 +434,14 @@ public class BleConnectionManager {
                         Log.w(TAG, "Error setting connection parameters: " + e.getMessage());
                     }
                 }
-                // Mark operation as complete
+                // mar as complete
                 operationQueue.operationComplete();
             });
         }, "request connection parameters");
     }
     
     /**
-     * Connection timeout handler with exponential backoff for retries
+     * timeout handler with exponential backoff for retries
      */
     private void startConnectionTimeout() {
         // Clear any existing timeout
@@ -498,7 +498,7 @@ public class BleConnectionManager {
                     bluetoothGatt.disconnect();
                     Log.d(TAG, "Disconnect request sent");
                     
-                    // Note: We don't update state here - wait for the callback
+                    // Note: We don't update state here wait for the callback
                 } catch (Exception e) {
                     Log.e(TAG, "Error disconnecting: " + e.getMessage());
                     closeGattAndUpdateState();
@@ -529,16 +529,15 @@ public class BleConnectionManager {
     }
     
     /**
-     * Request MTU negotiation for optimal data throughput
-     * Larger MTU allows for more efficient data transfer
-     * ESP32 supports up to 517 bytes
+     *request mtu 
+     * Larger MTU efficiency >>>> , we had a lower before 
+     * esp32 max=  517 bytes
      */
     private void requestMtuNegotiation(BluetoothGatt gatt) {
         if (gatt == null) return;
         
         executeWithPermissionCheck(() -> {
-            // Request the best possible MTU size (512 bytes is good for ESP32)
-            // The actual negotiated value will depend on both devices' capabilities
+           
             final int OPTIMAL_MTU = 512; 
             
             try {
@@ -606,7 +605,7 @@ public class BleConnectionManager {
                     // Close GATT and update state
                     closeGattAndUpdateState();
                     
-                    // Attempt reconnection with exponential backoff
+                    //reconnection with exponential backoff
                     handleConnectionError(status);
                 }
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
@@ -700,9 +699,9 @@ public class BleConnectionManager {
     };
     
     /**
-     * Get human-readable error message for BLE error codes
+     * get error message 
      * Handles both connection error codes and scan error codes
-     * Optimized for Android 12 on Pixel 4a with ESP32
+     * 
      */
     private String getErrorMessage(int errorCode) {
         // GATT connection error codes
@@ -725,8 +724,8 @@ public class BleConnectionManager {
             return "GATT error (133) - This is common on Android 12, please retry";
         }
         else if (errorCode == ESP32BluetoothSpec.ErrorCodes.CONNECTION_TIMEOUT ||
-                 errorCode == 62 || // Android 12 specific - GATT_CONN_TIMEOUT
-                 errorCode == 8) {  // Android 12 specific - GATT_CONN_TIMEOUT_PEER
+                 errorCode == 62 || // Android 12 spec GATT_CONN_TIMEOUT
+                 errorCode == 8) {  // Android 12 spec  GATT_CONN_TIMEOUT_PEER
             return "Connection timeout - ESP32 may be out of range";
         }
         else if (errorCode == ESP32BluetoothSpec.ErrorCodes.CONN_PARAM_REJECTED) {
@@ -735,16 +734,16 @@ public class BleConnectionManager {
         else if (errorCode == ESP32BluetoothSpec.ErrorCodes.UNSUPPORTED_TRANSPORT) {
             return "Unsupported transport - Try with default PHY";
         }
-        else if (errorCode == 19) { // Android 12 specific - GATT_CONN_TERMINATE_PEER_USER
+        else if (errorCode == 19) { //  GATT_CONN_TERMINATE_PEER_USER
             return "Connection terminated by ESP32 - It may be in sleep mode";
         }
-        else if (errorCode == 22) { // Android 12 specific - GATT_CONN_TERMINATE_LOCAL_HOST
+        else if (errorCode == 22) { //  GATT_CONN_TERMINATE_LOCAL_HOST
             return "Connection terminated by Android - Battery optimization may be active";
         }
-        else if (errorCode == 34) { // Android 12 specific - GATT_CONN_LMP_TIMEOUT
+        else if (errorCode == 34) { // GATT_CONN_LMP_TIMEOUT
             return "LMP response timeout - Interference or ESP32 unresponsive";
         }
-        else if (errorCode == 256) { // Android 12 specific - GATT_CONN_FAIL_ESTABLISH
+        else if (errorCode == 256) { //GATT_CONN_FAIL_ESTABLISH
             return "Failed to establish connection - Retry with different parameters";
         }
         
@@ -761,7 +760,7 @@ public class BleConnectionManager {
         else if (errorCode == ScanCallback.SCAN_FAILED_FEATURE_UNSUPPORTED) {
             return "Feature unsupported";
         }
-        // Android 6.0+ scan errors
+        // 6+ scan errors
         else if (errorCode == 5) { // SCAN_FAILED_OUT_OF_HARDWARE_RESOURCES
             return "Out of hardware resources";
         }
@@ -775,8 +774,6 @@ public class BleConnectionManager {
     
     /**
      * Handle connection errors based on error code
-     * Implements retry logic for transient errors
-     * Optimized for Android 12 on Pixel 4a with ESP32
      */
     private void handleConnectionError(int errorCode) {
         Log.e(TAG, "Handling connection error: " + errorCode + " - " + getErrorMessage(errorCode));
@@ -788,12 +785,12 @@ public class BleConnectionManager {
             return;
         }
         
-        // Handle specific error codes differently
+        // Handle specific error code
         if (errorCode == ESP32BluetoothSpec.ErrorCodes.CONNECTION_TIMEOUT ||
-            errorCode == 62 || // Android 12 specific
-            errorCode == 8) {  // Android 12 specific
+            errorCode == 62 || 
+            errorCode == 8) {  
             
-            // Connection timeout - retry with backoff if under max retries
+            // retry with backoff if under max retries
             if (connectionRetries < MAX_RETRIES) {
                 long delay = calculateBackoffDelay();
                 Log.d(TAG, "Connection timed out, retrying after " + delay + "ms (attempt " + (connectionRetries + 1) + ")");
@@ -803,7 +800,7 @@ public class BleConnectionManager {
             }
         }
         else if (errorCode == ESP32BluetoothSpec.ErrorCodes.GATT_ERROR) {
-            // Common on Android 12, retry with exponential backoff
+            // retry with exponential backoff
             if (connectionRetries < MAX_RETRIES) {
                 long delay = calculateBackoffDelay();
                 Log.d(TAG, "Retrying connection after " + delay + "ms (attempt " + (connectionRetries + 1) + ")");
@@ -896,12 +893,12 @@ public class BleConnectionManager {
     }
     
     /**
-     * Get the last connected device for reconnection purposes
-     * @return The last device we successfully connected to, or null if none
+     * Get the last connected device 
+     * @return The last device we successfully connected to null if none
      */
     public BluetoothDevice getLastConnectedDevice() {
         executeWithPermissionCheck(() -> {
-            // No-op, just for permission check
+            // No op, just for permission check
         }, "get last connected device");
         
         return lastConnectedDevice;
@@ -909,7 +906,7 @@ public class BleConnectionManager {
     
     /**
      * Stop any active Bluetooth LE scan
-     * Optimized for Android 12 on Pixel 4a
+     * 
      */
     public void stopScan() {
         if (!isScanning.get()) return;
@@ -934,7 +931,7 @@ public class BleConnectionManager {
     
     /**
      * Scan for ESP32 BLE devices
-     * Optimized for Android 12 on Pixel 4a
+     * 
      * 
      * @param callback Callback to receive scan results
      * @param timeoutMs Timeout in milliseconds
@@ -946,7 +943,7 @@ public class BleConnectionManager {
             return;
         }
         
-        // For Android 12+, we need BLUETOOTH_SCAN permission specifically
+        // 12 spec
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (!permissionManager.hasBluetoothScanPermission()) {
                 Log.e(TAG, "Cannot scan: BLUETOOTH_SCAN permission not granted");
@@ -996,12 +993,12 @@ public class BleConnectionManager {
                 return;
             }
             
-            // Create scan settings optimized for Android 12 on Pixel 4a
+            // Create scan settings 
             ScanSettings settings = new ScanSettings.Builder()
-                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)  // Use high power mode for quick discovery
+                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)  // quick discovery high power mode
                 .setReportDelay(0)  // Report results immediately
                 .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)  // Report all devices
-                .setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE)  // Be less strict in matching
+                .setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE)  
                 .setNumOfMatches(ScanSettings.MATCH_NUM_MAX_ADVERTISEMENT)  // Get all advertisements
                 .build();
                 
@@ -1012,7 +1009,7 @@ public class BleConnectionManager {
                 .build();
             filters.add(filter);
             
-            // Create scan callback that looks specifically for ESP32 devices
+            // Create scan callback that looks for esp32 
             scanCallback = new ScanCallback() {
                 @Override
                 public void onScanResult(int callbackType, ScanResult result) {
@@ -1068,7 +1065,7 @@ public class BleConnectionManager {
     }
     
     /**
-     * Check if a device is likely an ESP32 based on scan result
+     * Check if a device is likely an esp based on scan result
      */
     private boolean isESP32Device(BluetoothDevice device, ScanResult result) {
         // Check by name
@@ -1079,7 +1076,7 @@ public class BleConnectionManager {
                 return true;
             }
         }
-        
+         
         // Check by service UUID
         ScanRecord record = result.getScanRecord();
         if (record != null) {
@@ -1093,8 +1090,8 @@ public class BleConnectionManager {
             }
         }
         
-        // If neither matches, check signal strength as last resort
-        // (ESP32 devices will typically be close when scanning)
+        // If neither matche heck signal strength as last resort
+    
         int rssi = result.getRssi();
         return rssi > -75; // Only consider devices with strong signal
     }
@@ -1159,8 +1156,8 @@ public class BleConnectionManager {
     }
     
     /**
-     * Resets the singleton instance for testing purposes only.
-     * This method is not intended for use in production code.
+     * Resets the singleton instance for test only
+     * 
      */
     @VisibleForTesting
     public static void resetInstanceForTesting() {
@@ -1170,12 +1167,12 @@ public class BleConnectionManager {
         }
     }
     
-    // Add a protected getter for characteristicChangeListener
+    // protected getter for characteristicChangeListener
     /**
-     * Get the current characteristic change listener
+     *
      * @return The currently registered listener or null if none
      */
     protected CharacteristicChangeListener getCharacteristicChangeListener() {
         return characteristicChangeListener;
     }
-} 
+}  

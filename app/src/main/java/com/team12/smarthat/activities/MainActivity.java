@@ -48,8 +48,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
- * main activity is handling a lot might consider moving to different classses later
-
+ * main activity handling a lot we might consider refactoring some of this into separate classes later
  */
 public class MainActivity extends AppCompatActivity implements 
         BluetoothServiceIntegration.SensorDataListener,
@@ -67,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements
     private DatabaseHelper databaseHelper; // our local sqlite database access
     private NotificationUtils notificationUtils;
     
-    // uI components
+    // ui components
     private TextView tvStatus, tvDust, tvNoise, tvTestMode;
     private Button btnConnect;
     private View connectionIndicator;
@@ -90,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements
                 Log.d(Constants.TAG_MAIN, "Bluetooth enabled successfully via system dialog");
                 startScanAndConnect();
             } else {
-                // case user declined
+                // user declined bluetooth activation
                 Log.d(Constants.TAG_MAIN, "User declined to enable Bluetooth via system dialog");
                 showToast("Bluetooth is required to connect to SmartHat device");
                 updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
@@ -99,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements
     );
     // endregion
 
-    //a singlethreadexecutor for db operations
+    // single thread executor for database operations to avoid blocking the main thread
     private final ExecutorService dbExecutor = Executors.newSingleThreadExecutor();
 
     private TestDataGenerator testDataGenerator;
@@ -207,35 +206,35 @@ public class MainActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
         
-     //bt state changes registrereceiver
+        // register receiver to listen for bluetooth state changes
         IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
         registerReceiver(bluetoothStateReceiver, filter);
         
 
         if (permissionManager.hasRequiredPermissions()) {
             try {
-                // enable check
+                // check if bluetooth is enabled
                 if (bluetoothAdapter != null && !bluetoothAdapter.isEnabled()) {
-                    // update the ui
+                    // update the ui to show bluetooth is disabled
                     updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
                     connectionHelper.setText(R.string.bluetooth_disabled);
                 } else if (connectionManager != null) {
                     updateConnectionUI(connectionManager.getCurrentState());
                     
-                    // auto recon connected/ disc / previous connection exists
+                    // attempt auto-reconnection if we were previously connected but now disconnected
                     if (connectionManager.getCurrentState() == BleConnectionManager.ConnectionState.DISCONNECTED
                         && connectionManager.getLastConnectedDevice() != null) {
-                        // reconnection after short delay
+                        // add a short delay before attempting reconnection
                         mainHandler.postDelayed(this::startReconnectionProcess, 1000);
                     }
                 }
             } catch (SecurityException e) {
-                // handle security exception from bt adapter operations
+                // handle security exception that might occur when accessing bluetooth adapter
                 Log.e(Constants.TAG_MAIN, "Security exception in onResume: " + e.getMessage());
                 updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
             }
         } else {
-            //no permissions yet just update ui
+            // we don't have required permissions yet, just update the ui accordingly
             updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
             connectionHelper.setText(R.string.permission_required);
         }
@@ -245,15 +244,15 @@ public class MainActivity extends AppCompatActivity implements
     protected void onPause() {
         super.onPause();
         
-        //unregiter bt state receiver
+        // unregister the bluetooth state receiver to prevent leaks
         try {
             unregisterReceiver(bluetoothStateReceiver);
         } catch (IllegalArgumentException e) {
-            // ignore
+            // ignore if receiver wasn't registered
             Log.d(Constants.TAG_MAIN, "BluetoothStateReceiver was not registered");
         }
         
-        // cancel pending ui updates/ delays
+        // cancel any pending ui updates or delayed operations
         mainHandler.removeCallbacksAndMessages(null);
 
     }
@@ -262,10 +261,10 @@ public class MainActivity extends AppCompatActivity implements
     protected void onStop() {
         super.onStop();
 
-        // no auto disconnec to allow background operation
-        // android 12 background restrictions spec
+        // we don't auto disconnect to allow background operation
+        // this follows android 12 background restrictions specifications
         
-        // saving to restore
+        // save current state to restore later if needed
         if (databaseHelper != null) {
             databaseHelper.saveAppState(connectionManager.getCurrentState().name());
         }
@@ -367,7 +366,7 @@ public class MainActivity extends AppCompatActivity implements
 
     // region component init
     private void initializeComponents() {
-        // find ui components
+        // find and initialize ui components
         tvStatus = findViewById(R.id.tv_status);
         tvDust = findViewById(R.id.tv_dust);
         tvNoise = findViewById(R.id.tv_noise);
@@ -376,22 +375,22 @@ public class MainActivity extends AppCompatActivity implements
         connectionIndicator = findViewById(R.id.connection_indicator);
         connectionHelper = findViewById(R.id.connection_helper);
         
-        // init db helper singleton
+        // initialize database helper singleton
         databaseHelper = DatabaseHelper.getInstance();
         
-        // init bt system components
+        // initialize bluetooth system components
         systemBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         if (systemBluetoothManager != null) {
             bluetoothAdapter = systemBluetoothManager.getAdapter();
         }
         
-        // init permission manager for android 12
+        // initialize permission manager for android 12 compatibility
         permissionManager = new BluetoothPermissionManager(this);
         
-        //  singleton
+        // get the singleton instance of the connection manager
         connectionManager = BleConnectionManager.getInstance(this, permissionManager);
         
-        // don't use it yet
+        // initialize mock manager but don't use it yet
         mockConnectionManager = MockBleConnectionManager.getInstance(this, permissionManager);
 
         btIntegration = new BluetoothServiceIntegration(connectionManager);
@@ -594,17 +593,17 @@ public class MainActivity extends AppCompatActivity implements
     }
     
     /**
-     * start scanning for ESP32 & connect to found device
-     * updates for android 12 on Pixel 4a spec
+     * start scanning for ESP32 device and connect to it when found
+     * 
      */
     private void startScanAndConnect() {
         if (connectionManager == null) return;
 
-                    if (bluetoothAdapter == null) {
-                        showToast("Bluetooth not available on this device");
+        if (bluetoothAdapter == null) {
+            showToast("Bluetooth not available on this device");
             updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
-                        return;
-                    }
+            return;
+        }
                     
         if (!permissionManager.hasRequiredPermissions()) {
             Log.d(Constants.TAG_MAIN, "Requesting Bluetooth permissions");
@@ -616,8 +615,8 @@ public class MainActivity extends AppCompatActivity implements
     }
     
     /**
-     *
-     * this method assumes permissions have been checked
+     * internal implementation of scan and connect process
+     * this method assumes permissions have been checked already
      */
     private void startScanAndConnectInternal() {
         try {
@@ -626,10 +625,10 @@ public class MainActivity extends AppCompatActivity implements
                 requestBluetoothEnable();
             return;
         }
-              //scanning state
+              // update ui to show we're in scanning state
             updateConnectionUI(BleConnectionManager.ConnectionState.CONNECTING);
             
-            //timeout
+            // set timeout for scan operation
             final long SCAN_TIMEOUT = 10000; // 10 seconds
             connectionManager.scanForESP32(new BleConnectionManager.ScanResultCallback() {
                 @Override
@@ -658,12 +657,12 @@ public class MainActivity extends AppCompatActivity implements
             }, SCAN_TIMEOUT);
             
         } catch (SecurityException e) {
-            // update handling SecurityException explicit required by lint
+            // explicitly handle SecurityException as required by lint
             Log.e(Constants.TAG_MAIN, "Security exception: " + e.getMessage());
             showToast("Permission denied: " + e.getMessage());
             updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
             
-            // this shouldn't happen since we check permission but just in case
+            // this shouldn't happen since we check permissions first, but handle it just in case
             permissionManager.requestPermissions(this);
                 } catch (Exception e) {
             Log.e(Constants.TAG_MAIN, "Error starting scan: " + e.getMessage());
@@ -673,8 +672,7 @@ public class MainActivity extends AppCompatActivity implements
     }
     
     /**
-     * update the connection ui based on the current state
-     *
+     * update the connection ui elements based on the current connection state
      */
     private void updateConnectionUI(BleConnectionManager.ConnectionState state) {
         if (isFinishing() || isDestroyed()) return;
@@ -974,12 +972,12 @@ public class MainActivity extends AppCompatActivity implements
             Log.d(Constants.TAG_MAIN, "Skipping database save for test data");
             return;
         }
-        // avoid main thread block
+        // run database operations on background thread to avoid blocking the main thread
         dbExecutor.execute(() -> {
             try {
                 long startTime = System.currentTimeMillis();
                 
-                // Get the db helper
+                // get the database helper singleton instance
                 DatabaseHelper db = DatabaseHelper.getInstance();
                 if (db == null) {
                     Log.e(Constants.TAG_MAIN, "Database helper is null");
@@ -988,10 +986,10 @@ public class MainActivity extends AppCompatActivity implements
 
                 db.insertSensorData(data);
                 
-                // calc operation time for performance tracking
+                // calculate operation time for performance tracking
                 long operationTime = System.currentTimeMillis() - startTime;
 
-                String sensorType = data.getSensorType(); //instead of getType
+                String sensorType = data.getSensorType(); // use getSensorType instead of getType
                 Log.d(Constants.TAG_MAIN, "Saved " + sensorType + " data to database in " + operationTime + "ms");
 
                 if (Math.random() < 0.01) {
@@ -1037,8 +1035,8 @@ public class MainActivity extends AppCompatActivity implements
 
     // region test mode
     /**
-     * set the test mode state and config
-     * sim connection workflow
+     * set the test mode state and config the test data generation
+     * simulates the connection 
      */
     private void setTestMode(TestDataGenerator.TestMode mode) {
         boolean wasTestModeActive = testModeActive;
@@ -1114,11 +1112,11 @@ public class MainActivity extends AppCompatActivity implements
         invalidateOptionsMenu();
     }
     
-    // legacy method for backward compatibility
+    // legacy method for backward compatibility with older test implementation
     @Override
     public void onTestDataGenerated(SensorData data) {
-        // for backward compat
-        // the data will flow through the BluetoothServiceIntegration now
+        // for backward compatibility
+        // the data will now flow through the BluetoothServiceIntegration
         if (data == null) return;
         
         // process the test data in the same way as real data

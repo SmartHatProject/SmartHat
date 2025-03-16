@@ -20,26 +20,18 @@ import com.team12.smarthat.utils.Constants;
 import java.lang.ref.WeakReference;
 
 /**
- * Centralized manager for Bluetooth permissions
+ * centeralized ble permission manager
  * 
- * This class serves as the single source of truth for permission management in the SmartHat app.
- * It handles version-specific permission checks, requesting permissions, and managing the result flow.
- * 
- * App Architecture:
+ * single source of truth
+ * version specific permission checks requesting permissions, and managing the result flow
+ * Architecture(also explained in read me )
  * 1. MainActivity initializes this manager and passes it to BleConnectionManager
  * 2. BleConnectionManager uses it for permission checks before BLE operations
  * 3. All Bluetooth interactions require permission checks through this manager
- * 
- * Features:
- * - Supports both modern Activity Result API and traditional permission requests
- * - Handles Android version-specific permission requirements (API 31+ vs older)
- * - Provides UI for permission rationales and settings redirection
- * - Thread-safe with weak references to prevent memory leaks
- * 
- * Permission Flow:
- * 1. Check permissions using hasRequiredPermissions()
- * 2. If granted, proceed with operation
- * 3. If not granted, request permissions with requestPermissions()
+ * permission flow
+ * 1.check permissions using hasRequiredPermissions()
+ * 2.case granted proceed with operation
+ * 3. case not granted, request permissions with requestPermissions()
  * 4. Result handled through callbacks or onRequestPermissionsResult()
  */
 public class BluetoothPermissionManager {
@@ -79,7 +71,7 @@ public class BluetoothPermissionManager {
     }
     
     /**
-     * Setup permission launcher using Activity Result API
+     * Setup permission launcher 
      */
     private void setupPermissionLauncher(ComponentActivity activity) {
         permissionLauncher = activity.registerForActivityResult(
@@ -106,7 +98,7 @@ public class BluetoothPermissionManager {
     }
     
     /**
-     * Get the array of permissions required for Android 12+
+     * array of permissions required for12+
      * @return Array of required permission strings
      */
     public String[] getRequiredPermissions() {
@@ -118,7 +110,7 @@ public class BluetoothPermissionManager {
     }
     
     /**
-     * Check if all required Bluetooth permissions for Android 12+ are granted
+     * Check if all required Bluetooth permissions for 12+ are granted
      * @return True if all required permissions are granted, false otherwise
      */
     public boolean hasRequiredPermissions() {
@@ -171,14 +163,13 @@ public class BluetoothPermissionManager {
     
     /**
      * Request required permissions without a callback
-     * This is a convenience method for use in UI components
      */
     public void requestRequiredPermissions() {
         requestPermissions(null);
     }
     
     /**
-     * Show rationale dialog explaining why permissions are needed
+     * dialog explaining why permissions are needed
      */
     private void showPermissionRationale() {
         Activity activity = activityRef.get();
@@ -257,14 +248,14 @@ public class BluetoothPermissionManager {
     }
     
     /**
-     * Execute action if permissions are granted, or request permissions
+     * action if granted or request if not
      */
     public void executeWithPermissions(Runnable grantedAction) {
         executeWithPermissions(grantedAction, null);
     }
     
     /**
-     * Execute action if permissions are granted, or request permissions and run denied action
+     * action if gra
      */
     public void executeWithPermissions(Runnable grantedAction, Runnable deniedAction) {
         if (hasRequiredPermissions()) {
@@ -302,8 +293,9 @@ public class BluetoothPermissionManager {
             .setMessage("SmartHat requires Bluetooth permissions to function properly. " +
                        "Please enable them in app settings.")
             .setPositiveButton("Settings", (dialog, which) -> {
-                // This would typically open app settings
-                // Code to open settings should be added here
+              //to open app setting
+             
+
                 Log.d(TAG, "Would open settings here");
             })
             .setNegativeButton("Cancel", (dialog, which) -> {
@@ -317,7 +309,7 @@ public class BluetoothPermissionManager {
     }
     
     /**
-     * Log permission status for debugging
+     * Logs
      */
     public void logPermissionStatus() {
         String[] permissions = getRequiredPermissions();
@@ -329,7 +321,7 @@ public class BluetoothPermissionManager {
     }
     
     /**
-     * Check if BLUETOOTH_CONNECT permission is granted for Android 12+
+     * Check if BLUETOOTH_CONNECT permission is granted 
      * @return true if granted, false otherwise
      */
     public boolean hasBluetoothConnectPermission() {
@@ -338,8 +330,8 @@ public class BluetoothPermissionManager {
     }
 
     /**
-     * Check if BLUETOOTH_SCAN permission is granted for Android 12+
-     * @return true if granted, false otherwise
+     * Check if BLUETOOTH_SCAN permission is granted
+     * @return true if granted
      */
     public boolean hasBluetoothScanPermission() {
         return ContextCompat.checkSelfPermission(appContext, Manifest.permission.BLUETOOTH_SCAN) 
@@ -347,7 +339,7 @@ public class BluetoothPermissionManager {
     }
     
     /**
-     * Execute an operation that requires BLUETOOTH_CONNECT permission
+     * operation that requires BLUETOOTH_CONNECT permission
      * @param grantedAction Action to perform if permission is granted
      * @param deniedAction Action to perform if permission is denied
      */
@@ -374,7 +366,7 @@ public class BluetoothPermissionManager {
     }
     
     /**
-     * Execute an operation that requires BLUETOOTH_SCAN permission
+     * =operation that requires BLUETOOTH_SCAN permission
      * @param grantedAction Action to perform if permission is granted
      * @param deniedAction Action to perform if permission is denied
      */
@@ -401,7 +393,7 @@ public class BluetoothPermissionManager {
     }
     
     /**
-     * Safely run an operation that requires Bluetooth permissions on Android 12+
+     * operation that requires Bluetooth permissions on Android 12+
      * This method handles permission checking and proper error handling
      * @param operation The operation to execute if permissions are granted
      * @param errorHandler The handler to call if permissions are not granted

@@ -90,6 +90,8 @@ public class BluetoothServiceIntegrationTest {
     // Test constants
     private static final byte[] DUST_SENSOR_DATA = createDustSensorData(120.5f);
     private static final byte[] NOISE_SENSOR_DATA = createNoiseSensorData(85.2f);
+    private static final byte[] ESP32_DUST_SENSOR_DATA = createEsp32DustSensorData(95.5f);
+    private static final byte[] ESP32_NOISE_SENSOR_DATA = createEsp32NoiseSensorData(78.3f);
     
     // Constants for sensor types
     private static final String SENSOR_TYPE_DUST = SensorData.TYPE_DUST;
@@ -179,6 +181,24 @@ public class BluetoothServiceIntegrationTest {
         String jsonData = String.format("{\"type\":\"%s\",\"value\":%.1f,\"timestamp\":%d}",
                 SENSOR_TYPE_NOISE, value, System.currentTimeMillis());
         return jsonData.getBytes();
+    }
+    
+    /**
+     * Creates a properly formatted JSON string for dust sensor data in ESP32 format
+     */
+    private static byte[] createEsp32DustSensorData(float value) {
+        String jsonData = String.format("{\"messageType\":\"DUST_SENSOR_DATA\",\"data\":%.1f,\"timeStamp\":%d}",
+                value, System.currentTimeMillis());
+        return jsonData.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+    }
+    
+    /**
+     * Creates a properly formatted JSON string for noise sensor data in ESP32 format
+     */
+    private static byte[] createEsp32NoiseSensorData(float value) {
+        String jsonData = String.format("{\"messageType\":\"SOUND_SENSOR_DATA\",\"data\":%.1f,\"timeStamp\":%d}",
+                value, System.currentTimeMillis());
+        return jsonData.getBytes(java.nio.charset.StandardCharsets.UTF_8);
     }
     
     @Test
@@ -341,5 +361,45 @@ public class BluetoothServiceIntegrationTest {
         
         // Then the listener should be called
         verify(mockSensorDataListener).onSensorData(any(SensorData.class), eq(SENSOR_TYPE_DUST));
+    }
+    
+    @Test
+    public void onCharacteristicChanged_esp32DustData_parsesCorrectly() {
+        // Given a dust sensor characteristic with ESP32 format data
+        when(mockDustCharacteristic.getValue()).thenReturn(ESP32_DUST_SENSOR_DATA);
+        
+        // Register a sensor data listener
+        bluetoothService.addSensorDataListener(mockSensorDataListener);
+        
+        // When the characteristic changes
+        characteristicChangeListenerCaptor.getValue().onCharacteristicChanged(mockDustCharacteristic);
+        
+        // Then the dust data should be parsed correctly and sent to the listener
+        ArgumentCaptor<SensorData> sensorDataCaptor = ArgumentCaptor.forClass(SensorData.class);
+        verify(mockSensorDataListener).onSensorData(sensorDataCaptor.capture(), eq(SensorData.TYPE_DUST));
+        
+        SensorData capturedData = sensorDataCaptor.getValue();
+        assertEquals(SensorData.TYPE_DUST, capturedData.getSensorType());
+        assertEquals(95.5f, capturedData.getValue(), 0.01f);
+    }
+    
+    @Test
+    public void onCharacteristicChanged_esp32NoiseData_parsesCorrectly() {
+        // Given a noise sensor characteristic with ESP32 format data
+        when(mockSoundCharacteristic.getValue()).thenReturn(ESP32_NOISE_SENSOR_DATA);
+        
+        // Register a sensor data listener
+        bluetoothService.addSensorDataListener(mockSensorDataListener);
+        
+        // When the characteristic changes
+        characteristicChangeListenerCaptor.getValue().onCharacteristicChanged(mockSoundCharacteristic);
+        
+        // Then the noise data should be parsed correctly and sent to the listener
+        ArgumentCaptor<SensorData> sensorDataCaptor = ArgumentCaptor.forClass(SensorData.class);
+        verify(mockSensorDataListener).onSensorData(sensorDataCaptor.capture(), eq(SensorData.TYPE_NOISE));
+        
+        SensorData capturedData = sensorDataCaptor.getValue();
+        assertEquals(SensorData.TYPE_NOISE, capturedData.getSensorType());
+        assertEquals(78.3f, capturedData.getValue(), 0.01f);
     }
 } 

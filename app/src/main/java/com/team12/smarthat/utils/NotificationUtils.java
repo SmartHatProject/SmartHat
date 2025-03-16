@@ -22,8 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Utility class for handling notifications in the SmartHat app
- * Optimized for Android 12+ with proper permission handling
+ * Utility class for handling notifications
  */
 @SuppressLint("MissingPermission")
 public class NotificationUtils {
@@ -58,14 +57,14 @@ public class NotificationUtils {
     }
 
     /**
-     * Send a threshold alert notification
-     * This method checks for notification permissions and respects cooldown periods
+     * threshold alert notification
+     * checks for notification permissions and respects cooldown periods
      */
     @SuppressLint("MissingPermission")
     public void sendThresholdAlert(String title, String message) {
         new Handler(Looper.getMainLooper()).post(() -> {
             try {
-                // First check if notifications are enabled in app preferences
+                // if notifications are enabled in app preferences
                 if (!areNotificationsEnabled()) {
                     Log.d(Constants.TAG_MAIN, "Alert suppressed because notifications are disabled: " + title);
                     return;
@@ -224,7 +223,7 @@ public class NotificationUtils {
     }
 
     /**
-     * Check if the app has POST_NOTIFICATIONS permission on Android 13+
+     * Check if the app has POST_NOTIFICATIONS permission on 13+
      * @return true if permission is granted or not needed (Android < 13), false otherwise
      */
     private boolean hasNotificationPermission() {

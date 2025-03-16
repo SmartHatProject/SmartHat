@@ -16,10 +16,9 @@ import com.team12.smarthat.permissions.BluetoothPermissionManager;
 import com.team12.smarthat.utils.Constants;
 
 /**
- * a mock implementation of bleconnectionmanager that simulates connection states
- * without requiring actual ble hardware. used for testing and demonstration purposes.
- * 
- * optimized for android 12 on pixel 4a.
+ * mock implementation of bleconnectionmanager that simulates connection states
+ * without requiring HW
+ 
  */
 @SuppressLint("MissingPermission")
 public class MockBleConnectionManager extends BleConnectionManager {
@@ -103,9 +102,7 @@ public class MockBleConnectionManager extends BleConnectionManager {
     }
     
     /**
-     * simulate a characteristic change - used to inject test data
-     * this allows test data to flow through the same characteristic callback path
-     * as real data would.
+     * simulate a characteristic change
      */
     public void simulateCharacteristicChange(BluetoothGattCharacteristic characteristic) {
         if (characteristic != null) {
@@ -118,7 +115,6 @@ public class MockBleConnectionManager extends BleConnectionManager {
     
     /**
      * get the characteristic change listener
-     * this method is needed since the field is protected in the parent class
      */
     public CharacteristicChangeListener getCharacteristicChangeListener() {
         return super.getCharacteristicChangeListener();

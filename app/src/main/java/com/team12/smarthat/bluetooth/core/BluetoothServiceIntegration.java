@@ -30,10 +30,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * integration class that bridges bleconnectionmanager with sensor data handling
+ * integration class 
  * 
- * this class provides sensor data updates through a listener pattern and handles
- * esp32-specific ble operations. optimized for android 12 on pixel 4a devices.
+ * sensor data updates through a listener pattern and handles
  */
 @SuppressLint("MissingPermission")
 public class BluetoothServiceIntegration implements 
@@ -44,17 +43,17 @@ public class BluetoothServiceIntegration implements
     public static final String SENSOR_TYPE_DUST = SensorData.TYPE_DUST;
     public static final String SENSOR_TYPE_NOISE = SensorData.TYPE_NOISE;
     
-    // sensor value bounds for validation
+    //sensor value bounds for validation
     private static final float MAX_DUST_VALUE = 1000.0f;
     private static final float MAX_NOISE_VALUE = 150.0f;
     
     private final BleConnectionManager connectionManager;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     
-    // listeners for sensor data - thread-safe collection
+    // listeners for sensor data
     private final List<SensorDataListener> dataListeners = new CopyOnWriteArrayList<>();
     
-    // uuids of characteristics we're monitoring - final for better memory safety
+    // uuids of characteristics we're monitoring 
     private final UUID dustCharacteristicUuid;
     private final UUID soundCharacteristicUuid;
     
@@ -65,8 +64,7 @@ public class BluetoothServiceIntegration implements
     private Observer<BleConnectionManager.ConnectionState> connectionStateObserver;
     
     /**
-     * interface for sensor data listeners
-     * simplified to reduce redundant code and improve extensibility
+     * interface for sensor data listener simplified
      */
     public interface SensorDataListener {
         /**
@@ -79,7 +77,6 @@ public class BluetoothServiceIntegration implements
     
     /**
      * constructor that takes just the connection manager
-     * optimized for android 12 on pixel 4a
      */
     public BluetoothServiceIntegration(BleConnectionManager connectionManager) {
         if (connectionManager == null) {
@@ -132,7 +129,7 @@ public class BluetoothServiceIntegration implements
     
     /**
      * add a sensor data listener
-     * thread-safe implementation
+     * thread safe 
      */
     public void addSensorDataListener(SensorDataListener listener) {
         if (listener == null) {
@@ -148,7 +145,7 @@ public class BluetoothServiceIntegration implements
     
     /**
      * remove a sensor data listener
-     * thread-safe implementation
+     * thread safe implementation
      */
     public void removeSensorDataListener(SensorDataListener listener) {
         if (listener == null) {
@@ -161,7 +158,6 @@ public class BluetoothServiceIntegration implements
     
     /**
      * implementation of CharacteristicChangeListener interface
-     * optimized for android 12 on pixel 4a with esp32
      */
     @Override
     public void onCharacteristicChanged(BluetoothGattCharacteristic characteristic) {
@@ -175,23 +171,28 @@ public class BluetoothServiceIntegration implements
                 return;
             }
             
-            String stringData = new String(data);
+            // use utf-8 encoding all versions 
+            String stringData = new String(data, java.nio.charset.StandardCharsets.UTF_8);
             
-            // Add debug log to show raw data from ESP32
+            //logs
             Log.d(TAG, "Raw data from ESP32: " + stringData);
+            Log.d(TAG, "Characteristic UUID: " + uuid.toString());
+            Log.d(TAG, "Data length: " + data.length + " bytes");
             
-            // determine sensor type from uuid with null safety
+            // sensor type from uuid with null safety check
             String sensorType = null;
             if (dustCharacteristicUuid.equals(uuid)) {
                 sensorType = SENSOR_TYPE_DUST;
+                Log.d(TAG, "Identified as DUST sensor data");
             } else if (soundCharacteristicUuid.equals(uuid)) {
                 sensorType = SENSOR_TYPE_NOISE;
+                Log.d(TAG, "Identified as NOISE sensor data");
             } else {
                 Log.d(TAG, "Unknown characteristic changed: " + uuid);
                 return;
             }
             
-            // process the data - only pass normalized types to ensure consistency
+            // process the data only pass normalized types to ensure consistency throughout the app
             parseSensorData(stringData, sensorType);
             
         } catch (Exception e) {
@@ -201,7 +202,6 @@ public class BluetoothServiceIntegration implements
     
     /**
      * set up notifications for esp32 sensor characteristics
-     * optimized for android 12 on pixel 4a with esp32
      */
     private void setupNotifications() {
         // check if notifications are already set up - use atomic boolean for thread safety
@@ -210,7 +210,7 @@ public class BluetoothServiceIntegration implements
             return;
         }
         
-        // get gatt but perform early return if null
+        // get gatt but perform early return if null to avoid null pointer exceptions
         final BluetoothGatt gatt = connectionManager.getBluetoothGatt();
         if (gatt == null) {
             Log.e(TAG, "Cannot setup notifications - GATT is null");
@@ -218,7 +218,7 @@ public class BluetoothServiceIntegration implements
             return;
         }
         
-        // find the service first to avoid multiple service lookups
+        // find the service first to avoid multiple service lookups which can be expensive
         final BluetoothGattService service = gatt.getService(ESP32BluetoothSpec.SERVICE_UUID);
         if (service == null) {
             Log.e(TAG, "ESP32 service not found");
@@ -226,25 +226,25 @@ public class BluetoothServiceIntegration implements
             return;
         }
         
-        // run on main thread to avoid ble threading issues on android 12
+        // run on main thread to avoid ble threading issues 
         mainHandler.post(() -> {
             try {
                 Log.d(TAG, "Setting up notifications for ESP32 sensors");
                 
-                // find characteristics
+                // find characteristics for both sensors
                 BluetoothGattCharacteristic dustChar = 
                     service.getCharacteristic(dustCharacteristicUuid);
                 BluetoothGattCharacteristic soundChar = 
                     service.getCharacteristic(soundCharacteristicUuid);
                 
-                // check if both characteristics exist
+                // check if both characteristics exist before proceeding
                 if (dustChar == null && soundChar == null) {
                     Log.e(TAG, "No sensor characteristics found in ESP32 service");
                     notificationsSetup.set(false);
                     return;
                 }
                 
-                // track overall success
+                // track overall success to know if we need to retry later
                 boolean overallSuccess = true;
                 
                 // enable dust sensor notifications if available
@@ -265,7 +265,7 @@ public class BluetoothServiceIntegration implements
                     overallSuccess &= soundSuccess;
                 }
                 
-                // if both failed, reset the notification setup flag
+                // if both failed, reset the notification setup flag so we can try again
                 if (!overallSuccess) {
                     Log.w(TAG, "Failed to set up all notifications, will try again on next connection");
                     notificationsSetup.set(false);
@@ -282,7 +282,6 @@ public class BluetoothServiceIntegration implements
     
     /**
      * execute a gatt operation safely with error handling
-     * this is especially important for android 12 which has stricter ble requirements
      */
     private boolean executeGattOperationSafely(BluetoothGatt gatt, GattOperation operation) {
         if (gatt == null) {
@@ -309,7 +308,6 @@ public class BluetoothServiceIntegration implements
     
     /**
      * functional interface for gatt operations
-     * allows for lambda-based execution of gatt operations with consistent error handling
      */
     private interface GattOperation {
         /**
@@ -322,7 +320,6 @@ public class BluetoothServiceIntegration implements
     
     /**
      * enable notifications for a characteristic
-     * optimized for esp32 devices on android 12
      * 
      * @param gatt the bluetoothgatt connection
      * @param characteristic the characteristic to enable notifications for
@@ -338,13 +335,12 @@ public class BluetoothServiceIntegration implements
         
         try {
             // step 1: enable local notifications
-            // this step is important because it tells the Android BluetoothGatt system
-            // that we want characteristic changed callbacks for this characteristic
+            // tells the Android BluetoothGatt system we want characteristic changed callbacks for this characteristic
             boolean setCharResult;
             
-            // on android 12, we must use the new api if available
+           
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                // android 13+ (api 33+) using the new api
+                // 13+ spec
                 try {
                     // call via reflection to maintain backward compatibility
                     Method setCharNotificationMethod = gatt.getClass().getMethod(
@@ -367,8 +363,8 @@ public class BluetoothServiceIntegration implements
                 return false;
             }
             
-            // step 2: write the descriptor to enable remote notifications
-            // find the Client Characteristic Configuration Descriptor (CCCD)
+            // step 2 descriptor to enable notifications
+            // find CCCD
             BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
                     ESP32BluetoothSpec.CLIENT_CONFIG_DESCRIPTOR_UUID);
             
@@ -388,16 +384,16 @@ public class BluetoothServiceIntegration implements
                     Field enableNotificationField = BluetoothGattDescriptor.class.getField("ENABLE_NOTIFICATION_VALUE");
                     enableValue = (byte[]) enableNotificationField.get(null);
                 } catch (Exception e) {
-                    // fallback to hardcoded value if reflection fails
+                    //fallback to hardcoded value if reflection fails only
                     Log.w(TAG, "Reflection failed, using hardcoded value: " + e.getMessage());
                     enableValue = new byte[]{0x01, 0x00}; // Standard value for notifications
                 }
             } else {
-                // pre-android 13
+                // 13-
                 enableValue = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE;
             }
             
-            // write the descriptor value
+            //descriptor value
             if (!descriptor.setValue(enableValue)) {
                 Log.e(TAG, "Failed to set descriptor value for " + charUuid);
                 return false;
@@ -419,7 +415,6 @@ public class BluetoothServiceIntegration implements
     
     /**
      * parse sensor data from json string
-     * optimized for esp32 sensor data format
      */
     private void parseSensorData(String jsonData, String sensorType) {
         // early return if no listeners or invalid data
@@ -441,16 +436,34 @@ public class BluetoothServiceIntegration implements
             // parse json data
             JSONObject json = new JSONObject(jsonData);
             
-            // Log full JSON for debugging
+            // log full json for debugging purposes
             Log.d(TAG, "Parsing JSON: " + jsonData);
             
-            // normalize sensor type to lowercase for consistency
+            // normalize sensor type to lowercase for consistency across the app
             final String normalizedType = sensorType.toLowerCase();
             
             // extract the data value with bounds checking
-            float value = (float) json.optDouble("data", 0.0);
+            // handle both esp32 hardware format ("data") and test mode format ("value")
+            float value;
+            if (json.has("data")) {
+                // esp32 hardware format used when connected to real device
+                value = (float) json.optDouble("data", 0.0);
+                Log.d(TAG, "Found 'data' field in JSON: " + value);
+            } else if (json.has("value")) {
+                // test mode format (sim mode only)
+                value = (float) json.optDouble("value", 0.0);
+                Log.d(TAG, "Found 'value' field in JSON: " + value);
+            } else {
+                Log.w(TAG, "No data/value field found in JSON: " + jsonData);
+                value = 0.0f;
+            }
             
-            // validate and normalize values based on sensor type
+            // add logging for successful non zero values 
+            if (value > 0) {
+                Log.i(TAG, "Successfully parsed non-zero value: " + value + " for sensor type: " + normalizedType);
+            }
+            
+            // validate and normalize values based on sensor type to ensure readings are within expected ranges
             if (SENSOR_TYPE_DUST.equals(normalizedType)) {
                 if (value < 0 || value > MAX_DUST_VALUE) {
                     Log.w(TAG, "Suspicious dust value received: " + value + ", clamping to valid range");
@@ -467,7 +480,33 @@ public class BluetoothServiceIntegration implements
             }
             
             // get timestamp or use current time
-            long timestamp = json.optLong("timeStamp", System.currentTimeMillis());
+            // handle both esp32 format ("timeStamp") and test mode format ("timestamp")
+            long timestamp;
+            if (json.has("timeStamp")) {
+                // esp32 hardware format with capital 'S' in timeStamp
+                timestamp = json.optLong("timeStamp", System.currentTimeMillis());
+                Log.d(TAG, "Found 'timeStamp' field in JSON: " + timestamp);
+            } else if (json.has("timestamp")) {
+                // test mode format with lowercase 's' in timestamp
+                timestamp = json.optLong("timestamp", System.currentTimeMillis());
+                Log.d(TAG, "Found 'timestamp' field in JSON: " + timestamp);
+            } else {
+                Log.w(TAG, "No timestamp field found in JSON: " + jsonData);
+                timestamp = System.currentTimeMillis();
+            }
+            
+            // check for messageType field esp32 forma to verify data source
+            if (json.has("messageType")) {
+                String messageType = json.optString("messageType");
+                Log.d(TAG, "Found 'messageType' field in JSON: " + messageType);
+                
+                // verify the messageType matches the expected type for this characteristic
+                if (messageType.equals("DUST_SENSOR_DATA") && !SENSOR_TYPE_DUST.equals(normalizedType)) {
+                    Log.w(TAG, "MessageType mismatch: Expected dust sensor data for dust characteristic");
+                } else if (messageType.equals("SOUND_SENSOR_DATA") && !SENSOR_TYPE_NOISE.equals(normalizedType)) {
+                    Log.w(TAG, "MessageType mismatch: Expected sound sensor data for noise characteristic");
+                }
+            }
             
             // create sensor data object with normalized type
             final SensorData data = new SensorData(normalizedType, value, timestamp);
@@ -515,20 +554,17 @@ public class BluetoothServiceIntegration implements
     
     /**
      * cleanup resources used by this class
-     * this should be called when the component is no longer needed
-     * optimized for android 12 on pixel 4a
      */
     public void cleanup() {
         Log.d(TAG, "Cleaning up BluetoothServiceIntegration");
         
-        // first unregister all listeners to prevent callback during cleanup
         try {
-            // clear the connection state observer if it exists - observer pattern is already lifecycle-aware
+           
             // but we need to clean up references to prevent potential memory leaks
             if (connectionStateObserver != null) {
                 try {
-                    // this is safe to call even if the observer is lifecycle-bound
-                    // as it will remove our reference from the LiveData
+                 
+                    //removes our reference from the LiveData
                     connectionManager.getConnectionState().removeObserver(connectionStateObserver);
                     Log.d(TAG, "Removed connection state observer");
                 } catch (Exception e) {
@@ -554,7 +590,7 @@ public class BluetoothServiceIntegration implements
             // reset notification setup flag
             notificationsSetup.set(false);
             
-            // clear all handler callbacks to prevent delayed execution after cleanup
+           
             if (mainHandler != null) {
                 mainHandler.removeCallbacksAndMessages(null);
                 Log.d(TAG, "Cleared all pending handler callbacks");

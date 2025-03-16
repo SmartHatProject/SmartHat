@@ -12,11 +12,10 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * queue for ble operations to ensure they are executed in order with proper
+ * queue for ble operations for proper order 
  * callbacks before starting the next operation.
  * 
- * this is necessary because ble operations on android need to be executed sequentially
- * for reliable behavior, especially on android 12 with pixel 4a devices.
+ * used this since ble operations on android need to be executed sequentially
  */
 public class BleOperationQueue {
     private Queue<Runnable> operationQueue = new ConcurrentLinkedQueue<>();
@@ -81,7 +80,7 @@ public class BleOperationQueue {
 
     /**
      * cancel all pending operations and clear the queue.
-     * this should be called when cleaning up to prevent memory leaks.
+     * call wjem cleaning up
      */
     public synchronized void cancelAllOperations() {
         Log.d(Constants.TAG_BLUETOOTH, "Cancelling all BLE operations and clearing the queue");
@@ -94,7 +93,7 @@ public class BleOperationQueue {
 
     /**
      * check if the operation queue is empty
-     * this method is for testing purposes only
+     * test only
      * @return true if the queue is empty, false otherwise
      */
     @VisibleForTesting
