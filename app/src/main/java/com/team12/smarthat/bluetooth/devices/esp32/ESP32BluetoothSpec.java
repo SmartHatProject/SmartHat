@@ -23,7 +23,7 @@ public class ESP32BluetoothSpec {
         // low power mode
         public static final int PRIORITY_LOW_POWER = 2;
 
-        public static final int RECOMMENDED_MTU = 185;
+        public static final int RECOMMENDED_MTU = 512;
 
         public static final int PREFERRED_PHY = 2;
         
