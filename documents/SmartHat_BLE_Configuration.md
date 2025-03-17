@@ -37,6 +37,34 @@
 - initial values sent immediately on connection
 - auto-resume on reconnection
 
+## Notification Implementation
+
+### Enabling Notifications
+- write value 0x0100 to descriptor UUID 0x2902 (CCCD) on each characteristic
+- sequence: discover services → get characteristics → write to descriptor → register callback
+- re-enable notifications after any reconnection
+- both characteristics must have notifications enabled separately
+
+### Connection Parameters
+- recommended interval: 15-30ms
+- slave latency: 0
+- supervision timeout: 500ms
+- MTU: request 512 bytes after connection established
+- connection priority: high (for Android implementation)
+
+### Handling Notifications
+- expect notifications approximately every 1 second when connected
+- process in order received (use timestamp for verification)
+- implement queue if processing is slower than receipt rate
+- handle potential out-of-order timestamps
+- be prepared for initial values immediately after connection
+
+### Error Recovery
+- if no notifications within 5 seconds: verify subscription, reconnect if needed
+- if malformed JSON: log error, maintain last valid value
+- if connection drops: automatically reconnect and re-enable notifications
+- implement exponential backoff for reconnection attempts
+
 ## ESP32 Implementation
 - multiple readings averaged for stability
 - raw values converted to standard units
@@ -82,6 +110,49 @@
 ## Compatibility
 - exact device name and UUID matching
 - consistent JSON structure
-- notify property for real-time updates
+- notify property for realtime updates
 - matching alert thresholds
 - valid value ranges
+- robust connection handling
+
+## Hardware notification notes
+ heres how the notification descriptors are configured on the hardware side:
+
+```cpp
+//CCCD setup
+BLE2902* descriptor = new BLE2902();
+descriptor->setNotifications(true);
+characteristic->addDescriptor(descriptor);
+```
+
+When sensor data changes, n0tifications are sent using:
+
+```cpp
+// Update characteristic value and send notification
+characteristic->setValue(jsonString.c_str());
+characteristic->notify();
+```
+
+## Notification Implementation
+
+### Enabling Notifications
+- write value 0x0100 to descriptor uuid 0x2902 on each characteristic
+- sequence: discover services → get characteristics → write to descriptor → register callback
+- reenable notifications after any reconnection
+
+### Connection Parameters
+- recommended interval: 15-30ms
+- slave latency: 0
+- supervision timeout: 500ms
+- MTU: request 512 bytes after connection established
+
+### Handling Notifications
+- expect notifications approximately every 1 second when connected
+- process in order received (use timeStamp for verification)
+- implement queue if processing is slower than receipt rate
+- handle potential out of order timestamps (we are using this format on hw: timeStamp)
+
+### Error Recovery
+- if no notifications within 5 seconds: verify subscription, reconnect if needed
+- if malformed jSON: log error, maintain last valid value
+- if connection drops automatically reconnect and reenable notifications
