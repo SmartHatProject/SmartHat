@@ -21,3 +21,7 @@ local.properties
 
 # Logs
 *.log
+
+# Auto-generated files
+app/lint-results.html
+**/lint-results.*
