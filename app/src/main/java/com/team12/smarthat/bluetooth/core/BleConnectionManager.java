@@ -101,6 +101,8 @@ public class BleConnectionManager {
     // reconnection parameters
     private static final int MAX_RECONNECTION_ATTEMPTS = 5;
     private static final long BASE_RECONNECTION_DELAY = ESP32BluetoothSpec.ConnectionParams.BASE_RECONNECTION_DELAY;
+    // Maximum reconnection delay to cap exponential growth
+    private static final long MAX_RECONNECTION_DELAY = 60000; // 60 seconds
     private int reconnectionAttempts = 0;
     
     // connection timeout runnable
@@ -369,26 +371,31 @@ public class BleConnectionManager {
     }
     
     /**
-     * calculate backoff delay for reconnection attempts
-     * exponential backoff with jitter
+     * Calculate backoff delay for reconnection attempts using exponential backoff with jitter.
      * 
+     * Implementation follows the error recovery protocol for ESP32 hardware:
+     * - Base delay starts at BASE_RECONNECTION_DELAY (1000ms)
+     * - Each retry doubles the delay (exponential growth: 2^n * BASE_DELAY)
+     * - Random jitter (±20%) is added to prevent connection attempt synchronization
+     * - Delay is capped at MAX_RECONNECTION_DELAY (60 seconds) to ensure recovery
+     * 
+     * This approach ensures robust reconnection that balances quick recovery for
+     * temporary issues with avoiding excessive battery drain from constant retries.
+     * 
+     * @return calculated delay in milliseconds for the next connection attempt
      */
     private long calculateBackoffDelay() {
         // base delay increased by retry count using exponential backoff
         long baseDelay = BASE_RECONNECTION_DELAY * (1L << Math.min(reconnectionAttempts, 6)); // cap at 64x
         
-      //jitter
-       
-        double jitterFactor = 0.8 + (Math.random() * 0.4); // 0.8-1.2 range
+        // Add jitter to prevent connection collision if multiple devices try reconnecting
+        double jitterFactor = 0.8 + (Math.random() * 0.4); // 0.8-1.2 range for ±20% jitter
         
         long delay = (long)(baseDelay * jitterFactor);
         
         // log the calculated delay
         Log.d(TAG, "Reconnection attempt " + reconnectionAttempts + 
               ", backoff delay: " + delay + "ms");
-              
-        // added here since it's not defined as a constant
-        final long MAX_RECONNECTION_DELAY = 60000; // 60 sec
         
         // cap at a reasonable maximum to prevent excessive delays
         return Math.min(delay, MAX_RECONNECTION_DELAY);
@@ -402,10 +409,10 @@ public class BleConnectionManager {
         if (gatt == null) return;
         
         executeWithPermissionCheck(() -> {
-            // Request connection priority first 
+            // Request connection priority first - changed to HIGH priority
             boolean priorityResult = gatt.requestConnectionPriority(
-                BluetoothGatt.CONNECTION_PRIORITY_BALANCED);
-            Log.d(TAG, "Connection priority request result: " + priorityResult);
+                BluetoothGatt.CONNECTION_PRIORITY_HIGH);
+            Log.d(TAG, "Connection priority (HIGH) request result: " + priorityResult);
             
             // Short delay before MTU request to improve reliability on Android 12
             mainHandler.postDelayed(() -> {
@@ -434,7 +441,7 @@ public class BleConnectionManager {
                         Log.w(TAG, "Error setting connection parameters: " + e.getMessage());
                     }
                 }
-                // mar as complete
+                // mark as complete
                 operationQueue.operationComplete();
             });
         }, "request connection parameters");
@@ -827,6 +834,52 @@ public class BleConnectionManager {
      */
     public ConnectionState getCurrentState() {
         return connectionState.getValue();
+    }
+    
+    /**
+     * Reconnect to the last connected device
+     * This is called when notifications timeout to recover the connection
+     */
+    public void reconnect() {
+        Log.d(TAG, "Attempting to reconnect due to notification timeout");
+        
+        // If we're already connecting, don't interrupt
+        if (connectionState.getValue() == ConnectionState.CONNECTING) {
+            Log.d(TAG, "Already in connecting state, skipping reconnection");
+            return;
+        }
+        
+        // If we're already connected, disconnect first
+        if (connectionState.getValue() == ConnectionState.CONNECTED) {
+            Log.d(TAG, "Disconnecting before reconnection");
+            disconnect();
+            
+            // Schedule the reconnection after a short delay to allow disconnect to complete
+            mainHandler.postDelayed(() -> attemptReconnect(), 500);
+        } else {
+            // If we're already disconnected, attempt reconnection immediately
+            attemptReconnect();
+        }
+    }
+    
+    /**
+     * Helper method to attempt reconnection with the last connected device
+     */
+    private void attemptReconnect() {
+        if (lastConnectedDevice == null) {
+            Log.e(TAG, "Cannot reconnect - no previous device");
+            reportError("Cannot reconnect - no previous device");
+            return;
+        }
+        
+        Log.d(TAG, "Reconnecting to last device: " + lastConnectedDevice.getAddress());
+        
+        // Reset retry counters to allow a fresh set of connection attempts
+        connectionRetries = 0;
+        reconnectionAttempts = 0;
+        
+        // Connect to the last device
+        connect(lastConnectedDevice);
     }
     
     /**

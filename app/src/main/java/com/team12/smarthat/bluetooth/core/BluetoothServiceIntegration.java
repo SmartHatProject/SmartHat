@@ -35,17 +35,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * integration class 
- * 
- * sensor data updates through a listener pattern and handles
- * 
- * ESP32 Fallback Behaviors (for reference):
- * - JSON creation failure → valid JSON with defaults 
- * - invalid sound readings → 30.0 dB
- * - dust below 0.6V → 0.0  (clean air)
- * -non zero initial values: 40.0 dB (sound), 10.0 (dust)
- */
+
 @SuppressLint("MissingPermission")
 public class BluetoothServiceIntegration implements 
         BleConnectionManager.CharacteristicChangeListener {
@@ -59,14 +49,14 @@ public class BluetoothServiceIntegration implements
     private static final float MAX_DUST_VALUE = 1000.0f;
     private static final float MAX_NOISE_VALUE = 150.0f;
     
-    // Notification timeout constants
-    private static final long NOTIFICATION_TIMEOUT_MS = 5000; // 5 seconds
+    // Notification timeout constants - using values from ESP32BluetoothSpec
+    private static final long NOTIFICATION_TIMEOUT_MS = ESP32BluetoothSpec.NotificationParams.NOTIFICATION_TIMEOUT_MS;
     private static final long NOTIFICATION_CHECK_INTERVAL_MS = 2000; // Check every 2 seconds
     private static final int MAX_VERIFICATION_ATTEMPTS = 3; // Try to verify notifications three times before reconnecting
     
     // Queue management constants
     private static final int MAX_QUEUE_SIZE = 100; // Maximum number of notifications to queue
-    private static final long MAX_TIMESTAMP_DEVIATION = 60000; // 60 seconds - max allowed deviation for out-of-order timestamps
+    private static final long MAX_TIMESTAMP_DEVIATION = ESP32BluetoothSpec.NotificationParams.MAX_TIMESTAMP_DEVIATION_MS;
     private static final int BATCH_PROCESSING_SIZE = 10; // Process notifications in batches for better efficiency
     
     private final BleConnectionManager connectionManager;
@@ -106,8 +96,8 @@ public class BluetoothServiceIntegration implements
     private final Handler backgroundHandler;
     
     // Last valid readings for each sensor type to use as fallbacks
-    private float lastValidDustReading = 10.0f; // Default to clean air value
-    private float lastValidNoiseReading = 40.0f; // Default to quiet room value
+    private float lastValidDustReading = ESP32BluetoothSpec.NotificationParams.INITIAL_DUST_VALUE; // Default to clean air value
+    private float lastValidNoiseReading = ESP32BluetoothSpec.NotificationParams.INITIAL_SOUND_VALUE; // Default to quiet room value
     
     // Class to store notification data
     private static class NotificationData {
@@ -251,6 +241,7 @@ public class BluetoothServiceIntegration implements
             double value = json.optDouble("data", 0.0);
             
             // extract timestamp - support both timeStamp (ESP32) and timestamp (mock) formats
+            // ESP32 hardware uses "timeStamp" format as specified in BLE configuration
             long timestamp = 0;
             if (json.has("timeStamp")) {
                 timestamp = json.optLong("timeStamp", 0);
@@ -290,6 +281,8 @@ public class BluetoothServiceIntegration implements
             Log.e(TAG, "Invalid JSON: " + jsonData);
             
             // Use last valid reading for this sensor type as a fallback
+            // This implements the "JSON creation failure → valid JSON with defaults" fallback behavior
+            // from the ESP32 hardware specification
             float fallbackValue = SENSOR_TYPE_DUST.equals(sensorType) ? lastValidDustReading : lastValidNoiseReading;
             Log.w(TAG, "Using last valid reading as fallback: " + fallbackValue + " for " + sensorType);
             
@@ -432,40 +425,68 @@ public class BluetoothServiceIntegration implements
             return;
         }
         
-        // Determine sensor type
-        String sensorType = null;
         UUID uuid = characteristic.getUuid();
-        if (dustCharacteristicUuid.equals(uuid)) {
+        String sensorType = null;
+        
+        // determine sensor type from characteristic uuid
+        if (uuid.equals(dustCharacteristicUuid)) {
             sensorType = SENSOR_TYPE_DUST;
-        } else if (soundCharacteristicUuid.equals(uuid)) {
+        } else if (uuid.equals(soundCharacteristicUuid)) {
             sensorType = SENSOR_TYPE_NOISE;
         } else {
-            // Unknown characteristic, just process normally
-            processCharacteristic(characteristic);
+            Log.w(TAG, "Unknown characteristic UUID: " + uuid);
             return;
         }
         
-        // Extract timestamp for validation
+        // extract timestamp for validation
         long timestamp = extractTimestamp(characteristic);
         
-        // Check if we've seen this sensor type before
-        if (lastProcessedTimestamps.containsKey(sensorType)) {
+        // Check if this might be an out-of-order notification
+        if (timestamp > 0 && lastProcessedTimestamps.containsKey(sensorType)) {
             long lastTimestamp = lastProcessedTimestamps.get(sensorType);
+            long timeDifference = timestamp - lastTimestamp;
             
-            // Check if this notification is significantly out of order
-            if (timestamp < lastTimestamp && lastTimestamp - timestamp > MAX_TIMESTAMP_DEVIATION) {
-                Log.w(TAG, "Received significantly out-of-order notification for " + sensorType + 
-                      ". Current: " + timestamp + ", Last: " + lastTimestamp + 
-                      ", Deviation: " + (lastTimestamp - timestamp) + "ms");
-                
-                // We still process it, but with a warning
+            // If this is an older notification (negative time difference) but within acceptable deviation window
+            if (timeDifference < 0 && Math.abs(timeDifference) < MAX_TIMESTAMP_DEVIATION) {
+                Log.w(TAG, "Processing out-of-order notification for " + sensorType + 
+                      ", time difference: " + timeDifference + "ms");
+                // Continue processing even though it's out of order
+            } else if (timeDifference < 0) {
+                // This is a significantly older notification, log and skip
+                Log.w(TAG, "Skipping significantly out-of-order notification for " + sensorType + 
+                      ", time difference: " + timeDifference + "ms (exceeds max deviation of " + 
+                      MAX_TIMESTAMP_DEVIATION + "ms)");
+                return;
             }
         }
         
-        // Process the characteristic
-        processCharacteristic(characteristic);
+        // process the characteristic data
+        try {
+            byte[] data = characteristic.getValue();
+            if (data == null || data.length == 0) {
+                Log.e(TAG, "Empty characteristic data");
+                return;
+            }
+            
+            String stringData = new String(data, java.nio.charset.StandardCharsets.UTF_8);
+            Log.d(TAG, "Characteristic data (" + sensorType + "): " + stringData);
+            
+            // parse and process the data - this notifies listeners
+            parseSensorData(stringData, sensorType);
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Error processing characteristic data: " + e.getMessage(), e);
+            
+            // Even if processing fails, update the timestamp record to maintain proper ordering
+            if (timestamp > 0) {
+                Long currentLastTimestamp = lastProcessedTimestamps.get(sensorType);
+                if (currentLastTimestamp == null || timestamp > currentLastTimestamp) {
+                    lastProcessedTimestamps.put(sensorType, timestamp);
+                }
+            }
+        }
         
-        // Update the last processed timestamp for this sensor type if it's newer
+        // Update the last processed timestamp if this was a valid one
         if (timestamp > 0) { // Only update if we have a valid timestamp
             Long currentLastTimestamp = lastProcessedTimestamps.get(sensorType);
             if (currentLastTimestamp == null || timestamp > currentLastTimestamp) {
@@ -506,52 +527,6 @@ public class BluetoothServiceIntegration implements
         }
         
         return 0;
-    }
-    
-    /**
-     * process a single characteristic notification
-     */
-    private void processCharacteristic(BluetoothGattCharacteristic characteristic) {
-        if (characteristic == null) {
-            Log.e(TAG, "Null characteristic received");
-            return;
-        }
-        
-        UUID uuid = characteristic.getUuid();
-        
-        try {
-            // Process the characteristic data
-            byte[] data = characteristic.getValue();
-            if (data == null || data.length == 0) {
-                Log.w(TAG, "Empty characteristic data received");
-                return;
-            }
-            
-            String stringData = new String(data, java.nio.charset.StandardCharsets.UTF_8);
-            
-            Log.d(TAG, "Raw data from ESP32: " + stringData);
-            Log.d(TAG, "Characteristic UUID: " + uuid.toString());
-            Log.d(TAG, "Data length: " + data.length + " bytes");
-            
-            // Sensor type from UUID with null safety check
-            String sensorType = null;
-            if (dustCharacteristicUuid.equals(uuid)) {
-                sensorType = SENSOR_TYPE_DUST;
-                Log.d(TAG, "Identified as DUST sensor data");
-            } else if (soundCharacteristicUuid.equals(uuid)) {
-                sensorType = SENSOR_TYPE_NOISE;
-                Log.d(TAG, "Identified as NOISE sensor data");
-            } else {
-                Log.d(TAG, "Unknown characteristic changed: " + uuid);
-                return;
-            }
-            
-            // Process the data
-            parseSensorData(stringData, sensorType);
-            
-        } catch (Exception e) {
-            Log.e(TAG, "Error processing characteristic data: " + e.getMessage(), e);
-        }
     }
     
     /**

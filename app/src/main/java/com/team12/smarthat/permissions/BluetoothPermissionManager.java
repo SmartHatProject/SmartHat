@@ -19,21 +19,7 @@ import com.team12.smarthat.utils.Constants;
 
 import java.lang.ref.WeakReference;
 
-/**
- * centeralized ble permission manager
- * 
- * single source of truth
- * version specific permission checks requesting permissions, and managing the result flow
- * Architecture(also explained in read me )
- * 1. MainActivity initializes this manager and passes it to BleConnectionManager
- * 2. BleConnectionManager uses it for permission checks before BLE operations
- * 3. All Bluetooth interactions require permission checks through this manager
- * permission flow
- * 1.check permissions using hasRequiredPermissions()
- * 2.case granted proceed with operation
- * 3. case not granted, request permissions with requestPermissions()
- * 4. Result handled through callbacks or onRequestPermissionsResult()
- */
+
 public class BluetoothPermissionManager {
     // Constants
     private static final int REQUEST_BLUETOOTH_PERMISSIONS = 100;
@@ -393,8 +379,7 @@ public class BluetoothPermissionManager {
     }
     
     /**
-     * operation that requires Bluetooth permissions on Android 12+
-     * This method handles permission checking and proper error handling
+     * operation that requires Bluetooth permissions 12+
      * @param operation The operation to execute if permissions are granted
      * @param errorHandler The handler to call if permissions are not granted
      * @param requireConnect Whether BLUETOOTH_CONNECT permission is required
@@ -408,13 +393,13 @@ public class BluetoothPermissionManager {
             
         boolean hasAllRequiredPermissions = true;
         
-        // Check BLUETOOTH_CONNECT permission if required (Android 12+)
+        // Check BLUETOOTH_CONNECT permission if required 
         if (requireConnect && !hasBluetoothConnectPermission()) {
             Log.e(TAG, "Missing BLUETOOTH_CONNECT permission for operation");
             hasAllRequiredPermissions = false;
         }
         
-        // Check BLUETOOTH_SCAN permission if required (Android 12+)
+        // Check BLUETOOTH_SCAN permission if required
         if (requireScan && !hasBluetoothScanPermission()) {
             Log.e(TAG, "Missing BLUETOOTH_SCAN permission for operation");
             hasAllRequiredPermissions = false;

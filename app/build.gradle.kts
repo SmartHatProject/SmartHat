@@ -65,9 +65,9 @@ android {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
             
-            // Add this for better Mockito compatibility
+            // Use JUnit 4 instead of JUnit 5 platform since our tests are written in JUnit 4
             all {
-                it.useJUnitPlatform()
+                it.useJUnit()
             }
         }
     }
@@ -121,7 +121,7 @@ dependencies {
     testImplementation("androidx.test:runner:1.5.2")
     testImplementation("androidx.test.ext:junit:1.1.5")
     
-    // Hamcrest for better assertions
+    // hamcrest for better assertions
     testImplementation("org.hamcrest:hamcrest:2.2")
     
     // AndroidX test libraries for instrumented tests
