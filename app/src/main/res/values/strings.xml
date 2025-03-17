@@ -23,8 +23,8 @@
     <string name="status_format">Status: %s</string>
     
     <!-- Initial Values -->
-    <string name="dust_initial">Dust: 0.0 µg/m³</string>
-    <string name="noise_initial">Noise: 0.0 dB</string>
+    <string name="dust_initial">Dust: 10.0 µg/m³</string>
+    <string name="noise_initial">Noise: 40.0 dB</string>
     
     <!-- Connection Helper Messages -->
     <string name="helper_text_connected">Connected to SmartHat. Receiving data...</string>

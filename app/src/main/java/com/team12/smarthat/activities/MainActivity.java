@@ -80,6 +80,11 @@ public class MainActivity extends AppCompatActivity implements
     private MockBleConnectionManager mockConnectionManager;
     private boolean testModeActive = false;
     
+    // Variables for tracking sustained high noise levels
+    private long highNoiseStartTime = 0;
+    private boolean isHighNoiseTracking = false;
+    private static final long SUSTAINED_NOISE_THRESHOLD_MS = 4000; // 4 seconds
+    
     // region activation system
     private ActivityResultLauncher<Intent> bluetoothEnableLauncher = registerForActivityResult(
         new ActivityResultContracts.StartActivityForResult(),
@@ -765,17 +770,34 @@ public class MainActivity extends AppCompatActivity implements
                     }
                 }
             } else if (data.isNoiseData()) {
-
                 String noiseText = getString(R.string.noise_format, data.getValue());
                 tvNoise.setText(noiseText);
 
                 if (data.getValue() > Constants.NOISE_THRESHOLD) {
-
-                    notificationUtils.showNoiseAlert(data);
+                    // Track sustained high noise
+                    long currentTime = System.currentTimeMillis();
                     
-                    // log for test data
-                    if (data.isTestData()) {
-                        Log.d(Constants.TAG_MAIN, "Test noise data triggered notification: " + data.getValue());
+                    if (!isHighNoiseTracking) {
+                        // Start tracking high noise
+                        isHighNoiseTracking = true;
+                        highNoiseStartTime = currentTime;
+                        Log.d(Constants.TAG_MAIN, "Started tracking high noise level: " + data.getValue() + " dB");
+                    } else if (currentTime - highNoiseStartTime >= SUSTAINED_NOISE_THRESHOLD_MS) {
+                        // High noise sustained for 4+ seconds, trigger alert
+                        notificationUtils.showNoiseAlert(data);
+                        
+                        // log for test data
+                        if (data.isTestData()) {
+                            Log.d(Constants.TAG_MAIN, "Test noise data triggered notification after sustained period: " + data.getValue());
+                        } else {
+                            Log.d(Constants.TAG_MAIN, "Noise data triggered notification after sustained period: " + data.getValue());
+                        }
+                    }
+                } else {
+                    // Reset tracking when noise drops below threshold
+                    if (isHighNoiseTracking) {
+                        isHighNoiseTracking = false;
+                        Log.d(Constants.TAG_MAIN, "Stopped tracking high noise, level dropped to: " + data.getValue() + " dB");
                     }
                 }
             }

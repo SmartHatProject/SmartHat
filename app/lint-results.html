@@ -179,7 +179,7 @@ document.getElementById(id).style.display = 'none';
     <div class="mdl-layout__header-row">
       <span class="mdl-layout-title">Lint Report: 264 warnings</span>
       <div class="mdl-layout-spacer"></div>
-      <nav class="mdl-navigation mdl-layout--large-screen-only">Check performed at Sun Mar 16 17:55:27 EDT 2025 by AGP (8.4.1)</nav>
+      <nav class="mdl-navigation mdl-layout--large-screen-only">Check performed at Sun Mar 16 20:57:57 EDT 2025 by AGP (8.4.1)</nav>
     </div>
   </header>
   <div class="mdl-layout__drawer">
@@ -397,14 +397,14 @@ Dismiss</button>            </div>
 <span class="lineno"> 1077 </span>      }
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:443</span>: <span class="message">Implicitly using the default locale is a common source of bugs: Use <code>toLowerCase(Locale)</code> instead. For strings meant to be internal use <code>Locale.ROOT</code>, otherwise <code>Locale.getDefault()</code>.</span><br /><pre class="errorlines">
-<span class="lineno"> 440 </span>          Log.d(TAG, <span class="string">"Parsing JSON: "</span> + jsonData);
-<span class="lineno"> 441 </span>          
-<span class="lineno"> 442 </span>          <span class="comment">// normalize sensor type to lowercase for consistency across the app</span>
-<span class="caretline"><span class="lineno"> 443 </span>          <span class="keyword">final</span> String normalizedType = sensorType.<span class="warning">toLowerCase</span>();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 444 </span>          
-<span class="lineno"> 445 </span>          <span class="comment">// extract the data value with bounds checking</span>
-<span class="lineno"> 446 </span>          <span class="comment">// handle both esp32 hardware format ("data") and test mode format ("value")</span></pre>
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:449</span>: <span class="message">Implicitly using the default locale is a common source of bugs: Use <code>toLowerCase(Locale)</code> instead. For strings meant to be internal use <code>Locale.ROOT</code>, otherwise <code>Locale.getDefault()</code>.</span><br /><pre class="errorlines">
+<span class="lineno"> 446 </span>          Log.d(TAG, <span class="string">"Parsing JSON: "</span> + jsonData);
+<span class="lineno"> 447 </span>          
+<span class="lineno"> 448 </span>          <span class="comment">// normalize sensor type to lowercase for consistency across the app</span>
+<span class="caretline"><span class="lineno"> 449 </span>          <span class="keyword">final</span> String normalizedType = sensorType.<span class="warning">toLowerCase</span>();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 450 </span>          
+<span class="lineno"> 451 </span>          <span class="comment">// extract the data value with bounds checking</span>
+<span class="lineno"> 452 </span>          <span class="comment">// handle both esp32 hardware format ("data") and test mode format ("value")</span></pre>
 
 <span class="location"><a href="../../src/main/java/com/team12/smarthat/utils/NotificationUtils.java">../../src/main/java/com/team12/smarthat/utils/NotificationUtils.java</a>:169</span>: <span class="message">Implicitly using the default locale is a common source of bugs: Use <code>toLowerCase(Locale)</code> instead. For strings meant to be internal use <code>Locale.ROOT</code>, otherwise <code>Locale.getDefault()</code>.</span><br /><pre class="errorlines">
 <span class="lineno"> 166 </span><span class="javadoc">     * @return notification id constant
@@ -849,14 +849,14 @@ Dismiss</button>            </div>
               <div class="mdl-card__supporting-text">
 <div class="issue">
 <div class="warningslist">
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:300</span>: <span class="message">This method should only be accessed from tests or within private scope</span><br /><pre class="errorlines">
-<span class="lineno">  297 </span>            <span class="comment">// clean up both connection managers</span>
-<span class="lineno">  298 </span>            <span class="keyword">if</span> (connectionManager != <span class="keyword">null</span>) {
-<span class="lineno">  299 </span>                connectionManager.cleanup();
-<span class="caretline"><span class="lineno">  300 </span>                BleConnectionManager.<span class="warning">resetInstanceForTesting</span>();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  301 </span>            }
-<span class="lineno">  302 </span>            
-<span class="lineno">  303 </span>            <span class="keyword">if</span> (mockConnectionManager != <span class="keyword">null</span>) {
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:305</span>: <span class="message">This method should only be accessed from tests or within private scope</span><br /><pre class="errorlines">
+<span class="lineno">  302 </span>            <span class="comment">// clean up both connection managers</span>
+<span class="lineno">  303 </span>            <span class="keyword">if</span> (connectionManager != <span class="keyword">null</span>) {
+<span class="lineno">  304 </span>                connectionManager.cleanup();
+<span class="caretline"><span class="lineno">  305 </span>                BleConnectionManager.<span class="warning">resetInstanceForTesting</span>();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  306 </span>            }
+<span class="lineno">  307 </span>            
+<span class="lineno">  308 </span>            <span class="keyword">if</span> (mockConnectionManager != <span class="keyword">null</span>) {
 </pre>
 
 </div>
@@ -999,55 +999,55 @@ Dismiss</button>            </div>
 <span class="lineno"> 322 </span>    
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:156</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
-<span class="lineno"> 153 </span>        }
-<span class="lineno"> 154 </span>        
-<span class="lineno"> 155 </span>        dataListeners.remove(listener);
-<span class="caretline"><span class="lineno"> 156 </span>        <span class="warning">Log.d(TAG, <span class="string">"Sensor data listener removed, remaining: "</span> + dataListeners.size())</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 157 </span>    }
-<span class="lineno"> 158 </span>    
-<span class="lineno"> 159 </span>    <span class="javadoc">/**
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:162</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
+<span class="lineno"> 159 </span>        }
+<span class="lineno"> 160 </span>        
+<span class="lineno"> 161 </span>        dataListeners.remove(listener);
+<span class="caretline"><span class="lineno"> 162 </span>        <span class="warning">Log.d(TAG, <span class="string">"Sensor data listener removed, remaining: "</span> + dataListeners.size())</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 163 </span>    }
+<span class="lineno"> 164 </span>    
+<span class="lineno"> 165 </span>    <span class="javadoc">/**
 </span></pre>
 
 <button class="mdl-button mdl-js-button mdl-button--primary" id="LogConditionalDivLink" onclick="reveal('LogConditionalDiv');" />+ 11 More Occurrences...</button>
 <div id="LogConditionalDiv" style="display: none">
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:178</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
-<span class="lineno"> 175 </span>        String stringData = <span class="keyword">new</span> String(data, java.nio.charset.StandardCharsets.UTF_8);
-<span class="lineno"> 176 </span>        
-<span class="lineno"> 177 </span>        <span class="comment">//logs</span>
-<span class="caretline"><span class="lineno"> 178 </span>        <span class="warning">Log.d(TAG, <span class="string">"Raw data from ESP32: "</span> + stringData)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 179 </span>        Log.d(TAG, <span class="string">"Characteristic UUID: "</span> + uuid.toString());
-<span class="lineno"> 180 </span>        Log.d(TAG, <span class="string">"Data length: "</span> + data.length + <span class="string">" bytes"</span>);
-<span class="lineno"> 181 </span>        
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:184</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
+<span class="lineno"> 181 </span>        String stringData = <span class="keyword">new</span> String(data, java.nio.charset.StandardCharsets.UTF_8);
+<span class="lineno"> 182 </span>        
+<span class="lineno"> 183 </span>        <span class="comment">//logs</span>
+<span class="caretline"><span class="lineno"> 184 </span>        <span class="warning">Log.d(TAG, <span class="string">"Raw data from ESP32: "</span> + stringData)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 185 </span>        Log.d(TAG, <span class="string">"Characteristic UUID: "</span> + uuid.toString());
+<span class="lineno"> 186 </span>        Log.d(TAG, <span class="string">"Data length: "</span> + data.length + <span class="string">" bytes"</span>);
+<span class="lineno"> 187 </span>        
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:179</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
-<span class="lineno"> 176 </span>            
-<span class="lineno"> 177 </span>            <span class="comment">//logs</span>
-<span class="lineno"> 178 </span>            Log.d(TAG, <span class="string">"Raw data from ESP32: "</span> + stringData);
-<span class="caretline"><span class="lineno"> 179 </span>            <span class="warning">Log.d(TAG, <span class="string">"Characteristic UUID: "</span> + uuid.toString())</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 180 </span>            Log.d(TAG, <span class="string">"Data length: "</span> + data.length + <span class="string">" bytes"</span>);
-<span class="lineno"> 181 </span>            
-<span class="lineno"> 182 </span>            <span class="comment">// sensor type from uuid with null safety check</span></pre>
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:185</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
+<span class="lineno"> 182 </span>            
+<span class="lineno"> 183 </span>            <span class="comment">//logs</span>
+<span class="lineno"> 184 </span>            Log.d(TAG, <span class="string">"Raw data from ESP32: "</span> + stringData);
+<span class="caretline"><span class="lineno"> 185 </span>            <span class="warning">Log.d(TAG, <span class="string">"Characteristic UUID: "</span> + uuid.toString())</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 186 </span>            Log.d(TAG, <span class="string">"Data length: "</span> + data.length + <span class="string">" bytes"</span>);
+<span class="lineno"> 187 </span>            
+<span class="lineno"> 188 </span>            <span class="comment">// sensor type from uuid with null safety check</span></pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:180</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
-<span class="lineno"> 177 </span>            <span class="comment">//logs</span>
-<span class="lineno"> 178 </span>            Log.d(TAG, <span class="string">"Raw data from ESP32: "</span> + stringData);
-<span class="lineno"> 179 </span>            Log.d(TAG, <span class="string">"Characteristic UUID: "</span> + uuid.toString());
-<span class="caretline"><span class="lineno"> 180 </span>            <span class="warning">Log.d(TAG, <span class="string">"Data length: "</span> + data.length + <span class="string">" bytes"</span>)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 181 </span>            
-<span class="lineno"> 182 </span>            <span class="comment">// sensor type from uuid with null safety check</span>
-<span class="lineno"> 183 </span>            String sensorType = <span class="keyword">null</span>;
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:186</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
+<span class="lineno"> 183 </span>            <span class="comment">//logs</span>
+<span class="lineno"> 184 </span>            Log.d(TAG, <span class="string">"Raw data from ESP32: "</span> + stringData);
+<span class="lineno"> 185 </span>            Log.d(TAG, <span class="string">"Characteristic UUID: "</span> + uuid.toString());
+<span class="caretline"><span class="lineno"> 186 </span>            <span class="warning">Log.d(TAG, <span class="string">"Data length: "</span> + data.length + <span class="string">" bytes"</span>)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 187 </span>            
+<span class="lineno"> 188 </span>            <span class="comment">// sensor type from uuid with null safety check</span>
+<span class="lineno"> 189 </span>            String sensorType = <span class="keyword">null</span>;
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:440</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
-<span class="lineno"> 437 </span>            JSONObject json = <span class="keyword">new</span> JSONObject(jsonData);
-<span class="lineno"> 438 </span>            
-<span class="lineno"> 439 </span>            <span class="comment">// log full json for debugging purposes</span>
-<span class="caretline"><span class="lineno"> 440 </span>            <span class="warning">Log.d(TAG, <span class="string">"Parsing JSON: "</span> + jsonData)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 441 </span>            
-<span class="lineno"> 442 </span>            <span class="comment">// normalize sensor type to lowercase for consistency across the app</span>
-<span class="lineno"> 443 </span>            <span class="keyword">final</span> String normalizedType = sensorType.toLowerCase();
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:446</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
+<span class="lineno"> 443 </span>            JSONObject json = <span class="keyword">new</span> JSONObject(jsonData);
+<span class="lineno"> 444 </span>            
+<span class="lineno"> 445 </span>            <span class="comment">// log full json for debugging purposes</span>
+<span class="caretline"><span class="lineno"> 446 </span>            <span class="warning">Log.d(TAG, <span class="string">"Parsing JSON: "</span> + jsonData)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 447 </span>            
+<span class="lineno"> 448 </span>            <span class="comment">// normalize sensor type to lowercase for consistency across the app</span>
+<span class="lineno"> 449 </span>            <span class="keyword">final</span> String normalizedType = sensorType.toLowerCase();
 </pre>
 
 <span class="location"><a href="../../src/main/java/com/team12/smarthat/database/DatabaseHelper.java">../../src/main/java/com/team12/smarthat/database/DatabaseHelper.java</a>:108</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
@@ -1060,33 +1060,33 @@ Dismiss</button>            </div>
 <span class="lineno"> 111 </span>    
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:520</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
-<span class="lineno">  517 </span>        }
-<span class="lineno">  518 </span>        
-<span class="lineno">  519 </span>        tvTestMode.setText(modeText);
-<span class="caretline"><span class="lineno">  520 </span>        <span class="warning">Log.d(Constants.TAG_MAIN, <span class="string">"Updated test mode UI: "</span> + modeText)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  521 </span>    }
-<span class="lineno">  522 </span>
-<span class="lineno">  523 </span>    <span class="comment">// region connection management</span></pre>
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:525</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
+<span class="lineno">  522 </span>        }
+<span class="lineno">  523 </span>        
+<span class="lineno">  524 </span>        tvTestMode.setText(modeText);
+<span class="caretline"><span class="lineno">  525 </span>        <span class="warning">Log.d(Constants.TAG_MAIN, <span class="string">"Updated test mode UI: "</span> + modeText)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  526 </span>    }
+<span class="lineno">  527 </span>
+<span class="lineno">  528 </span>    <span class="comment">// region connection management</span></pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:923</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
-<span class="lineno">  920 </span>      updateConnectionUI(BleConnectionManager.ConnectionState.CONNECTING);
-<span class="lineno">  921 </span>      showToast(<span class="string">"Reconnecting to SmartHat..."</span>);
-<span class="lineno">  922 </span>
-<span class="caretline"><span class="lineno">  923 </span>      <span class="warning">Log.d(Constants.TAG_MAIN, <span class="string">"Attempting reconnection to: "</span> + lastDevice.getAddress())</span>;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  924 </span>      connectionManager.connect(lastDevice);
-<span class="lineno">  925 </span>      
-<span class="lineno">  926 </span>  } <span class="keyword">catch</span> (SecurityException e) {
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:945</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
+<span class="lineno">  942 </span>      updateConnectionUI(BleConnectionManager.ConnectionState.CONNECTING);
+<span class="lineno">  943 </span>      showToast(<span class="string">"Reconnecting to SmartHat..."</span>);
+<span class="lineno">  944 </span>
+<span class="caretline"><span class="lineno">  945 </span>      <span class="warning">Log.d(Constants.TAG_MAIN, <span class="string">"Attempting reconnection to: "</span> + lastDevice.getAddress())</span>;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  946 </span>      connectionManager.connect(lastDevice);
+<span class="lineno">  947 </span>      
+<span class="lineno">  948 </span>  } <span class="keyword">catch</span> (SecurityException e) {
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:993</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
-<span class="lineno">  990 </span>  <span class="keyword">long</span> operationTime = System.currentTimeMillis() - startTime;
-<span class="lineno">  991 </span>
-<span class="lineno">  992 </span>  String sensorType = data.getSensorType(); <span class="comment">// use getSensorType instead of getType</span>
-<span class="caretline"><span class="lineno">  993 </span>  <span class="warning">Log.d(Constants.TAG_MAIN, <span class="string">"Saved "</span> + sensorType + <span class="string">" data to database in "</span> + operationTime + <span class="string">"ms"</span>)</span>;</span>
-<span class="lineno">  994 </span>
-<span class="lineno">  995 </span>  <span class="keyword">if</span> (Math.random() &lt; <span class="number">0.01</span>) {
-<span class="lineno">  996 </span>      Log.d(Constants.TAG_MAIN, <span class="string">"Running database maintenance"</span>);
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:1015</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
+<span class="lineno"> 1012 </span>  <span class="keyword">long</span> operationTime = System.currentTimeMillis() - startTime;
+<span class="lineno"> 1013 </span>
+<span class="lineno"> 1014 </span>  String sensorType = data.getSensorType(); <span class="comment">// use getSensorType instead of getType</span>
+<span class="caretline"><span class="lineno"> 1015 </span>  <span class="warning">Log.d(Constants.TAG_MAIN, <span class="string">"Saved "</span> + sensorType + <span class="string">" data to database in "</span> + operationTime + <span class="string">"ms"</span>)</span>;</span>
+<span class="lineno"> 1016 </span>
+<span class="lineno"> 1017 </span>  <span class="keyword">if</span> (Math.random() &lt; <span class="number">0.01</span>) {
+<span class="lineno"> 1018 </span>      Log.d(Constants.TAG_MAIN, <span class="string">"Running database maintenance"</span>);
 </pre>
 
 <span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/MockBleConnectionManager.java">../../src/main/java/com/team12/smarthat/bluetooth/core/MockBleConnectionManager.java</a>:58</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
@@ -1550,152 +1550,152 @@ Dismiss</button>            </div>
 <span class="lineno"> 1038 </span>           
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:640</span>: <span class="message">Access to <code>private</code> field <code>connectionManager</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  637 </span>                    <span class="keyword">if</span> (device != <span class="keyword">null</span>) {
-<span class="lineno">  638 </span>                        Log.d(Constants.TAG_MAIN, <span class="string">"ESP32 device found: "</span> + 
-<span class="lineno">  639 </span>                              device.getAddress() + <span class="string">", connecting..."</span>);
-<span class="caretline"><span class="lineno">  640 </span>                        <span class="warning">connectionManager</span>.connect(device);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  641 </span>                    }
-<span class="lineno">  642 </span>                }
-<span class="lineno">  643 </span>                
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:645</span>: <span class="message">Access to <code>private</code> field <code>connectionManager</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  642 </span>                    <span class="keyword">if</span> (device != <span class="keyword">null</span>) {
+<span class="lineno">  643 </span>                        Log.d(Constants.TAG_MAIN, <span class="string">"ESP32 device found: "</span> + 
+<span class="lineno">  644 </span>                              device.getAddress() + <span class="string">", connecting..."</span>);
+<span class="caretline"><span class="lineno">  645 </span>                        <span class="warning">connectionManager</span>.connect(device);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  646 </span>                    }
+<span class="lineno">  647 </span>                }
+<span class="lineno">  648 </span>                
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:647</span>: <span class="message">Access to <code>private</code> method <code>showToast</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  644 </span>        <span class="annotation">@Override</span>
-<span class="lineno">  645 </span>        <span class="keyword">public</span> <span class="keyword">void</span> onScanFailed(<span class="keyword">int</span> errorCode, String errorMessage) {
-<span class="lineno">  646 </span>            Log.e(Constants.TAG_MAIN, <span class="string">"Scan failed: "</span> + errorMessage);
-<span class="caretline"><span class="lineno">  647 </span>            <span class="warning">showToast</span>(<span class="string">"Scan failed: "</span> + errorMessage);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  648 </span>            updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
-<span class="lineno">  649 </span>        }
-<span class="lineno">  650 </span>        
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:652</span>: <span class="message">Access to <code>private</code> method <code>showToast</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  649 </span>        <span class="annotation">@Override</span>
+<span class="lineno">  650 </span>        <span class="keyword">public</span> <span class="keyword">void</span> onScanFailed(<span class="keyword">int</span> errorCode, String errorMessage) {
+<span class="lineno">  651 </span>            Log.e(Constants.TAG_MAIN, <span class="string">"Scan failed: "</span> + errorMessage);
+<span class="caretline"><span class="lineno">  652 </span>            <span class="warning">showToast</span>(<span class="string">"Scan failed: "</span> + errorMessage);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  653 </span>            updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+<span class="lineno">  654 </span>        }
+<span class="lineno">  655 </span>        
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:648</span>: <span class="message">Access to <code>private</code> method <code>updateConnectionUI</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  645 </span>        <span class="keyword">public</span> <span class="keyword">void</span> onScanFailed(<span class="keyword">int</span> errorCode, String errorMessage) {
-<span class="lineno">  646 </span>            Log.e(Constants.TAG_MAIN, <span class="string">"Scan failed: "</span> + errorMessage);
-<span class="lineno">  647 </span>            showToast(<span class="string">"Scan failed: "</span> + errorMessage);
-<span class="caretline"><span class="lineno">  648 </span>            <span class="warning">updateConnectionUI</span>(BleConnectionManager.ConnectionState.DISCONNECTED);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  649 </span>        }
-<span class="lineno">  650 </span>        
-<span class="lineno">  651 </span>        <span class="annotation">@Override</span></pre>
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:653</span>: <span class="message">Access to <code>private</code> method <code>updateConnectionUI</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  650 </span>        <span class="keyword">public</span> <span class="keyword">void</span> onScanFailed(<span class="keyword">int</span> errorCode, String errorMessage) {
+<span class="lineno">  651 </span>            Log.e(Constants.TAG_MAIN, <span class="string">"Scan failed: "</span> + errorMessage);
+<span class="lineno">  652 </span>            showToast(<span class="string">"Scan failed: "</span> + errorMessage);
+<span class="caretline"><span class="lineno">  653 </span>            <span class="warning">updateConnectionUI</span>(BleConnectionManager.ConnectionState.DISCONNECTED);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  654 </span>        }
+<span class="lineno">  655 </span>        
+<span class="lineno">  656 </span>        <span class="annotation">@Override</span></pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:654</span>: <span class="message">Access to <code>private</code> method <code>showToast</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  651 </span>            <span class="annotation">@Override</span>
-<span class="lineno">  652 </span>            <span class="keyword">public</span> <span class="keyword">void</span> onScanTimeout() {
-<span class="lineno">  653 </span>                Log.d(Constants.TAG_MAIN, <span class="string">"Scan timed out, no ESP32 devices found"</span>);
-<span class="caretline"><span class="lineno">  654 </span>                <span class="warning">showToast</span>(<span class="string">"No ESP32 devices found nearby"</span>);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  655 </span>                updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
-<span class="lineno">  656 </span>            }
-<span class="lineno">  657 </span>        }, SCAN_TIMEOUT);
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:659</span>: <span class="message">Access to <code>private</code> method <code>showToast</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  656 </span>            <span class="annotation">@Override</span>
+<span class="lineno">  657 </span>            <span class="keyword">public</span> <span class="keyword">void</span> onScanTimeout() {
+<span class="lineno">  658 </span>                Log.d(Constants.TAG_MAIN, <span class="string">"Scan timed out, no ESP32 devices found"</span>);
+<span class="caretline"><span class="lineno">  659 </span>                <span class="warning">showToast</span>(<span class="string">"No ESP32 devices found nearby"</span>);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  660 </span>                updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+<span class="lineno">  661 </span>            }
+<span class="lineno">  662 </span>        }, SCAN_TIMEOUT);
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:655</span>: <span class="message">Access to <code>private</code> method <code>updateConnectionUI</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  652 </span>            <span class="keyword">public</span> <span class="keyword">void</span> onScanTimeout() {
-<span class="lineno">  653 </span>                Log.d(Constants.TAG_MAIN, <span class="string">"Scan timed out, no ESP32 devices found"</span>);
-<span class="lineno">  654 </span>                showToast(<span class="string">"No ESP32 devices found nearby"</span>);
-<span class="caretline"><span class="lineno">  655 </span>                <span class="warning">updateConnectionUI</span>(BleConnectionManager.ConnectionState.DISCONNECTED);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  656 </span>            }
-<span class="lineno">  657 </span>        }, SCAN_TIMEOUT);
-<span class="lineno">  658 </span>        
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:660</span>: <span class="message">Access to <code>private</code> method <code>updateConnectionUI</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  657 </span>            <span class="keyword">public</span> <span class="keyword">void</span> onScanTimeout() {
+<span class="lineno">  658 </span>                Log.d(Constants.TAG_MAIN, <span class="string">"Scan timed out, no ESP32 devices found"</span>);
+<span class="lineno">  659 </span>                showToast(<span class="string">"No ESP32 devices found nearby"</span>);
+<span class="caretline"><span class="lineno">  660 </span>                <span class="warning">updateConnectionUI</span>(BleConnectionManager.ConnectionState.DISCONNECTED);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  661 </span>            }
+<span class="lineno">  662 </span>        }, SCAN_TIMEOUT);
+<span class="lineno">  663 </span>        
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:844</span>: <span class="message">Access to <code>private</code> field <code>mainHandler</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  841 </span>  <span class="keyword">if</span> (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
-<span class="lineno">  842 </span>      <span class="keyword">final</span> <span class="keyword">int</span> state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-<span class="lineno">  843 </span>
-<span class="caretline"><span class="lineno">  844 </span>      <span class="warning">mainHandler</span>.post(() -> {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  845 </span>          <span class="keyword">switch</span> (state) {
-<span class="lineno">  846 </span>              <span class="keyword">case</span> BluetoothAdapter.STATE_OFF:
-<span class="lineno">  847 </span>                  Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turned off"</span>);
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:866</span>: <span class="message">Access to <code>private</code> field <code>mainHandler</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  863 </span>  <span class="keyword">if</span> (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
+<span class="lineno">  864 </span>      <span class="keyword">final</span> <span class="keyword">int</span> state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+<span class="lineno">  865 </span>
+<span class="caretline"><span class="lineno">  866 </span>      <span class="warning">mainHandler</span>.post(() -> {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  867 </span>          <span class="keyword">switch</span> (state) {
+<span class="lineno">  868 </span>              <span class="keyword">case</span> BluetoothAdapter.STATE_OFF:
+<span class="lineno">  869 </span>                  Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turned off"</span>);
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:848</span>: <span class="message">Access to <code>private</code> method <code>updateConnectionUI</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  845 </span>  <span class="keyword">switch</span> (state) {
-<span class="lineno">  846 </span>      <span class="keyword">case</span> BluetoothAdapter.STATE_OFF:
-<span class="lineno">  847 </span>          Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turned off"</span>);
-<span class="caretline"><span class="lineno">  848 </span>          <span class="warning">updateConnectionUI</span>(BleConnectionManager.ConnectionState.DISCONNECTED);&nbsp;&nbsp;</span>
-<span class="lineno">  849 </span>          connectionHelper.setText(R.string.bluetooth_disabled);
-<span class="lineno">  850 </span>          <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
-<span class="lineno">  851 </span>              showToast(<span class="string">"Bluetooth turned off"</span>);
-</pre>
-
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:849</span>: <span class="message">Access to <code>private</code> field <code>connectionHelper</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  846 </span>  <span class="keyword">case</span> BluetoothAdapter.STATE_OFF:
-<span class="lineno">  847 </span>      Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turned off"</span>);
-<span class="lineno">  848 </span>      updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
-<span class="caretline"><span class="lineno">  849 </span>      <span class="warning">connectionHelper</span>.setText(R.string.bluetooth_disabled);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  850 </span>      <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
-<span class="lineno">  851 </span>          showToast(<span class="string">"Bluetooth turned off"</span>);
-<span class="lineno">  852 </span>      }
-</pre>
-
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:851</span>: <span class="message">Access to <code>private</code> method <code>showToast</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  848 </span>  updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
-<span class="lineno">  849 </span>  connectionHelper.setText(R.string.bluetooth_disabled);
-<span class="lineno">  850 </span>  <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
-<span class="caretline"><span class="lineno">  851 </span>      <span class="warning">showToast</span>(<span class="string">"Bluetooth turned off"</span>);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  852 </span>  }
-<span class="lineno">  853 </span>  <span class="keyword">break</span>;
-<span class="lineno">  854 </span>  
-</pre>
-
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:861</span>: <span class="message">Access to <code>private</code> field <code>connectionHelper</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  858 </span>                
-<span class="lineno">  859 </span>                    <span class="keyword">case</span> BluetoothAdapter.STATE_TURNING_ON:
-<span class="lineno">  860 </span>                        Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turning on"</span>);
-<span class="caretline"><span class="lineno">  861 </span>                        <span class="warning">connectionHelper</span>.setText(R.string.bluetooth_enabling);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  862 </span>                <span class="keyword">break</span>;
-<span class="lineno">  863 </span>                
-<span class="lineno">  864 </span>                    <span class="keyword">case</span> BluetoothAdapter.STATE_ON:
-</pre>
-
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:869</span>: <span class="message">Access to <code>private</code> field <code>connectionManager</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  866 </span>  <span class="keyword">boolean</span> autoReconnect = getSharedPreferences(<span class="string">"app_prefs"</span>, MODE_PRIVATE)
-<span class="lineno">  867 </span>          .getBoolean(<span class="string">"auto_reconnect"</span>, <span class="keyword">true</span>);
-<span class="lineno">  868 </span>  
-<span class="caretline"><span class="lineno">  869 </span>  <span class="keyword">if</span> (autoReconnect &amp;&amp; <span class="warning">connectionManager</span>.getLastConnectedDevice() != <span class="keyword">null</span>) {</span>
-<span class="lineno">  870 </span>
-<span class="lineno">  871 </span>      mainHandler.postDelayed(() -> {
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:870</span>: <span class="message">Access to <code>private</code> method <code>updateConnectionUI</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  867 </span>  <span class="keyword">switch</span> (state) {
+<span class="lineno">  868 </span>      <span class="keyword">case</span> BluetoothAdapter.STATE_OFF:
+<span class="lineno">  869 </span>          Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turned off"</span>);
+<span class="caretline"><span class="lineno">  870 </span>          <span class="warning">updateConnectionUI</span>(BleConnectionManager.ConnectionState.DISCONNECTED);&nbsp;&nbsp;</span>
+<span class="lineno">  871 </span>          connectionHelper.setText(R.string.bluetooth_disabled);
 <span class="lineno">  872 </span>          <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
+<span class="lineno">  873 </span>              showToast(<span class="string">"Bluetooth turned off"</span>);
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:871</span>: <span class="message">Access to <code>private</code> field <code>mainHandler</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  868 </span>  
-<span class="lineno">  869 </span>  <span class="keyword">if</span> (autoReconnect &amp;&amp; connectionManager.getLastConnectedDevice() != <span class="keyword">null</span>) {
-<span class="lineno">  870 </span>
-<span class="caretline"><span class="lineno">  871 </span>      <span class="warning">mainHandler</span>.postDelayed(() -> {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  872 </span>          <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
-<span class="lineno">  873 </span>              startReconnectionProcess();
-<span class="lineno">  874 </span>          }
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:871</span>: <span class="message">Access to <code>private</code> field <code>connectionHelper</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  868 </span>  <span class="keyword">case</span> BluetoothAdapter.STATE_OFF:
+<span class="lineno">  869 </span>      Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turned off"</span>);
+<span class="lineno">  870 </span>      updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+<span class="caretline"><span class="lineno">  871 </span>      <span class="warning">connectionHelper</span>.setText(R.string.bluetooth_disabled);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  872 </span>      <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
+<span class="lineno">  873 </span>          showToast(<span class="string">"Bluetooth turned off"</span>);
+<span class="lineno">  874 </span>      }
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:873</span>: <span class="message">Access to <code>private</code> method <code>startReconnectionProcess</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  870 </span>
-<span class="lineno">  871 </span>                                mainHandler.postDelayed(() -> {
-<span class="lineno">  872 </span>                                    <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
-<span class="caretline"><span class="lineno">  873 </span>                                        <span class="warning">startReconnectionProcess</span>();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  874 </span>                                    }
-<span class="lineno">  875 </span>                                }, <span class="number">1500</span>);
-<span class="lineno">  876 </span>        } <span class="keyword">else</span> {
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:873</span>: <span class="message">Access to <code>private</code> method <code>showToast</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  870 </span>  updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+<span class="lineno">  871 </span>  connectionHelper.setText(R.string.bluetooth_disabled);
+<span class="lineno">  872 </span>  <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
+<span class="caretline"><span class="lineno">  873 </span>      <span class="warning">showToast</span>(<span class="string">"Bluetooth turned off"</span>);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  874 </span>  }
+<span class="lineno">  875 </span>  <span class="keyword">break</span>;
+<span class="lineno">  876 </span>  
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:877</span>: <span class="message">Access to <code>private</code> field <code>connectionHelper</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  874 </span>                                    }
-<span class="lineno">  875 </span>                                }, <span class="number">1500</span>);
-<span class="lineno">  876 </span>        } <span class="keyword">else</span> {
-<span class="caretline"><span class="lineno">  877 </span>                                <span class="warning">connectionHelper</span>.setText(R.string.ready_to_connect);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  878 </span>                            }
-<span class="lineno">  879 </span>                            
-<span class="lineno">  880 </span>                            <span class="comment">// Only show toast if app is in foreground</span></pre>
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:883</span>: <span class="message">Access to <code>private</code> field <code>connectionHelper</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  880 </span>                
+<span class="lineno">  881 </span>                    <span class="keyword">case</span> BluetoothAdapter.STATE_TURNING_ON:
+<span class="lineno">  882 </span>                        Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turning on"</span>);
+<span class="caretline"><span class="lineno">  883 </span>                        <span class="warning">connectionHelper</span>.setText(R.string.bluetooth_enabling);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  884 </span>                <span class="keyword">break</span>;
+<span class="lineno">  885 </span>                
+<span class="lineno">  886 </span>                    <span class="keyword">case</span> BluetoothAdapter.STATE_ON:
+</pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:882</span>: <span class="message">Access to <code>private</code> method <code>showToast</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  879 </span>                            
-<span class="lineno">  880 </span>                            <span class="comment">// Only show toast if app is in foreground</span>
-<span class="lineno">  881 </span>                            <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
-<span class="caretline"><span class="lineno">  882 </span>                                <span class="warning">showToast</span>(<span class="string">"Bluetooth turned on"</span>);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  883 </span>                            }
-<span class="lineno">  884 </span>                    <span class="keyword">break</span>;
-<span class="lineno">  885 </span>            }
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:891</span>: <span class="message">Access to <code>private</code> field <code>connectionManager</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  888 </span>  <span class="keyword">boolean</span> autoReconnect = getSharedPreferences(<span class="string">"app_prefs"</span>, MODE_PRIVATE)
+<span class="lineno">  889 </span>          .getBoolean(<span class="string">"auto_reconnect"</span>, <span class="keyword">true</span>);
+<span class="lineno">  890 </span>  
+<span class="caretline"><span class="lineno">  891 </span>  <span class="keyword">if</span> (autoReconnect &amp;&amp; <span class="warning">connectionManager</span>.getLastConnectedDevice() != <span class="keyword">null</span>) {</span>
+<span class="lineno">  892 </span>
+<span class="lineno">  893 </span>      mainHandler.postDelayed(() -> {
+<span class="lineno">  894 </span>          <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
+</pre>
+
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:893</span>: <span class="message">Access to <code>private</code> field <code>mainHandler</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  890 </span>  
+<span class="lineno">  891 </span>  <span class="keyword">if</span> (autoReconnect &amp;&amp; connectionManager.getLastConnectedDevice() != <span class="keyword">null</span>) {
+<span class="lineno">  892 </span>
+<span class="caretline"><span class="lineno">  893 </span>      <span class="warning">mainHandler</span>.postDelayed(() -> {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  894 </span>          <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
+<span class="lineno">  895 </span>              startReconnectionProcess();
+<span class="lineno">  896 </span>          }
+</pre>
+
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:895</span>: <span class="message">Access to <code>private</code> method <code>startReconnectionProcess</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  892 </span>
+<span class="lineno">  893 </span>                                mainHandler.postDelayed(() -> {
+<span class="lineno">  894 </span>                                    <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
+<span class="caretline"><span class="lineno">  895 </span>                                        <span class="warning">startReconnectionProcess</span>();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  896 </span>                                    }
+<span class="lineno">  897 </span>                                }, <span class="number">1500</span>);
+<span class="lineno">  898 </span>        } <span class="keyword">else</span> {
+</pre>
+
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:899</span>: <span class="message">Access to <code>private</code> field <code>connectionHelper</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  896 </span>                                    }
+<span class="lineno">  897 </span>                                }, <span class="number">1500</span>);
+<span class="lineno">  898 </span>        } <span class="keyword">else</span> {
+<span class="caretline"><span class="lineno">  899 </span>                                <span class="warning">connectionHelper</span>.setText(R.string.ready_to_connect);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  900 </span>                            }
+<span class="lineno">  901 </span>                            
+<span class="lineno">  902 </span>                            <span class="comment">// Only show toast if app is in foreground</span></pre>
+
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:904</span>: <span class="message">Access to <code>private</code> method <code>showToast</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  901 </span>                            
+<span class="lineno">  902 </span>                            <span class="comment">// Only show toast if app is in foreground</span>
+<span class="lineno">  903 </span>                            <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
+<span class="caretline"><span class="lineno">  904 </span>                                <span class="warning">showToast</span>(<span class="string">"Bluetooth turned on"</span>);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  905 </span>                            }
+<span class="lineno">  906 </span>                    <span class="keyword">break</span>;
+<span class="lineno">  907 </span>            }
 </pre>
 
 <span class="location"><a href="../../src/main/java/com/team12/smarthat/utils/TestDataGenerator.java">../../src/main/java/com/team12/smarthat/utils/TestDataGenerator.java</a>:140</span>: <span class="message">Access to <code>private</code> field <code>isRunning</code> of class <code>TestDataGenerator</code> requires synthetic accessor</span><br /><pre class="errorlines">
@@ -2039,7 +2039,7 @@ Dismiss</button>            </div>
 <span class="lineno"> 25 </span>    <span class="comment">&lt;!-- Initial Values --></span></pre>
 
 <span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:30</span>: <span class="message">Replace "..." with ellipsis character (&#8230;, &amp;#8230;) ?</span><br /><pre class="errorlines">
-<span class="lineno"> 27 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"noise_initial"</span>>Noise: 0.0 dB<span class="tag">&lt;/string></span>
+<span class="lineno"> 27 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"noise_initial"</span>>Noise: 40.0 dB<span class="tag">&lt;/string></span>
 <span class="lineno"> 28 </span>  
 <span class="lineno"> 29 </span>  <span class="comment">&lt;!-- Connection Helper Messages --></span>
 <span class="caretline"><span class="lineno"> 30 </span>  <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"helper_text_connected"</span>><span class="warning">Connected to SmartHat. Receiving data...</span><span class="tag">&lt;/string></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -2860,74 +2860,74 @@ Dismiss</button>            </div>
 <span class="lineno"> 376 </span>        } <span class="keyword">else</span> {
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:75</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://developer.android.com/kotlin/interop#nullability_annotations">https://developer.android.com/kotlin/interop#nullability_annotations</a></span><br /><pre class="errorlines">
-<span class="lineno">  72 </span><span class="javadoc">         * @param data the sensor data object
-</span><span class="lineno">  73 </span><span class="javadoc">         * @param sensorType the type of sensor (use sensor_type_* constants)
-</span><span class="lineno">  74 </span><span class="javadoc">         */</span>
-<span class="caretline"><span class="lineno">  75 </span>        <span class="keyword">void</span> onSensorData(<span class="warning">SensorData</span> data, String sensorType);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  76 </span>    }
-<span class="lineno">  77 </span>    
-<span class="lineno">  78 </span>    <span class="javadoc">/**
-</span></pre>
-
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:75</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://developer.android.com/kotlin/interop#nullability_annotations">https://developer.android.com/kotlin/interop#nullability_annotations</a></span><br /><pre class="errorlines">
-<span class="lineno">  72 </span><span class="javadoc">         * @param data the sensor data object
-</span><span class="lineno">  73 </span><span class="javadoc">         * @param sensorType the type of sensor (use sensor_type_* constants)
-</span><span class="lineno">  74 </span><span class="javadoc">         */</span>
-<span class="caretline"><span class="lineno">  75 </span>        <span class="keyword">void</span> onSensorData(SensorData data, <span class="warning">String</span> sensorType);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  76 </span>    }
-<span class="lineno">  77 </span>    
-<span class="lineno">  78 </span>    <span class="javadoc">/**
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:81</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://developer.android.com/kotlin/interop#nullability_annotations">https://developer.android.com/kotlin/interop#nullability_annotations</a></span><br /><pre class="errorlines">
+<span class="lineno">  78 </span><span class="javadoc">         * @param data the sensor data object
+</span><span class="lineno">  79 </span><span class="javadoc">         * @param sensorType the type of sensor (use sensor_type_* constants)
+</span><span class="lineno">  80 </span><span class="javadoc">         */</span>
+<span class="caretline"><span class="lineno">  81 </span>        <span class="keyword">void</span> onSensorData(<span class="warning">SensorData</span> data, String sensorType);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  82 </span>    }
+<span class="lineno">  83 </span>    
+<span class="lineno">  84 </span>    <span class="javadoc">/**
 </span></pre>
 
 <span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:81</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://developer.android.com/kotlin/interop#nullability_annotations">https://developer.android.com/kotlin/interop#nullability_annotations</a></span><br /><pre class="errorlines">
-<span class="lineno">  78 </span>    <span class="javadoc">/**
-</span><span class="lineno">  79 </span><span class="javadoc">     * constructor that takes just the connection manager
-</span><span class="lineno">  80 </span><span class="javadoc">     */</span>
-<span class="caretline"><span class="lineno">  81 </span>    <span class="keyword">public</span> BluetoothServiceIntegration(<span class="warning">BleConnectionManager</span> connectionManager) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  82 </span>        <span class="keyword">if</span> (connectionManager == <span class="keyword">null</span>) {
-<span class="lineno">  83 </span>            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"BleConnectionManager cannot be null"</span>);
-<span class="lineno">  84 </span>        }
+<span class="lineno">  78 </span><span class="javadoc">         * @param data the sensor data object
+</span><span class="lineno">  79 </span><span class="javadoc">         * @param sensorType the type of sensor (use sensor_type_* constants)
+</span><span class="lineno">  80 </span><span class="javadoc">         */</span>
+<span class="caretline"><span class="lineno">  81 </span>        <span class="keyword">void</span> onSensorData(SensorData data, <span class="warning">String</span> sensorType);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  82 </span>    }
+<span class="lineno">  83 </span>    
+<span class="lineno">  84 </span>    <span class="javadoc">/**
+</span></pre>
+
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:87</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://developer.android.com/kotlin/interop#nullability_annotations">https://developer.android.com/kotlin/interop#nullability_annotations</a></span><br /><pre class="errorlines">
+<span class="lineno">  84 </span>    <span class="javadoc">/**
+</span><span class="lineno">  85 </span><span class="javadoc">     * constructor that takes just the connection manager
+</span><span class="lineno">  86 </span><span class="javadoc">     */</span>
+<span class="caretline"><span class="lineno">  87 </span>    <span class="keyword">public</span> BluetoothServiceIntegration(<span class="warning">BleConnectionManager</span> connectionManager) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  88 </span>        <span class="keyword">if</span> (connectionManager == <span class="keyword">null</span>) {
+<span class="lineno">  89 </span>            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"BleConnectionManager cannot be null"</span>);
+<span class="lineno">  90 </span>        }
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:101</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://developer.android.com/kotlin/interop#nullability_annotations">https://developer.android.com/kotlin/interop#nullability_annotations</a></span><br /><pre class="errorlines">
-<span class="lineno">  98 </span><span class="javadoc">     * observe connection state changes from the connection manager
-</span><span class="lineno">  99 </span><span class="javadoc">     * @param lifecycleOwner the lifecycle owner to bind the observer to
-</span><span class="lineno"> 100 </span><span class="javadoc">     */</span>
-<span class="caretline"><span class="lineno"> 101 </span>    <span class="keyword">public</span> <span class="keyword">void</span> observeConnectionState(<span class="warning">LifecycleOwner</span> lifecycleOwner) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 102 </span>        <span class="keyword">if</span> (lifecycleOwner == <span class="keyword">null</span>) {
-<span class="lineno"> 103 </span>            Log.e(TAG, <span class="string">"Cannot observe connection state - lifecycleOwner is null"</span>);
-<span class="lineno"> 104 </span>            <span class="keyword">return</span>;
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:107</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://developer.android.com/kotlin/interop#nullability_annotations">https://developer.android.com/kotlin/interop#nullability_annotations</a></span><br /><pre class="errorlines">
+<span class="lineno"> 104 </span><span class="javadoc">     * observe connection state changes from the connection manager
+</span><span class="lineno"> 105 </span><span class="javadoc">     * @param lifecycleOwner the lifecycle owner to bind the observer to
+</span><span class="lineno"> 106 </span><span class="javadoc">     */</span>
+<span class="caretline"><span class="lineno"> 107 </span>    <span class="keyword">public</span> <span class="keyword">void</span> observeConnectionState(<span class="warning">LifecycleOwner</span> lifecycleOwner) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 108 </span>        <span class="keyword">if</span> (lifecycleOwner == <span class="keyword">null</span>) {
+<span class="lineno"> 109 </span>            Log.e(TAG, <span class="string">"Cannot observe connection state - lifecycleOwner is null"</span>);
+<span class="lineno"> 110 </span>            <span class="keyword">return</span>;
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:134</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://developer.android.com/kotlin/interop#nullability_annotations">https://developer.android.com/kotlin/interop#nullability_annotations</a></span><br /><pre class="errorlines">
-<span class="lineno"> 131 </span><span class="javadoc">     * add a sensor data listener
-</span><span class="lineno"> 132 </span><span class="javadoc">     * thread safe 
-</span><span class="lineno"> 133 </span><span class="javadoc">     */</span>
-<span class="caretline"><span class="lineno"> 134 </span>    <span class="keyword">public</span> <span class="keyword">void</span> addSensorDataListener(<span class="warning">SensorDataListener</span> listener) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 135 </span>        <span class="keyword">if</span> (listener == <span class="keyword">null</span>) {
-<span class="lineno"> 136 </span>            Log.w(TAG, <span class="string">"Attempted to add null sensor data listener"</span>);
-<span class="lineno"> 137 </span>            <span class="keyword">return</span>;
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:140</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://developer.android.com/kotlin/interop#nullability_annotations">https://developer.android.com/kotlin/interop#nullability_annotations</a></span><br /><pre class="errorlines">
+<span class="lineno"> 137 </span><span class="javadoc">     * add a sensor data listener
+</span><span class="lineno"> 138 </span><span class="javadoc">     * thread safe 
+</span><span class="lineno"> 139 </span><span class="javadoc">     */</span>
+<span class="caretline"><span class="lineno"> 140 </span>    <span class="keyword">public</span> <span class="keyword">void</span> addSensorDataListener(<span class="warning">SensorDataListener</span> listener) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 141 </span>        <span class="keyword">if</span> (listener == <span class="keyword">null</span>) {
+<span class="lineno"> 142 </span>            Log.w(TAG, <span class="string">"Attempted to add null sensor data listener"</span>);
+<span class="lineno"> 143 </span>            <span class="keyword">return</span>;
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:150</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://developer.android.com/kotlin/interop#nullability_annotations">https://developer.android.com/kotlin/interop#nullability_annotations</a></span><br /><pre class="errorlines">
-<span class="lineno"> 147 </span><span class="javadoc">     * remove a sensor data listener
-</span><span class="lineno"> 148 </span><span class="javadoc">     * thread safe implementation
-</span><span class="lineno"> 149 </span><span class="javadoc">     */</span>
-<span class="caretline"><span class="lineno"> 150 </span>    <span class="keyword">public</span> <span class="keyword">void</span> removeSensorDataListener(<span class="warning">SensorDataListener</span> listener) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 151 </span>        <span class="keyword">if</span> (listener == <span class="keyword">null</span>) {
-<span class="lineno"> 152 </span>            <span class="keyword">return</span>;
-<span class="lineno"> 153 </span>        }
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:156</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://developer.android.com/kotlin/interop#nullability_annotations">https://developer.android.com/kotlin/interop#nullability_annotations</a></span><br /><pre class="errorlines">
+<span class="lineno"> 153 </span><span class="javadoc">     * remove a sensor data listener
+</span><span class="lineno"> 154 </span><span class="javadoc">     * thread safe implementation
+</span><span class="lineno"> 155 </span><span class="javadoc">     */</span>
+<span class="caretline"><span class="lineno"> 156 </span>    <span class="keyword">public</span> <span class="keyword">void</span> removeSensorDataListener(<span class="warning">SensorDataListener</span> listener) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 157 </span>        <span class="keyword">if</span> (listener == <span class="keyword">null</span>) {
+<span class="lineno"> 158 </span>            <span class="keyword">return</span>;
+<span class="lineno"> 159 </span>        }
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:163</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://developer.android.com/kotlin/interop#nullability_annotations">https://developer.android.com/kotlin/interop#nullability_annotations</a></span><br /><pre class="errorlines">
-<span class="lineno"> 160 </span><span class="javadoc">     * implementation of CharacteristicChangeListener interface
-</span><span class="lineno"> 161 </span><span class="javadoc">     */</span>
-<span class="lineno"> 162 </span>    <span class="annotation">@Override</span>
-<span class="caretline"><span class="lineno"> 163 </span>    <span class="keyword">public</span> <span class="keyword">void</span> onCharacteristicChanged(<span class="warning">BluetoothGattCharacteristic</span> characteristic) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 164 </span>        UUID uuid = characteristic.getUuid();
-<span class="lineno"> 165 </span>        
-<span class="lineno"> 166 </span>        <span class="keyword">try</span> {
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BluetoothServiceIntegration.java</a>:169</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://developer.android.com/kotlin/interop#nullability_annotations">https://developer.android.com/kotlin/interop#nullability_annotations</a></span><br /><pre class="errorlines">
+<span class="lineno"> 166 </span><span class="javadoc">     * implementation of CharacteristicChangeListener interface
+</span><span class="lineno"> 167 </span><span class="javadoc">     */</span>
+<span class="lineno"> 168 </span>    <span class="annotation">@Override</span>
+<span class="caretline"><span class="lineno"> 169 </span>    <span class="keyword">public</span> <span class="keyword">void</span> onCharacteristicChanged(<span class="warning">BluetoothGattCharacteristic</span> characteristic) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 170 </span>        UUID uuid = characteristic.getUuid();
+<span class="lineno"> 171 </span>        
+<span class="lineno"> 172 </span>        <span class="keyword">try</span> {
 </pre>
 
 <span class="location"><a href="../../src/main/java/com/team12/smarthat/database/DatabaseHelper.java">../../src/main/java/com/team12/smarthat/database/DatabaseHelper.java</a>:32</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://developer.android.com/kotlin/interop#nullability_annotations">https://developer.android.com/kotlin/interop#nullability_annotations</a></span><br /><pre class="errorlines">

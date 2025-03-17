@@ -33,6 +33,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * integration class 
  * 
  * sensor data updates through a listener pattern and handles
+ * 
+ * ESP32 Fallback Behaviors (for reference):
+ * - JSON creation failure → valid JSON with defaults 
+ * - invalid sound readings → 30.0 dB
+ * - dust below 0.6V → 0.0  (clean air)
+ * -non zero initial values: 40.0 dB (sound), 10.0 (dust)
  */
 @SuppressLint("MissingPermission")
 public class BluetoothServiceIntegration implements 
