@@ -41,16 +41,6 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * centralized ble connection manager for pixel 4a (android 12) to esp32 connection
- * 
- * this class implements a state machine pattern to manage ble connections,
- * providing a single source of truth for connection state and ensuring
- * proper resource management.
- * 
- * it is specifically optimized for android 12 on pixel 4a devices
- * connecting to esp32 ble peripherals.
- */
 @SuppressLint("MissingPermission")
 public class BleConnectionManager {
     private static final String TAG = "BleConnectionManager";
@@ -371,16 +361,6 @@ public class BleConnectionManager {
     }
     
     /**
-     * Calculate backoff delay for reconnection attempts using exponential backoff with jitter.
-     * 
-     * Implementation follows the error recovery protocol for ESP32 hardware:
-     * - Base delay starts at BASE_RECONNECTION_DELAY (1000ms)
-     * - Each retry doubles the delay (exponential growth: 2^n * BASE_DELAY)
-     * - Random jitter (±20%) is added to prevent connection attempt synchronization
-     * - Delay is capped at MAX_RECONNECTION_DELAY (60 seconds) to ensure recovery
-     * 
-     * This approach ensures robust reconnection that balances quick recovery for
-     * temporary issues with avoiding excessive battery drain from constant retries.
      * 
      * @return calculated delay in milliseconds for the next connection attempt
      */
@@ -388,7 +368,7 @@ public class BleConnectionManager {
         // base delay increased by retry count using exponential backoff
         long baseDelay = BASE_RECONNECTION_DELAY * (1L << Math.min(reconnectionAttempts, 6)); // cap at 64x
         
-        // Add jitter to prevent connection collision if multiple devices try reconnecting
+       
         double jitterFactor = 0.8 + (Math.random() * 0.4); // 0.8-1.2 range for ±20% jitter
         
         long delay = (long)(baseDelay * jitterFactor);
@@ -915,7 +895,6 @@ public class BleConnectionManager {
     
     /**
      * Clean up resources
-     * Enhanced with proper resource management for Android 12
      */
     public void cleanup() {
         Log.d(TAG, "Cleaning up BLE resources");

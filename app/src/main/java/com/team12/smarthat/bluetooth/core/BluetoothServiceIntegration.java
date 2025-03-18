@@ -240,8 +240,7 @@ public class BluetoothServiceIntegration implements
             // extract data value
             double value = json.optDouble("data", 0.0);
             
-            // extract timestamp - support both timeStamp (ESP32) and timestamp (mock) formats
-            // ESP32 hardware uses "timeStamp" format as specified in BLE configuration
+           
             long timestamp = 0;
             if (json.has("timeStamp")) {
                 timestamp = json.optLong("timeStamp", 0);
@@ -255,7 +254,7 @@ public class BluetoothServiceIntegration implements
             if (SENSOR_TYPE_DUST.equals(sensorType)) {
                 if (value < 0 || value > MAX_DUST_VALUE) {
                     Log.w(TAG, "Dust sensor value out of range: " + value);
-                    // we'll still create and dispatch the data - UI can handle out of range
+                    // we'll still create and dispatch the data 
                 } else {
                     // Only update last valid reading if the value is valid
                     lastValidDustReading = (float)value;
@@ -263,7 +262,7 @@ public class BluetoothServiceIntegration implements
             } else if (SENSOR_TYPE_NOISE.equals(sensorType)) {
                 if (value < 0 || value > MAX_NOISE_VALUE) {
                     Log.w(TAG, "Noise sensor value out of range: " + value);
-                    // we'll still create and dispatch the data - UI can handle out of range
+                    // we'll still create and dispatch the data 
                 } else {
                     // Only update last valid reading if the value is valid
                     lastValidNoiseReading = (float)value;
@@ -280,9 +279,7 @@ public class BluetoothServiceIntegration implements
             Log.e(TAG, "Error parsing JSON: " + e.getMessage());
             Log.e(TAG, "Invalid JSON: " + jsonData);
             
-            // Use last valid reading for this sensor type as a fallback
-            // This implements the "JSON creation failure → valid JSON with defaults" fallback behavior
-            // from the ESP32 hardware specification
+          
             float fallbackValue = SENSOR_TYPE_DUST.equals(sensorType) ? lastValidDustReading : lastValidNoiseReading;
             Log.w(TAG, "Using last valid reading as fallback: " + fallbackValue + " for " + sensorType);
             
@@ -365,7 +362,7 @@ public class BluetoothServiceIntegration implements
                 List<NotificationData> notifications = new ArrayList<>();
                 NotificationData notification;
                 
-                // Get up to BATCH_PROCESSING_SIZE notifications at a time
+                
                 // to prevent processing too many at once if the queue is very large
                 int count = 0;
                 while ((notification = notificationQueue.poll()) != null && count < BATCH_PROCESSING_SIZE) {
@@ -446,7 +443,7 @@ public class BluetoothServiceIntegration implements
             long lastTimestamp = lastProcessedTimestamps.get(sensorType);
             long timeDifference = timestamp - lastTimestamp;
             
-            // If this is an older notification (negative time difference) but within acceptable deviation window
+            
             if (timeDifference < 0 && Math.abs(timeDifference) < MAX_TIMESTAMP_DEVIATION) {
                 Log.w(TAG, "Processing out-of-order notification for " + sensorType + 
                       ", time difference: " + timeDifference + "ms");
@@ -650,14 +647,6 @@ public class BluetoothServiceIntegration implements
     }
     
     /**
-     * enable notifications for a characteristic
-     * 
-     * Implementation follows the ESP32 notification protocol:
-     * 1. First enable local notifications on the Android side (setCharacteristicNotification)
-     * 2. Then write the value 0x0100 to the CCCD (UUID 0x2902) to enable remote notifications
-     * 
-     * This method must be called for each characteristic individually, and re-called after
-     * any reconnection event to re-enable notifications.
      * 
      * @param gatt the bluetoothgatt connection
      * @param characteristic the characteristic to enable notifications for
@@ -672,8 +661,7 @@ public class BluetoothServiceIntegration implements
         final UUID charUuid = characteristic.getUuid();
         
         try {
-            // step 1: enable local notifications
-            // tells the Android BluetoothGatt system we want characteristic changed callbacks for this characteristic
+
             boolean setCharResult;
             
            
@@ -701,9 +689,7 @@ public class BluetoothServiceIntegration implements
                 return false;
             }
             
-            // step 2: write to descriptor to enable remote notifications from ESP32
-            // Using CCCD (Client Characteristic Configuration Descriptor) with UUID 0x2902
-            // Writing 0x0100 enables notifications (matches ESP32 hardware expectation)
+            
             BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
                     ESP32BluetoothSpec.CLIENT_CONFIG_DESCRIPTOR_UUID);
             
@@ -715,32 +701,30 @@ public class BluetoothServiceIntegration implements
             // value for enabling notifications
             byte[] enableValue;
             
-            // get the latest recommended value for enabling notifications
-            // NOTE: The ESP32 hardware expects exactly 0x0100 (byte array {0x01, 0x00})
-            // to be written to the CCCD to enable notifications, as specified in the BLE Config
+            
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                // android 13+ using BluetoothGattDescriptor constants
+               
                 try {
-                    // use reflection to get the ENABLE_NOTIFICATION_VALUE constant
+                    
                     Field enableNotificationField = BluetoothGattDescriptor.class.getField("ENABLE_NOTIFICATION_VALUE");
                     enableValue = (byte[]) enableNotificationField.get(null);
                     
-                    // Log the value to verify it matches ESP32 expectations
+                   
                     StringBuilder sb = new StringBuilder();
                     for (byte b : enableValue) {
                         sb.append(String.format("0x%02X ", b));
                     }
                     Log.d(TAG, "Using descriptor value: " + sb.toString().trim() + " for notifications");
                 } catch (Exception e) {
-                    //fallback to hardcoded value if reflection fails only
+                    
                     Log.w(TAG, "Reflection failed, using hardcoded value: " + e.getMessage());
-                    enableValue = new byte[]{0x01, 0x00}; // Standard value for notifications (0x0100)
+                    enableValue = new byte[]{0x01, 0x00}; 
                     Log.d(TAG, "Using hardcoded descriptor value: 0x01 0x00 for notifications");
                 }
             } else {
-                // Pre-Android 13 using standard constant
+                // will remove later when cleaning code
                 enableValue = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE;
-                // This has the value {0x01, 0x00} which matches the ESP32 expectation
+                
                 Log.d(TAG, "Using standard descriptor value: 0x01 0x00 for notifications");
             }
             
@@ -776,34 +760,34 @@ public class BluetoothServiceIntegration implements
         long currentTime = System.currentTimeMillis();
         long elapsedTime = currentTime - lastNotificationTimestamp;
         
-        // If we've received notifications recently, we're good
+        
         if (lastNotificationTimestamp > 0 && elapsedTime < NOTIFICATION_TIMEOUT_MS) {
             return;
         }
         
         Log.w(TAG, "No notifications received for " + elapsedTime + "ms");
         
-        // If this is the first notification timeout, try to verify/re-enable notifications
+        
         if (verificationAttempts < MAX_VERIFICATION_ATTEMPTS) {
             Log.d(TAG, "Attempting to verify notifications (attempt " + (verificationAttempts + 1) + ")");
             verificationAttempts++;
             
-            // Reset notification setup flag to force re-setup
+           
             notificationsSetup.set(false);
             
-            // Try to re-setup notifications
+           
             setupNotifications();
         } else {
             Log.e(TAG, "Notification verification failed after " + MAX_VERIFICATION_ATTEMPTS + " attempts");
             
-            // If we've tried multiple times and still no notifications, try reconnecting
+
             if (connectionManager.getCurrentState() == BleConnectionManager.ConnectionState.CONNECTED) {
                 Log.w(TAG, "Attempting to reconnect due to notification timeout");
                 
-                // Reset attempts counter for next connection
+                
                 verificationAttempts = 0;
                 
-                // Trigger reconnection
+               
                 connectionManager.reconnect();
             }
         }

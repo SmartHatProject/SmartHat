@@ -379,7 +379,6 @@ public class BluetoothPermissionManager {
     }
     
     /**
-     * operation that requires Bluetooth permissions 12+
      * @param operation The operation to execute if permissions are granted
      * @param errorHandler The handler to call if permissions are not granted
      * @param requireConnect Whether BLUETOOTH_CONNECT permission is required

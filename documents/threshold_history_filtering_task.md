@@ -103,6 +103,9 @@ we need to connect ui elements to your filter logic:
 we can test this with our test mode readings that are already being recorded. 
 
 
+current app uses constants for the threshold values (check Constants.java for DUST_THRESHOLD and NOISE_THRESHOLD). when implementing new query methods in DatabaseHelper.java we might need to add a "WHERE" clause that can handle empty filter params. also, our SensorData model already has timeStamps as unix timeStamps (milliseconds), so date filtering should be pretty straightforward with simple comparisons DatePicker converts to the same format.  we're generating lots of test data in test mode, so definitely test with that using the LOG_COMMANDS_FOR_TESTING.md guide to watch the debug logs. test mode adds "TEST" as the source field in SensorData so we might want to add that as a filter option too.
+
+
 
 
 
