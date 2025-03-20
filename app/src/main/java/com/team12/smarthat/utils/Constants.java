@@ -43,6 +43,7 @@ public class Constants {
     public static final float NOISE_THRESHOLD = 85.0f; // dB
     public static final float GAS_THRESHOLD = 375.0f; // ppm
     public static final float DUST_THRESHOLD = DUST_PM25_THRESHOLD;
+    public static final float GAS_THRESHOLD = 50.0f;
     
     // osha says these noise levels are bad for these durations
     public static final float[] OSHA_NOISE_LEVELS = {90.0f, 92.0f, 95.0f, 97.0f, 100.0f, 102.0f, 105.0f, 110.0f, 115.0f};
