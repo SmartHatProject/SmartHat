@@ -9,12 +9,16 @@
         app:showAsAction="never" />
     
     <item
-        android:id="@+id/action_notifications"
-        android:title="Enable Notifications"
-        android:checkable="true"
-        android:checked="true"
-        android:icon="@android:drawable/ic_popup_reminder"
-        app:showAsAction="never" />
+        android:id="@+id/action_settings"
+        android:title="Settings"
+        android:icon="@drawable/ic_settings"
+        app:showAsAction="ifRoom" />
+    
+    <item
+        android:id="@+id/action_visualization"
+        android:title="Data Visualization"
+        android:icon="@drawable/ic_visualization"
+        app:showAsAction="ifRoom" />
     
     <item
         android:id="@+id/action_test_mode"

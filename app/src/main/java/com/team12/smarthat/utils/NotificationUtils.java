@@ -64,9 +64,9 @@ public class NotificationUtils {
     public void sendThresholdAlert(String title, String message) {
         new Handler(Looper.getMainLooper()).post(() -> {
             try {
-                // if notifications are enabled in app preferences
-                if (!areNotificationsEnabled()) {
-                    Log.d(Constants.TAG_MAIN, "Alert suppressed because notifications are disabled: " + title);
+                // Check if notifications are enabled for this specific sensor type
+                if (!areNotificationsEnabledForType(getAlertTypeFromTitle(title))) {
+                    Log.d(Constants.TAG_MAIN, "Alert suppressed because " + getAlertTypeFromTitle(title) + " notifications are disabled: " + title);
                     return;
                 }
                 
@@ -166,13 +166,14 @@ public class NotificationUtils {
      * @return notification id constant
      */
     private int getNotificationIdForType(String alertType) {
-        switch (alertType.toLowerCase()) {
-            case "dust":
-                return Constants.NOTIFICATION_ID_DUST;
-            case "noise":
-                return Constants.NOTIFICATION_ID_NOISE;
-            default:
-                return Constants.NOTIFICATION_ID_GENERAL;
+        if (alertType.equalsIgnoreCase("dust")) {
+            return Constants.NOTIFICATION_ID_DUST;
+        } else if (alertType.equalsIgnoreCase("noise")) {
+            return Constants.NOTIFICATION_ID_NOISE;
+        } else if (alertType.equalsIgnoreCase("gas")) {
+            return Constants.NOTIFICATION_ID_GAS;
+        } else {
+            return Constants.NOTIFICATION_ID_GENERAL;
         }
     }
     
@@ -196,9 +197,13 @@ public class NotificationUtils {
         boolean isTestData = data.isTestData();
         float value = data.getValue();
         
+        // Get custom threshold if available
+        float threshold = context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
+                .getFloat(Constants.PREF_DUST_THRESHOLD, Constants.DUST_THRESHOLD);
+        
         String title = isTestData ? "Test Dust Alert" : "Dust Alert";
-        String message = String.format("Dust level of %.1f µg/m³ exceeds safe limit (%d µg/m³)%s", 
-                                      value, (int)Constants.DUST_THRESHOLD,
+        String message = String.format("Dust level of %.1f µg/m³ exceeds safe limit (%.1f µg/m³)%s", 
+                                      value, threshold,
                                       isTestData ? " [TEST DATA]" : "");
         
         sendAlert(title, message);
@@ -214,9 +219,35 @@ public class NotificationUtils {
         boolean isTestData = data.isTestData();
         float value = data.getValue();
         
+        // Get custom threshold if available
+        float threshold = context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
+                .getFloat(Constants.PREF_NOISE_THRESHOLD, Constants.NOISE_THRESHOLD);
+        
         String title = isTestData ? "Test Noise Alert" : "Noise Alert";
-        String message = String.format("Noise level of %.1f dB exceeds safe limit (%d dB)%s", 
-                                      value, (int)Constants.NOISE_THRESHOLD,
+        String message = String.format("Noise level of %.1f dB exceeds safe limit (%.1f dB)%s", 
+                                      value, threshold,
+                                      isTestData ? " [TEST DATA]" : "");
+        
+        sendAlert(title, message);
+    }
+
+    /**
+     * Show an alert for gas sensor threshold breach
+     * @param data the gas sensor data that triggered the alert
+     */
+    @SuppressLint("MissingPermission")
+    public void showGasAlert(SensorData data) {
+        // Check if this is test data and adjust the title
+        boolean isTestData = data.isTestData();
+        float value = data.getValue();
+        
+        // Get custom threshold if available
+        float threshold = context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
+                .getFloat(Constants.PREF_GAS_THRESHOLD, Constants.GAS_THRESHOLD);
+        
+        String title = isTestData ? "Test Gas Alert" : "Gas Alert";
+        String message = String.format("Gas level of %.1f ppm exceeds safe limit (%.1f ppm)%s", 
+                                      value, threshold,
                                       isTestData ? " [TEST DATA]" : "");
         
         sendAlert(title, message);
@@ -243,10 +274,38 @@ public class NotificationUtils {
         // Check system permission, POST_NOTIFICATIONS permission on Android 13+, and app preference
         boolean systemEnabled = NotificationManagerCompat.from(context).areNotificationsEnabled();
         boolean permissionGranted = hasNotificationPermission();
-        boolean appEnabled = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        boolean appEnabled = context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
                 .getBoolean(Constants.PREF_NOTIFICATIONS_ENABLED, true); // Default to enabled
         
         return systemEnabled && appEnabled && permissionGranted;
+    }
+    
+    /**
+     * Check if notifications are enabled for a specific sensor type
+     * @param alertType the type of alert (dust, noise, or gas)
+     * @return true if notifications are enabled for this type, false otherwise
+     */
+    public boolean areNotificationsEnabledForType(String alertType) {
+        // First check if notifications are enabled globally
+        if (!areNotificationsEnabled()) {
+            return false;
+        }
+        
+        // Then check for specific type
+        String prefKey;
+        if (alertType.equalsIgnoreCase("dust")) {
+            prefKey = Constants.PREF_DUST_NOTIFICATIONS_ENABLED;
+        } else if (alertType.equalsIgnoreCase("noise")) {
+            prefKey = Constants.PREF_NOISE_NOTIFICATIONS_ENABLED;
+        } else if (alertType.equalsIgnoreCase("gas")) {
+            prefKey = Constants.PREF_GAS_NOTIFICATIONS_ENABLED;
+        } else {
+            // For unknown types, fall back to the global setting
+            return true;
+        }
+        
+        return context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
+                .getBoolean(prefKey, true); // Default to enabled
     }
     
     /**
@@ -254,11 +313,37 @@ public class NotificationUtils {
      * @param enabled true to enable notifications, false to disable
      */
     public void setNotificationsEnabled(boolean enabled) {
-        context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
                 .edit()
                 .putBoolean(Constants.PREF_NOTIFICATIONS_ENABLED, enabled)
                 .apply();
         
         Log.d(Constants.TAG_MAIN, "Notifications " + (enabled ? "enabled" : "disabled") + " by user");
+    }
+    
+    /**
+     * Set notification enabled/disabled state for a specific sensor type
+     * @param alertType the type of alert (dust, noise, or gas)
+     * @param enabled true to enable notifications, false to disable
+     */
+    public void setNotificationsEnabledForType(String alertType, boolean enabled) {
+        String prefKey;
+        if (alertType.equalsIgnoreCase("dust")) {
+            prefKey = Constants.PREF_DUST_NOTIFICATIONS_ENABLED;
+        } else if (alertType.equalsIgnoreCase("noise")) {
+            prefKey = Constants.PREF_NOISE_NOTIFICATIONS_ENABLED;
+        } else if (alertType.equalsIgnoreCase("gas")) {
+            prefKey = Constants.PREF_GAS_NOTIFICATIONS_ENABLED;
+        } else {
+            // For unknown types, do nothing
+            return;
+        }
+        
+        context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
+                .edit()
+                .putBoolean(prefKey, enabled)
+                .apply();
+        
+        Log.d(Constants.TAG_MAIN, alertType + " notifications " + (enabled ? "enabled" : "disabled") + " by user");
     }
 }

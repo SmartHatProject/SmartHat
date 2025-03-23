@@ -1,6 +1,7 @@
 package com.team12.smarthat.database;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -166,6 +167,37 @@ public class DatabaseHelper {
                 Log.e(Constants.TAG_DATABASE, "Error during database maintenance: " + e.getMessage());
             }
         });
+    }
+    
+    /**
+     * Get the user's custom dust threshold value
+     * @param context Context for accessing shared preferences
+     * @return The custom threshold value or the default if not set
+     */
+    public float getCustomDustThreshold(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE);
+        return prefs.getFloat(Constants.PREF_DUST_THRESHOLD, Constants.DUST_THRESHOLD);
+    }
+    
+    /**
+     * Get the user's custom noise threshold value
+     * @param context Context for accessing shared preferences
+     * @return The custom threshold value or the default if not set
+     */
+    public float getCustomNoiseThreshold(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE);
+        return prefs.getFloat(Constants.PREF_NOISE_THRESHOLD, Constants.NOISE_THRESHOLD);
+    }
+    
+    /**
+     * Get threshold breaches with custom thresholds
+     * @param context Context for accessing shared preferences
+     * @return LiveData list of threshold breaches based on custom thresholds
+     */
+    public LiveData<List<SensorData>> getThresholdBreachesWithCustomThresholds(Context context) {
+        float dustThreshold = getCustomDustThreshold(context);
+        float noiseThreshold = getCustomNoiseThreshold(context);
+        return getThresholdBreaches(dustThreshold, noiseThreshold);
     }
 }
 

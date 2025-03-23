@@ -24,12 +24,14 @@ public class Constants {
     // hardware message types
     public static final String MESSAGE_TYPE_DUST = "DUST_SENSOR_DATA";
     public static final String MESSAGE_TYPE_SOUND = "SOUND_SENSOR_DATA";
+    public static final String MESSAGE_TYPE_GAS = "GAS_SENSOR_DATA";
 
     // notification stuff
     public static final String NOTIFICATION_CHANNEL_ID = "sensor_alerts";
     public static final int NOTIFICATION_ID = 1001;
     public static final int NOTIFICATION_ID_DUST = 1002;
     public static final int NOTIFICATION_ID_NOISE = 1003;
+    public static final int NOTIFICATION_ID_GAS = 1004;
     public static final int NOTIFICATION_ID_GENERAL = 1001;
     
     // cooldown times
@@ -39,6 +41,7 @@ public class Constants {
     // when to alert the user 
     public static final float DUST_PM25_THRESHOLD = 50.0f; // microg/m^3
     public static final float NOISE_THRESHOLD = 85.0f; // dB
+    public static final float GAS_THRESHOLD = 100.0f; // ppm
     public static final float DUST_THRESHOLD = DUST_PM25_THRESHOLD;
     
     // osha says these noise levels are bad for these durations
@@ -60,6 +63,8 @@ public class Constants {
     public static final float DUST_MAX_VALUE = 1000.0f;
     public static final float NOISE_MIN_VALUE = 0.0f;
     public static final float NOISE_MAX_VALUE = 140.0f;
+    public static final float GAS_MIN_VALUE = 0.0f;
+    public static final float GAS_MAX_VALUE = 400.0f;
 
     // connection states moved to bleconnectionmanager.connectionstate enum
     
@@ -77,5 +82,12 @@ public class Constants {
     public static final long DATABASE_CLEANUP_INTERVAL = 86400000;
     
     // app preferences
+    public static final String PREF_NAME = "app_prefs";
     public static final String PREF_NOTIFICATIONS_ENABLED = "notifications_enabled";
+    public static final String PREF_DUST_NOTIFICATIONS_ENABLED = "dust_notifications_enabled";
+    public static final String PREF_NOISE_NOTIFICATIONS_ENABLED = "noise_notifications_enabled";
+    public static final String PREF_GAS_NOTIFICATIONS_ENABLED = "gas_notifications_enabled";
+    public static final String PREF_DUST_THRESHOLD = "dust_threshold";
+    public static final String PREF_NOISE_THRESHOLD = "noise_threshold";
+    public static final String PREF_GAS_THRESHOLD = "gas_threshold";
 }

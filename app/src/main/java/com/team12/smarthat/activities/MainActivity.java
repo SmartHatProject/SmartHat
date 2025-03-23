@@ -9,6 +9,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +33,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.github.anastr.speedviewlib.PointerSpeedometer;
+import com.github.anastr.speedviewlib.components.Section;
 import com.team12.smarthat.R;
 import com.team12.smarthat.bluetooth.core.BleConnectionManager;
 import com.team12.smarthat.bluetooth.core.BluetoothServiceIntegration;
@@ -71,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements
     private Button btnConnect;
     private View connectionIndicator;
     private TextView connectionHelper;
+    private ProgressBar soundMeter;
+    private PointerSpeedometer gasGauge;
     
     // ble connection management
     private BleConnectionManager connectionManager;
@@ -131,16 +138,11 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        // notif state
-        MenuItem notificationsItem = menu.findItem(R.id.action_notifications);
-        if (notificationsItem != null && notificationUtils != null) {
-            notificationsItem.setChecked(notificationUtils.areNotificationsEnabled());
-            //update menu
-            notificationsItem.setTitle(notificationsItem.isChecked() ? 
-                    "Disable Notifications" : "Enable Notifications");
-        }
+        // Check if test mode should be visible
+        MenuItem testModeItem = menu.findItem(R.id.action_test_mode);
+        testModeItem.setVisible(Constants.DEV_MODE);
         
-        // update test mode menu items
+        // Update test mode menu items
         if (testDataGenerator != null) {
             TestDataGenerator.TestMode currentMode = testDataGenerator.getCurrentMode();
             MenuItem offItem = menu.findItem(R.id.action_test_mode_off);
@@ -164,28 +166,19 @@ public class MainActivity extends AppCompatActivity implements
         int id = item.getItemId();
         
         if (id == R.id.action_history) {
-            // threshold history activity launch
-            Intent historyIntent = new Intent(this, ThresholdHistoryActivity.class);
-            startActivity(historyIntent);
+            // Open threshold history activity
+            Intent intent = new Intent(this, ThresholdHistoryActivity.class);
+            startActivity(intent);
             return true;
-        } else if (id == R.id.action_notifications) {
-            // toggle notif
-            boolean newState = !item.isChecked();
-            item.setChecked(newState);
-            
-            // update title
-                item.setTitle(newState ? "Disable Notifications" : "Enable Notifications");
-                
-
-            // update notification state
-                notificationUtils.setNotificationsEnabled(newState);
-            
-            // save preference
-            getSharedPreferences("app_prefs", MODE_PRIVATE)
-                    .edit()
-                    .putBoolean(Constants.PREF_NOTIFICATIONS_ENABLED, newState)
-                    .apply();
-            
+        } else if (id == R.id.action_settings) {
+            // Open settings activity
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.action_visualization) {
+            // Open data visualization activity
+            Intent intent = new Intent(this, DataVisualizationActivity.class);
+            startActivity(intent);
             return true;
         } else if (id == R.id.action_test_mode_off) {
             setTestMode(TestDataGenerator.TestMode.OFF);
@@ -379,6 +372,8 @@ public class MainActivity extends AppCompatActivity implements
         btnConnect = findViewById(R.id.btn_connect);
         connectionIndicator = findViewById(R.id.connection_indicator);
         connectionHelper = findViewById(R.id.connection_helper);
+        soundMeter = findViewById(R.id.sound_meter);
+        gasGauge = findViewById(R.id.gas_gauge);
         
         // initialize database helper singleton
         databaseHelper = DatabaseHelper.getInstance();
@@ -414,10 +409,31 @@ public class MainActivity extends AppCompatActivity implements
 
     // region ui config
     private void setupUI() {
-
         tvStatus.setText(R.string.status_disconnected);
         tvDust.setText(R.string.dust_initial);
         tvNoise.setText(R.string.noise_initial);
+        
+        // Configure gas gauge
+        if (gasGauge != null) {
+            gasGauge.setMaxSpeed(500);
+            gasGauge.setUnit("PPM");
+            gasGauge.setSpeedTextColor(Color.BLACK);
+            gasGauge.setCenterCircleColor(Color.WHITE);
+            gasGauge.setMarkColor(Color.DKGRAY);
+            gasGauge.setTextSize(36f);
+            gasGauge.setUnitTextSize(18f);
+            gasGauge.setWithTremble(false);
+            
+            gasGauge.clearSections();
+            gasGauge.addSections(
+                new Section(0f, .3f, Color.parseColor("#4CAF50"), 30),
+                new Section(.3f, .7f, Color.parseColor("#FFC107"), 30),
+                new Section(.7f, 1f, Color.parseColor("#F44336"), 30)
+            );
+            
+            // Set initial speed to 0
+            gasGauge.speedTo(0, 1000);
+        }
         
         // hide test mode indicator initially
         tvTestMode.setVisibility(View.GONE);
@@ -761,45 +777,30 @@ public class MainActivity extends AppCompatActivity implements
             if (data.isDustData()) {
                 String dustText = getString(R.string.dust_format, data.getValue());
                 tvDust.setText(dustText);
-                if (data.getValue() > Constants.DUST_THRESHOLD) { //test can trigger notif
-                    notificationUtils.showDustAlert(data);
-                    
-                    // log for test data
-                    if (data.isTestData()) {
-                        Log.d(Constants.TAG_MAIN, "Test dust data triggered notification: " + data.getValue());
-                    }
-                }
+                // Use our custom threshold handler
+                handleDustSensorData(data);
             } else if (data.isNoiseData()) {
                 String noiseText = getString(R.string.noise_format, data.getValue());
                 tvNoise.setText(noiseText);
-
-                if (data.getValue() > Constants.NOISE_THRESHOLD) {
-                    // Track sustained high noise
-                    long currentTime = System.currentTimeMillis();
-                    
-                    if (!isHighNoiseTracking) {
-                        // Start tracking high noise
-                        isHighNoiseTracking = true;
-                        highNoiseStartTime = currentTime;
-                        Log.d(Constants.TAG_MAIN, "Started tracking high noise level: " + data.getValue() + " dB");
-                    } else if (currentTime - highNoiseStartTime >= SUSTAINED_NOISE_THRESHOLD_MS) {
-                        // High noise sustained for 4+ seconds, trigger alert
-                        notificationUtils.showNoiseAlert(data);
-                        
-                        // log for test data
-                        if (data.isTestData()) {
-                            Log.d(Constants.TAG_MAIN, "Test noise data triggered notification after sustained period: " + data.getValue());
-                        } else {
-                            Log.d(Constants.TAG_MAIN, "Noise data triggered notification after sustained period: " + data.getValue());
-                        }
-                    }
-                } else {
-                    // Reset tracking when noise drops below threshold
-                    if (isHighNoiseTracking) {
-                        isHighNoiseTracking = false;
-                        Log.d(Constants.TAG_MAIN, "Stopped tracking high noise, level dropped to: " + data.getValue() + " dB");
-                    }
+                
+                // Update sound meter visualization
+                if (soundMeter != null) {
+                    // Map noise value to progress (0-100)
+                    int progress = (int) Math.min(100, Math.max(0, data.getValue() * 100 / Constants.NOISE_THRESHOLD));
+                    soundMeter.setProgress(progress);
                 }
+                
+                // Use our custom threshold handler
+                handleNoiseSensorData(data);
+            } else if (data.isGasData()) {
+                // Update gas gauge visualization
+                if (gasGauge != null) {
+                    float gasValue = data.getValue();
+                    gasGauge.speedTo(gasValue, 1000);
+                }
+                
+                // Use our custom threshold handler
+                handleGasSensorData(data);
             }
             
             // update db in background only save real data by default
@@ -1145,4 +1146,101 @@ public class MainActivity extends AppCompatActivity implements
         onSensorData(data, data.getSensorType());
     }
     // endregion
+
+    // Get custom dust threshold
+    private float getCustomDustThreshold() {
+        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
+        return prefs.getFloat(Constants.PREF_DUST_THRESHOLD, Constants.DUST_THRESHOLD);
+    }
+    
+    // Get custom noise threshold
+    private float getCustomNoiseThreshold() {
+        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
+        return prefs.getFloat(Constants.PREF_NOISE_THRESHOLD, Constants.NOISE_THRESHOLD);
+    }
+    
+    // Get custom gas threshold
+    private float getCustomGasThreshold() {
+        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
+        return prefs.getFloat(Constants.PREF_GAS_THRESHOLD, Constants.GAS_THRESHOLD);
+    }
+
+    private void handleDustSensorData(SensorData data) {
+        // Get custom threshold
+        float dustThreshold = getCustomDustThreshold();
+        
+        // Check if value exceeds threshold
+        if (data.getValue() > dustThreshold) {
+            // Show alert
+            if (notificationUtils != null) {
+                notificationUtils.showDustAlert(data);
+            }
+            
+            // Log for test data
+            if (data.isTestData()) {
+                Log.d(Constants.TAG_MAIN, "Test dust data triggered notification: " + data.getValue() + " > " + dustThreshold);
+            } else {
+                Log.d(Constants.TAG_MAIN, "Dust threshold exceeded: " + data.getValue() + " > " + dustThreshold);
+            }
+        }
+    }
+
+    private void handleNoiseSensorData(SensorData data) {
+        // Get custom threshold
+        float noiseThreshold = getCustomNoiseThreshold();
+        
+        // Check if noise exceeds threshold
+        if (data.getValue() > noiseThreshold) {
+            // Track sustained high noise
+            long currentTime = System.currentTimeMillis();
+            
+            if (!isHighNoiseTracking) {
+                // Start tracking high noise
+                isHighNoiseTracking = true;
+                highNoiseStartTime = currentTime;
+                Log.d(Constants.TAG_MAIN, "Started tracking high noise level: " + data.getValue() + " dB");
+            } else if (currentTime - highNoiseStartTime >= SUSTAINED_NOISE_THRESHOLD_MS) {
+                // High noise sustained for required duration, trigger alert
+                if (notificationUtils != null) {
+                    notificationUtils.showNoiseAlert(data);
+                }
+                
+                // log for test data
+                if (data.isTestData()) {
+                    Log.d(Constants.TAG_MAIN, "Test noise data triggered notification after sustained period: " + data.getValue());
+                } else {
+                    Log.d(Constants.TAG_MAIN, "Noise data triggered notification after sustained period: " + data.getValue());
+                }
+                
+                // Reset tracking timestamp to avoid constant alerts
+                highNoiseStartTime = currentTime;
+            }
+        } else {
+            // Reset tracking when noise drops below threshold
+            if (isHighNoiseTracking) {
+                isHighNoiseTracking = false;
+                Log.d(Constants.TAG_MAIN, "Stopped tracking high noise, level dropped to: " + data.getValue() + " dB");
+            }
+        }
+    }
+    
+    private void handleGasSensorData(SensorData data) {
+        // Get custom threshold
+        float gasThreshold = getCustomGasThreshold();
+        
+        // Check if value exceeds threshold
+        if (data.getValue() > gasThreshold) {
+            // Show alert
+            if (notificationUtils != null) {
+                notificationUtils.showGasAlert(data);
+            }
+            
+            // Log for test data
+            if (data.isTestData()) {
+                Log.d(Constants.TAG_MAIN, "Test gas data triggered notification: " + data.getValue() + " > " + gasThreshold);
+            } else {
+                Log.d(Constants.TAG_MAIN, "Gas threshold exceeded: " + data.getValue() + " > " + gasThreshold);
+            }
+        }
+    }
 }

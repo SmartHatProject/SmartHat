@@ -237,10 +237,14 @@ public class BluetoothServiceIntegration implements
                 Log.d(TAG, "Message type: " + messageType);
             }
             
-            // extract data value
-            double value = json.optDouble("data", 0.0);
+            // extract data value - check both "data" (hardware format) and "value" (test mode format)
+            double value = 0.0;
+            if (json.has("data")) {
+                value = json.optDouble("data", 0.0);
+            } else if (json.has("value")) {
+                value = json.optDouble("value", 0.0);
+            }
             
-           
             long timestamp = 0;
             if (json.has("timeStamp")) {
                 timestamp = json.optLong("timeStamp", 0);

@@ -44,6 +44,19 @@
             android:name=".activities.ThresholdHistoryActivity"
             android:exported="false"
             android:parentActivityName=".activities.MainActivity" />
+            
+        <!-- Settings Activity -->
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartHat.NoActionBar"
+            android:parentActivityName=".activities.MainActivity" />
+            
+        <!-- Data Visualization Activity -->
+        <activity
+            android:name=".activities.DataVisualizationActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.MainActivity" />
 
     </application>
 </manifest>
