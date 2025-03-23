@@ -1,6 +1,9 @@
 package com.team12.smarthat;
 
 import android.app.Application;
+import android.os.Build;
+import androidx.core.content.ContextCompat;
+import com.google.android.material.color.DynamicColors;
 
 import com.team12.smarthat.database.DatabaseHelper;
 
@@ -16,6 +19,12 @@ public class AppController extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        
+        // Apply dynamic colors on Android 12+ devices (like Pixel 4a)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            DynamicColors.applyToActivitiesIfAvailable(this);
+        }
+        
         DatabaseHelper.initialize(this);
     }
 }

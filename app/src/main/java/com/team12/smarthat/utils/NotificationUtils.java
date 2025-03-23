@@ -64,9 +64,9 @@ public class NotificationUtils {
     public void sendThresholdAlert(String title, String message) {
         new Handler(Looper.getMainLooper()).post(() -> {
             try {
-                // if notifications are enabled in app preferences
-                if (!areNotificationsEnabled()) {
-                    Log.d(Constants.TAG_MAIN, "Alert suppressed because notifications are disabled: " + title);
+                // Check if notifications are enabled for this specific sensor type
+                if (!areNotificationsEnabledForType(getAlertTypeFromTitle(title))) {
+                    Log.d(Constants.TAG_MAIN, "Alert suppressed because " + getAlertTypeFromTitle(title) + " notifications are disabled: " + title);
                     return;
                 }
                 
@@ -197,8 +197,8 @@ public class NotificationUtils {
         float value = data.getValue();
         
         // Get custom threshold if available
-        float threshold = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-                .getFloat("dust_threshold", Constants.DUST_THRESHOLD);
+        float threshold = context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
+                .getFloat(Constants.PREF_DUST_THRESHOLD, Constants.DUST_THRESHOLD);
         
         String title = isTestData ? "Test Dust Alert" : "Dust Alert";
         String message = String.format("Dust level of %.1f µg/m³ exceeds safe limit (%.1f µg/m³)%s", 
@@ -219,8 +219,8 @@ public class NotificationUtils {
         float value = data.getValue();
         
         // Get custom threshold if available
-        float threshold = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-                .getFloat("noise_threshold", Constants.NOISE_THRESHOLD);
+        float threshold = context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
+                .getFloat(Constants.PREF_NOISE_THRESHOLD, Constants.NOISE_THRESHOLD);
         
         String title = isTestData ? "Test Noise Alert" : "Noise Alert";
         String message = String.format("Noise level of %.1f dB exceeds safe limit (%.1f dB)%s", 
@@ -251,10 +251,36 @@ public class NotificationUtils {
         // Check system permission, POST_NOTIFICATIONS permission on Android 13+, and app preference
         boolean systemEnabled = NotificationManagerCompat.from(context).areNotificationsEnabled();
         boolean permissionGranted = hasNotificationPermission();
-        boolean appEnabled = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        boolean appEnabled = context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
                 .getBoolean(Constants.PREF_NOTIFICATIONS_ENABLED, true); // Default to enabled
         
         return systemEnabled && appEnabled && permissionGranted;
+    }
+    
+    /**
+     * Check if notifications are enabled for a specific sensor type
+     * @param alertType the type of alert (dust or noise)
+     * @return true if notifications are enabled for this type, false otherwise
+     */
+    public boolean areNotificationsEnabledForType(String alertType) {
+        // First check if notifications are enabled globally
+        if (!areNotificationsEnabled()) {
+            return false;
+        }
+        
+        // Then check for specific type
+        String prefKey;
+        if (alertType.equalsIgnoreCase("dust")) {
+            prefKey = Constants.PREF_DUST_NOTIFICATIONS_ENABLED;
+        } else if (alertType.equalsIgnoreCase("noise")) {
+            prefKey = Constants.PREF_NOISE_NOTIFICATIONS_ENABLED;
+        } else {
+            // For unknown types, fall back to the global setting
+            return true;
+        }
+        
+        return context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
+                .getBoolean(prefKey, true); // Default to enabled
     }
     
     /**
@@ -262,11 +288,35 @@ public class NotificationUtils {
      * @param enabled true to enable notifications, false to disable
      */
     public void setNotificationsEnabled(boolean enabled) {
-        context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
                 .edit()
                 .putBoolean(Constants.PREF_NOTIFICATIONS_ENABLED, enabled)
                 .apply();
         
         Log.d(Constants.TAG_MAIN, "Notifications " + (enabled ? "enabled" : "disabled") + " by user");
+    }
+    
+    /**
+     * Set notification enabled/disabled state for a specific sensor type
+     * @param alertType the type of alert (dust or noise)
+     * @param enabled true to enable notifications, false to disable
+     */
+    public void setNotificationsEnabledForType(String alertType, boolean enabled) {
+        String prefKey;
+        if (alertType.equalsIgnoreCase("dust")) {
+            prefKey = Constants.PREF_DUST_NOTIFICATIONS_ENABLED;
+        } else if (alertType.equalsIgnoreCase("noise")) {
+            prefKey = Constants.PREF_NOISE_NOTIFICATIONS_ENABLED;
+        } else {
+            // For unknown types, do nothing
+            return;
+        }
+        
+        context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
+                .edit()
+                .putBoolean(prefKey, enabled)
+                .apply();
+        
+        Log.d(Constants.TAG_MAIN, alertType + " notifications " + (enabled ? "enabled" : "disabled") + " by user");
     }
 }

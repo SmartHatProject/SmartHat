@@ -77,5 +77,10 @@ public class Constants {
     public static final long DATABASE_CLEANUP_INTERVAL = 86400000;
     
     // app preferences
+    public static final String PREF_NAME = "app_prefs";
     public static final String PREF_NOTIFICATIONS_ENABLED = "notifications_enabled";
+    public static final String PREF_DUST_NOTIFICATIONS_ENABLED = "dust_notifications_enabled";
+    public static final String PREF_NOISE_NOTIFICATIONS_ENABLED = "noise_notifications_enabled";
+    public static final String PREF_DUST_THRESHOLD = "dust_threshold";
+    public static final String PREF_NOISE_THRESHOLD = "noise_threshold";
 }

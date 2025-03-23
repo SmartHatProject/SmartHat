@@ -169,6 +169,11 @@ public class MainActivity extends AppCompatActivity implements
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
             return true;
+        } else if (id == R.id.action_visualization) {
+            // Open data visualization activity
+            Intent intent = new Intent(this, DataVisualizationActivity.class);
+            startActivity(intent);
+            return true;
         } else if (id == R.id.action_test_mode_off) {
             setTestMode(TestDataGenerator.TestMode.OFF);
             return true;
@@ -1098,14 +1103,14 @@ public class MainActivity extends AppCompatActivity implements
 
     // Get custom dust threshold
     private float getCustomDustThreshold() {
-        SharedPreferences prefs = getSharedPreferences("app_prefs", MODE_PRIVATE);
-        return prefs.getFloat("dust_threshold", Constants.DUST_THRESHOLD);
+        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
+        return prefs.getFloat(Constants.PREF_DUST_THRESHOLD, Constants.DUST_THRESHOLD);
     }
     
     // Get custom noise threshold
     private float getCustomNoiseThreshold() {
-        SharedPreferences prefs = getSharedPreferences("app_prefs", MODE_PRIVATE);
-        return prefs.getFloat("noise_threshold", Constants.NOISE_THRESHOLD);
+        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
+        return prefs.getFloat(Constants.PREF_NOISE_THRESHOLD, Constants.NOISE_THRESHOLD);
     }
 
     private void handleDustSensorData(SensorData data) {

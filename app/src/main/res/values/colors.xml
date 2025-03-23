@@ -20,6 +20,13 @@
     <color name="on_background">#191C1E</color>
     <color name="surface">#FBFDFD</color>
     <color name="on_surface">#191C1E</color>
+    <color name="surface_variant">#DDE3EA</color>
+    <color name="on_surface_variant">#41484D</color>
+    
+    <!-- Material You harmonized colors (Android 12+) -->
+    <color name="harmonized_primary">#1F6E8C</color>
+    <color name="harmonized_secondary">#4C616B</color>
+    <color name="harmonized_tertiary">#62637B</color>
     
     <!-- Legacy colors maintained for backward compatibility -->
     <color name="purple_200">#FFBB86FC</color>
@@ -52,4 +59,9 @@
     <color name="connect_button_bg">@color/primary</color>
     <color name="connect_button_text">@color/on_primary</color>
     <color name="footer_text">#78909C</color>
+    
+    <!-- Elevation overlay colors for Android 12 Material Design -->
+    <color name="elevation_overlay_1">#0F000000</color>
+    <color name="elevation_overlay_2">#14000000</color>
+    <color name="elevation_overlay_3">#1A000000</color>
 </resources>

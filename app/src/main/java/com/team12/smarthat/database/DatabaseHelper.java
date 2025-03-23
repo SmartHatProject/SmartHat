@@ -175,8 +175,8 @@ public class DatabaseHelper {
      * @return The custom threshold value or the default if not set
      */
     public float getCustomDustThreshold(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
-        return prefs.getFloat("dust_threshold", Constants.DUST_THRESHOLD);
+        SharedPreferences prefs = context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE);
+        return prefs.getFloat(Constants.PREF_DUST_THRESHOLD, Constants.DUST_THRESHOLD);
     }
     
     /**
@@ -185,8 +185,8 @@ public class DatabaseHelper {
      * @return The custom threshold value or the default if not set
      */
     public float getCustomNoiseThreshold(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
-        return prefs.getFloat("noise_threshold", Constants.NOISE_THRESHOLD);
+        SharedPreferences prefs = context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE);
+        return prefs.getFloat(Constants.PREF_NOISE_THRESHOLD, Constants.NOISE_THRESHOLD);
     }
     
     /**
