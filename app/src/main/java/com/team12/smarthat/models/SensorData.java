@@ -17,11 +17,13 @@ public class SensorData {
     // matching BluetoothServiceIntegration
     public static final String TYPE_DUST = "dust";
     public static final String TYPE_NOISE = "noise";
+    public static final String TYPE_GAS = "gas";
     
     // validation constants
     private static final float MAX_DUST_VALUE = 1000.0f;
     private static final float MAX_NOISE_VALUE = 150.0f;
     private static final long MAX_FUTURE_TIMESTAMP = 60000; // 1 minute in the future
+    private static final float MAX_GAS_VALUE = 400.0f;
     
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -96,6 +98,11 @@ public class SensorData {
             if (value < 0 || value > MAX_NOISE_VALUE) {
                 Log.w(TAG, "Invalid noise value: " + value + ", clamping to valid range");
                 return Math.max(0, Math.min(value, MAX_NOISE_VALUE));
+            }
+        } else if (TYPE_GAS.equals(type)) {
+            if (value < 0 || value > MAX_GAS_VALUE) {
+                Log.w(TAG, "Invalid gas value: " + value + ", clamping to valid range");
+                return Math.max(0, Math.min(value, MAX_GAS_VALUE));
             }
         }
         return value;
@@ -204,6 +211,14 @@ public class SensorData {
     }
     
     /**
+     *
+     * @return true if gas data
+     */
+    public boolean isGasData() {
+        return TYPE_GAS.equals(sensorType);
+    }
+    
+    /**
      * 
      * @return Formatted value with units
      */
@@ -212,6 +227,8 @@ public class SensorData {
             return String.format("%.1f µg/m³", value);
         } else if (TYPE_NOISE.equals(sensorType)) {
             return String.format("%.1f dB", value);
+        } else if (TYPE_GAS.equals(sensorType)) {
+            return String.format("%.1f ppm", value);
         } else {
             return String.format("%.1f", value);
         }

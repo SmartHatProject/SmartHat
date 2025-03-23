@@ -39,10 +39,12 @@
     <!-- Sensor Displays -->
     <string name="dust_display">PM2.5: %.1f µg/m³</string>
     <string name="noise_display">Noise: %.1f dB</string>
+    <string name="gas_display">Air Quality: %.1f ppm</string>
     
     <!-- Sensor Format Strings - Optimized for Android 12 -->
     <string name="dust_format">Dust: %.1f µg/m³</string>
     <string name="noise_format">Noise: %.1f dB</string>
+    <string name="gas_format">Gas: %.1f ppm</string>
     
     <!-- Main Layout Strings -->
     <string name="app_title">SmartHat</string>
@@ -54,6 +56,8 @@
     <string name="dust_placeholder">-- µg/m³</string>
     <string name="noise_level">Noise Level</string>
     <string name="noise_placeholder">-- dB</string>
+    <string name="gas_level">Air Quality</string>
+    <string name="gas_placeholder">-- ppm</string>
     <string name="footer_text">SmartHat</string>
     
     <!-- BLE Test Activity Strings -->

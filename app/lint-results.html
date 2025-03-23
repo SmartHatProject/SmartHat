@@ -177,9 +177,9 @@ document.getElementById(id).style.display = 'none';
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
   <header class="mdl-layout__header">
     <div class="mdl-layout__header-row">
-      <span class="mdl-layout-title">Lint Report: 344 warnings</span>
+      <span class="mdl-layout-title">Lint Report: 347 warnings</span>
       <div class="mdl-layout-spacer"></div>
-      <nav class="mdl-navigation mdl-layout--large-screen-only">Check performed at Sun Mar 23 06:00:47 EDT 2025 by AGP (8.4.1)</nav>
+      <nav class="mdl-navigation mdl-layout--large-screen-only">Check performed at Sun Mar 23 07:32:08 EDT 2025 by AGP (8.4.1)</nav>
     </div>
   </header>
   <div class="mdl-layout__drawer">
@@ -189,7 +189,7 @@ document.getElementById(id).style.display = 'none';
       <a class="mdl-navigation__link" href="#LintBaseline"><i class="material-icons warning-icon">warning</i>Baseline Applied (1)</a>
       <a class="mdl-navigation__link" href="#LintBaselineFixed"><i class="material-icons warning-icon">warning</i>Baselined Issues Fixed (1)</a>
       <a class="mdl-navigation__link" href="#ApplySharedPref"><i class="material-icons warning-icon">warning</i>Use <code>apply()</code> on <code>SharedPreferences</code> (2)</a>
-      <a class="mdl-navigation__link" href="#DefaultLocale"><i class="material-icons warning-icon">warning</i>Implied default locale in case conversion (8)</a>
+      <a class="mdl-navigation__link" href="#DefaultLocale"><i class="material-icons warning-icon">warning</i>Implied default locale in case conversion (9)</a>
       <a class="mdl-navigation__link" href="#InlinedApi"><i class="material-icons warning-icon">warning</i>Using inlined constants on older versions (4)</a>
       <a class="mdl-navigation__link" href="#AndroidGradlePluginVersion"><i class="material-icons warning-icon">warning</i>Obsolete Android Gradle Plugin Version (3)</a>
       <a class="mdl-navigation__link" href="#GradleDependency"><i class="material-icons warning-icon">warning</i>Obsolete Gradle Dependency (6)</a>
@@ -203,12 +203,12 @@ document.getElementById(id).style.display = 'none';
       <a class="mdl-navigation__link" href="#UnusedIds"><i class="material-icons warning-icon">warning</i>Unused id (21)</a>
       <a class="mdl-navigation__link" href="#DuplicateStrings"><i class="material-icons warning-icon">warning</i>Duplicate Strings (4)</a>
       <a class="mdl-navigation__link" href="#TypographyEllipsis"><i class="material-icons warning-icon">warning</i>Ellipsis string can be replaced with ellipsis character (6)</a>
-      <a class="mdl-navigation__link" href="#UseTomlInstead"><i class="material-icons warning-icon">warning</i>Use TOML Version Catalog Instead (14)</a>
+      <a class="mdl-navigation__link" href="#UseTomlInstead"><i class="material-icons warning-icon">warning</i>Use TOML Version Catalog Instead (15)</a>
       <a class="mdl-navigation__link" href="#SetTextI18n"><i class="material-icons warning-icon">warning</i>TextView Internationalization (14)</a>
       <a class="mdl-navigation__link" href="#HardcodedText"><i class="material-icons warning-icon">warning</i>Hardcoded text (32)</a>
       <a class="mdl-navigation__link" href="#KotlinPropertyAccess"><i class="material-icons warning-icon">warning</i>Kotlin Property Access (2)</a>
       <a class="mdl-navigation__link" href="#LambdaLast"><i class="material-icons warning-icon">warning</i>Lambda Parameters Last (1)</a>
-      <a class="mdl-navigation__link" href="#UnknownNullness"><i class="material-icons warning-icon">warning</i>Unknown nullness (110)</a>
+      <a class="mdl-navigation__link" href="#UnknownNullness"><i class="material-icons warning-icon">warning</i>Unknown nullness (111)</a>
     </nav>
   </div>
   <main class="mdl-layout__content">
@@ -235,7 +235,7 @@ document.getElementById(id).style.display = 'none';
 <td class="countColumn">2</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
 <a href="#ApplySharedPref">ApplySharedPref</a>: Use <code>apply()</code> on <code>SharedPreferences</code></td></tr>
 <tr>
-<td class="countColumn">8</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
+<td class="countColumn">9</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
 <a href="#DefaultLocale">DefaultLocale</a>: Implied default locale in case conversion</td></tr>
 <tr>
 <td class="countColumn">4</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
@@ -285,7 +285,7 @@ document.getElementById(id).style.display = 'none';
 <tr><td class="countColumn"></td><td class="categoryColumn"><a href="#Productivity">Productivity</a>
 </td></tr>
 <tr>
-<td class="countColumn">14</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
+<td class="countColumn">15</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
 <a href="#UseTomlInstead">UseTomlInstead</a>: Use TOML Version Catalog Instead</td></tr>
 <tr><td class="countColumn"></td><td class="categoryColumn"><a href="#Internationalization">Internationalization</a>
 </td></tr>
@@ -304,7 +304,7 @@ document.getElementById(id).style.display = 'none';
 <td class="countColumn">1</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
 <a href="#LambdaLast">LambdaLast</a>: Lambda Parameters Last</td></tr>
 <tr>
-<td class="countColumn">110</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
+<td class="countColumn">111</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
 <a href="#UnknownNullness">UnknownNullness</a>: Unknown nullness</td></tr>
 <tr><td></td><td class="categoryColumn"><a href="#ExtraIssues">Included Additional Checks (24)</a>
 </td></tr>
@@ -465,54 +465,66 @@ Dismiss</button>            </div>
 <span class="lineno"> 1109 </span>      }
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/utils/NotificationUtils.java">../../src/main/java/com/team12/smarthat/utils/NotificationUtils.java</a>:169</span>: <span class="message">Implicitly using the default locale is a common source of bugs: Use <code>toLowerCase(Locale)</code> instead. For strings meant to be internal use <code>Locale.ROOT</code>, otherwise <code>Locale.getDefault()</code>.</span><br /><pre class="errorlines">
-<span class="lineno"> 166 </span><span class="javadoc">     * @return notification id constant
-</span><span class="lineno"> 167 </span><span class="javadoc">     */</span>
-<span class="lineno"> 168 </span>    <span class="keyword">private</span> <span class="keyword">int</span> getNotificationIdForType(String alertType) {
-<span class="caretline"><span class="lineno"> 169 </span>        <span class="keyword">switch</span> (alertType.<span class="warning">toLowerCase</span>()) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 170 </span>            <span class="keyword">case</span> <span class="string">"dust"</span>:
-<span class="lineno"> 171 </span>                <span class="keyword">return</span> Constants.NOTIFICATION_ID_DUST;
-<span class="lineno"> 172 </span>            <span class="keyword">case</span> <span class="string">"noise"</span>:
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/utils/NotificationUtils.java">../../src/main/java/com/team12/smarthat/utils/NotificationUtils.java</a>:249</span>: <span class="message">Implicitly using the default locale is a common source of bugs: Use <code>String.format(Locale, ...)</code> instead</span><br /><pre class="errorlines">
+<span class="lineno"> 246 </span>          .getFloat(Constants.PREF_GAS_THRESHOLD, Constants.GAS_THRESHOLD);
+<span class="lineno"> 247 </span>  
+<span class="lineno"> 248 </span>  String title = isTestData ? <span class="string">"Test Gas Alert"</span> : <span class="string">"Gas Alert"</span>;
+<span class="caretline"><span class="lineno"> 249 </span>  String message = <span class="warning">String.format(<span class="string">"Gas level of %.1f ppm exceeds safe limit (%.1f ppm)%s"</span>, </span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 250 </span>                                value, threshold,
+<span class="lineno"> 251 </span>                                isTestData ? <span class="string">" [TEST DATA]"</span> : <span class="string">""</span>);
+<span class="lineno"> 252 </span>  
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/models/SensorData.java">../../src/main/java/com/team12/smarthat/models/SensorData.java</a>:80</span>: <span class="message">Implicitly using the default locale is a common source of bugs: Use <code>toLowerCase(Locale)</code> instead. For strings meant to be internal use <code>Locale.ROOT</code>, otherwise <code>Locale.getDefault()</code>.</span><br /><pre class="errorlines">
-<span class="lineno">  77 </span>            Log.w(TAG, <span class="string">"Empty sensor type provided, defaulting to 'unknown'"</span>);
-<span class="lineno">  78 </span>            <span class="keyword">return</span> <span class="string">"unknown"</span>;
-<span class="lineno">  79 </span>        }
-<span class="caretline"><span class="lineno">  80 </span>        <span class="keyword">return</span> type.<span class="warning">toLowerCase</span>();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  81 </span>    }
-<span class="lineno">  82 </span>    
-<span class="lineno">  83 </span>    <span class="javadoc">/**
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/models/SensorData.java">../../src/main/java/com/team12/smarthat/models/SensorData.java</a>:82</span>: <span class="message">Implicitly using the default locale is a common source of bugs: Use <code>toLowerCase(Locale)</code> instead. For strings meant to be internal use <code>Locale.ROOT</code>, otherwise <code>Locale.getDefault()</code>.</span><br /><pre class="errorlines">
+<span class="lineno">  79 </span>            Log.w(TAG, <span class="string">"Empty sensor type provided, defaulting to 'unknown'"</span>);
+<span class="lineno">  80 </span>            <span class="keyword">return</span> <span class="string">"unknown"</span>;
+<span class="lineno">  81 </span>        }
+<span class="caretline"><span class="lineno">  82 </span>        <span class="keyword">return</span> type.<span class="warning">toLowerCase</span>();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  83 </span>    }
+<span class="lineno">  84 </span>    
+<span class="lineno">  85 </span>    <span class="javadoc">/**
 </span></pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/models/SensorData.java">../../src/main/java/com/team12/smarthat/models/SensorData.java</a>:212</span>: <span class="message">Implicitly using the default locale is a common source of bugs: Use <code>String.format(Locale, ...)</code> instead</span><br /><pre class="errorlines">
-<span class="lineno"> 209 </span><span class="javadoc">     */</span>
-<span class="lineno"> 210 </span>    <span class="keyword">public</span> String getFormattedValue() {
-<span class="lineno"> 211 </span>        <span class="keyword">if</span> (TYPE_DUST.equals(sensorType)) {
-<span class="caretline"><span class="lineno"> 212 </span>            <span class="keyword">return</span> <span class="warning">String.format(<span class="string">"%.1f µg/m³"</span>, value)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 213 </span>        } <span class="keyword">else</span> <span class="keyword">if</span> (TYPE_NOISE.equals(sensorType)) {
-<span class="lineno"> 214 </span>            <span class="keyword">return</span> String.format(<span class="string">"%.1f dB"</span>, value);
-<span class="lineno"> 215 </span>        } <span class="keyword">else</span> {
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/models/SensorData.java">../../src/main/java/com/team12/smarthat/models/SensorData.java</a>:227</span>: <span class="message">Implicitly using the default locale is a common source of bugs: Use <code>String.format(Locale, ...)</code> instead</span><br /><pre class="errorlines">
+<span class="lineno"> 224 </span><span class="javadoc">     */</span>
+<span class="lineno"> 225 </span>    <span class="keyword">public</span> String getFormattedValue() {
+<span class="lineno"> 226 </span>        <span class="keyword">if</span> (TYPE_DUST.equals(sensorType)) {
+<span class="caretline"><span class="lineno"> 227 </span>            <span class="keyword">return</span> <span class="warning">String.format(<span class="string">"%.1f µg/m³"</span>, value)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 228 </span>        } <span class="keyword">else</span> <span class="keyword">if</span> (TYPE_NOISE.equals(sensorType)) {
+<span class="lineno"> 229 </span>            <span class="keyword">return</span> String.format(<span class="string">"%.1f dB"</span>, value);
+<span class="lineno"> 230 </span>        } <span class="keyword">else</span> <span class="keyword">if</span> (TYPE_GAS.equals(sensorType)) {
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/models/SensorData.java">../../src/main/java/com/team12/smarthat/models/SensorData.java</a>:214</span>: <span class="message">Implicitly using the default locale is a common source of bugs: Use <code>String.format(Locale, ...)</code> instead</span><br /><pre class="errorlines">
-<span class="lineno"> 211 </span>        <span class="keyword">if</span> (TYPE_DUST.equals(sensorType)) {
-<span class="lineno"> 212 </span>            <span class="keyword">return</span> String.format(<span class="string">"%.1f µg/m³"</span>, value);
-<span class="lineno"> 213 </span>        } <span class="keyword">else</span> <span class="keyword">if</span> (TYPE_NOISE.equals(sensorType)) {
-<span class="caretline"><span class="lineno"> 214 </span>            <span class="keyword">return</span> <span class="warning">String.format(<span class="string">"%.1f dB"</span>, value)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 215 </span>        } <span class="keyword">else</span> {
-<span class="lineno"> 216 </span>            <span class="keyword">return</span> String.format(<span class="string">"%.1f"</span>, value);
-<span class="lineno"> 217 </span>        }
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/models/SensorData.java">../../src/main/java/com/team12/smarthat/models/SensorData.java</a>:229</span>: <span class="message">Implicitly using the default locale is a common source of bugs: Use <code>String.format(Locale, ...)</code> instead</span><br /><pre class="errorlines">
+<span class="lineno"> 226 </span>        <span class="keyword">if</span> (TYPE_DUST.equals(sensorType)) {
+<span class="lineno"> 227 </span>            <span class="keyword">return</span> String.format(<span class="string">"%.1f µg/m³"</span>, value);
+<span class="lineno"> 228 </span>        } <span class="keyword">else</span> <span class="keyword">if</span> (TYPE_NOISE.equals(sensorType)) {
+<span class="caretline"><span class="lineno"> 229 </span>            <span class="keyword">return</span> <span class="warning">String.format(<span class="string">"%.1f dB"</span>, value)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 230 </span>        } <span class="keyword">else</span> <span class="keyword">if</span> (TYPE_GAS.equals(sensorType)) {
+<span class="lineno"> 231 </span>            <span class="keyword">return</span> String.format(<span class="string">"%.1f ppm"</span>, value);
+<span class="lineno"> 232 </span>        } <span class="keyword">else</span> {
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/models/SensorData.java">../../src/main/java/com/team12/smarthat/models/SensorData.java</a>:216</span>: <span class="message">Implicitly using the default locale is a common source of bugs: Use <code>String.format(Locale, ...)</code> instead</span><br /><pre class="errorlines">
-<span class="lineno"> 213 </span>        } <span class="keyword">else</span> <span class="keyword">if</span> (TYPE_NOISE.equals(sensorType)) {
-<span class="lineno"> 214 </span>            <span class="keyword">return</span> String.format(<span class="string">"%.1f dB"</span>, value);
-<span class="lineno"> 215 </span>        } <span class="keyword">else</span> {
-<span class="caretline"><span class="lineno"> 216 </span>            <span class="keyword">return</span> <span class="warning">String.format(<span class="string">"%.1f"</span>, value)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 217 </span>        }
-<span class="lineno"> 218 </span>    }
-<span class="lineno"> 219 </span>}</pre>
+<button class="mdl-button mdl-js-button mdl-button--primary" id="DefaultLocaleDivLink" onclick="reveal('DefaultLocaleDiv');" />+ 4 More Occurrences...</button>
+<div id="DefaultLocaleDiv" style="display: none">
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/models/SensorData.java">../../src/main/java/com/team12/smarthat/models/SensorData.java</a>:231</span>: <span class="message">Implicitly using the default locale is a common source of bugs: Use <code>String.format(Locale, ...)</code> instead</span><br /><pre class="errorlines">
+<span class="lineno"> 228 </span>        } <span class="keyword">else</span> <span class="keyword">if</span> (TYPE_NOISE.equals(sensorType)) {
+<span class="lineno"> 229 </span>            <span class="keyword">return</span> String.format(<span class="string">"%.1f dB"</span>, value);
+<span class="lineno"> 230 </span>        } <span class="keyword">else</span> <span class="keyword">if</span> (TYPE_GAS.equals(sensorType)) {
+<span class="caretline"><span class="lineno"> 231 </span>            <span class="keyword">return</span> <span class="warning">String.format(<span class="string">"%.1f ppm"</span>, value)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 232 </span>        } <span class="keyword">else</span> {
+<span class="lineno"> 233 </span>            <span class="keyword">return</span> String.format(<span class="string">"%.1f"</span>, value);
+<span class="lineno"> 234 </span>        }
+</pre>
+
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/models/SensorData.java">../../src/main/java/com/team12/smarthat/models/SensorData.java</a>:233</span>: <span class="message">Implicitly using the default locale is a common source of bugs: Use <code>String.format(Locale, ...)</code> instead</span><br /><pre class="errorlines">
+<span class="lineno"> 230 </span>        } <span class="keyword">else</span> <span class="keyword">if</span> (TYPE_GAS.equals(sensorType)) {
+<span class="lineno"> 231 </span>            <span class="keyword">return</span> String.format(<span class="string">"%.1f ppm"</span>, value);
+<span class="lineno"> 232 </span>        } <span class="keyword">else</span> {
+<span class="caretline"><span class="lineno"> 233 </span>            <span class="keyword">return</span> <span class="warning">String.format(<span class="string">"%.1f"</span>, value)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 234 </span>        }
+<span class="lineno"> 235 </span>    }
+<span class="lineno"> 236 </span>}</pre>
 
 <span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/SettingsActivity.java">../../src/main/java/com/team12/smarthat/activities/SettingsActivity.java</a>:312</span>: <span class="message">Implicitly using the default locale is a common source of bugs: Use <code>String.format(Locale, ...)</code> instead</span><br /><pre class="errorlines">
 <span class="lineno"> 309 </span>    }
@@ -534,6 +546,7 @@ Dismiss</button>            </div>
 <span class="lineno"> 341 </span>        TextView riskText = binding.txtNoiseThresholdRisk;
 </pre>
 
+</div>
 </div>
 <div class="metadata"><div class="explanation" id="explanationDefaultLocale" style="display: none;">
 Calling <code>String#toLowerCase()</code> or <code>#toUpperCase()</code> <b>without specifying an explicit locale</b> is a common source of bugs. The reason for that is that those methods will use the current locale on the user's device, and even though the code appears to work correctly when you are developing the app, it will fail in some locales. For example, in the Turkish locale, the uppercase replacement for <code>i</code> is <b>not</b> <code>I</code>.<br/>
@@ -759,7 +772,7 @@ Dismiss</button>            </div>
 <span class="caretline"><span class="lineno"> 132 </span>    androidTestImplementation("<span class="warning">androidx.test:rules:1.5.0</span>")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 <span class="lineno"> 133 </span>    androidTestImplementation("androidx.test:runner:1.5.2")
 <span class="lineno"> 134 </span>    androidTestImplementation("org.mockito:mockito-android:5.4.0")
-<span class="lineno"> 135 </span>}</pre>
+</pre>
 
 <span class="location"><a href="../../build.gradle.kts">../../build.gradle.kts</a>:133</span>: <span class="message">A newer version of androidx.test:runner than 1.5.2 is available: 1.6.2</span><br /><pre class="errorlines">
 <span class="lineno"> 130 </span>    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -767,7 +780,9 @@ Dismiss</button>            </div>
 <span class="lineno"> 132 </span>    androidTestImplementation("androidx.test:rules:1.5.0")
 <span class="caretline"><span class="lineno"> 133 </span>    androidTestImplementation("<span class="warning">androidx.test:runner:1.5.2</span>")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 <span class="lineno"> 134 </span>    androidTestImplementation("org.mockito:mockito-android:5.4.0")
-<span class="lineno"> 135 </span>}</pre>
+<span class="lineno"> 135 </span>
+<span class="lineno"> 136 </span>    //SpeedView
+</pre>
 
 </div>
 <div class="metadata"><div class="explanation" id="explanationGradleDependency" style="display: none;">
@@ -862,7 +877,10 @@ Dismiss</button>            </div>
 <span class="lineno"> 132 </span>    androidTestImplementation("androidx.test:rules:1.5.0")
 <span class="lineno"> 133 </span>    androidTestImplementation("androidx.test:runner:1.5.2")
 <span class="caretline"><span class="lineno"> 134 </span>    androidTestImplementation("<span class="warning">org.mockito:mockito-android:5.4.0</span>")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 135 </span>}</pre>
+<span class="lineno"> 135 </span>
+<span class="lineno"> 136 </span>    //SpeedView
+<span class="lineno"> 137 </span>    implementation("com.github.anastr:SpeedView:1.5.2")
+</pre>
 
 <span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:9</span>: <span class="message">A newer version of org.jetbrains.kotlin.android than 1.9.22 is available: 2.1.20</span><br /><pre class="errorlines">
 <span class="lineno">  6 </span>appcompat = "1.7.0"
@@ -928,14 +946,14 @@ Dismiss</button>            </div>
               <div class="mdl-card__supporting-text">
 <div class="issue">
 <div class="warningslist">
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:292</span>: <span class="message">This method should only be accessed from tests or within private scope</span><br /><pre class="errorlines">
-<span class="lineno">  289 </span>            <span class="comment">// clean up both connection managers</span>
-<span class="lineno">  290 </span>            <span class="keyword">if</span> (connectionManager != <span class="keyword">null</span>) {
-<span class="lineno">  291 </span>                connectionManager.cleanup();
-<span class="caretline"><span class="lineno">  292 </span>                BleConnectionManager.<span class="warning">resetInstanceForTesting</span>();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  293 </span>            }
-<span class="lineno">  294 </span>            
-<span class="lineno">  295 </span>            <span class="keyword">if</span> (mockConnectionManager != <span class="keyword">null</span>) {
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:298</span>: <span class="message">This method should only be accessed from tests or within private scope</span><br /><pre class="errorlines">
+<span class="lineno">  295 </span>            <span class="comment">// clean up both connection managers</span>
+<span class="lineno">  296 </span>            <span class="keyword">if</span> (connectionManager != <span class="keyword">null</span>) {
+<span class="lineno">  297 </span>                connectionManager.cleanup();
+<span class="caretline"><span class="lineno">  298 </span>                BleConnectionManager.<span class="warning">resetInstanceForTesting</span>();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  299 </span>            }
+<span class="lineno">  300 </span>            
+<span class="lineno">  301 </span>            <span class="keyword">if</span> (mockConnectionManager != <span class="keyword">null</span>) {
 </pre>
 
 </div>
@@ -1120,33 +1138,33 @@ Dismiss</button>            </div>
 <span class="lineno"> 112 </span>    
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:512</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
-<span class="lineno">  509 </span>        }
-<span class="lineno">  510 </span>        
-<span class="lineno">  511 </span>        tvTestMode.setText(modeText);
-<span class="caretline"><span class="lineno">  512 </span>        <span class="warning">Log.d(Constants.TAG_MAIN, <span class="string">"Updated test mode UI: "</span> + modeText)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  513 </span>    }
-<span class="lineno">  514 </span>
-<span class="lineno">  515 </span>    <span class="comment">// region connection management</span></pre>
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:541</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
+<span class="lineno">  538 </span>        }
+<span class="lineno">  539 </span>        
+<span class="lineno">  540 </span>        tvTestMode.setText(modeText);
+<span class="caretline"><span class="lineno">  541 </span>        <span class="warning">Log.d(Constants.TAG_MAIN, <span class="string">"Updated test mode UI: "</span> + modeText)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  542 </span>    }
+<span class="lineno">  543 </span>
+<span class="lineno">  544 </span>    <span class="comment">// region connection management</span></pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:900</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
-<span class="lineno">  897 </span>      updateConnectionUI(BleConnectionManager.ConnectionState.CONNECTING);
-<span class="lineno">  898 </span>      showToast(<span class="string">"Reconnecting to SmartHat..."</span>);
-<span class="lineno">  899 </span>
-<span class="caretline"><span class="lineno">  900 </span>      <span class="warning">Log.d(Constants.TAG_MAIN, <span class="string">"Attempting reconnection to: "</span> + lastDevice.getAddress())</span>;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  901 </span>      connectionManager.connect(lastDevice);
-<span class="lineno">  902 </span>      
-<span class="lineno">  903 </span>  } <span class="keyword">catch</span> (SecurityException e) {
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:946</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
+<span class="lineno">  943 </span>      updateConnectionUI(BleConnectionManager.ConnectionState.CONNECTING);
+<span class="lineno">  944 </span>      showToast(<span class="string">"Reconnecting to SmartHat..."</span>);
+<span class="lineno">  945 </span>
+<span class="caretline"><span class="lineno">  946 </span>      <span class="warning">Log.d(Constants.TAG_MAIN, <span class="string">"Attempting reconnection to: "</span> + lastDevice.getAddress())</span>;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  947 </span>      connectionManager.connect(lastDevice);
+<span class="lineno">  948 </span>      
+<span class="lineno">  949 </span>  } <span class="keyword">catch</span> (SecurityException e) {
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:970</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
-<span class="lineno">  967 </span>  <span class="keyword">long</span> operationTime = System.currentTimeMillis() - startTime;
-<span class="lineno">  968 </span>
-<span class="lineno">  969 </span>  String sensorType = data.getSensorType(); <span class="comment">// use getSensorType instead of getType</span>
-<span class="caretline"><span class="lineno">  970 </span>  <span class="warning">Log.d(Constants.TAG_MAIN, <span class="string">"Saved "</span> + sensorType + <span class="string">" data to database in "</span> + operationTime + <span class="string">"ms"</span>)</span>;</span>
-<span class="lineno">  971 </span>
-<span class="lineno">  972 </span>  <span class="keyword">if</span> (Math.random() &lt; <span class="number">0.01</span>) {
-<span class="lineno">  973 </span>      Log.d(Constants.TAG_MAIN, <span class="string">"Running database maintenance"</span>);
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:1016</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
+<span class="lineno"> 1013 </span>  <span class="keyword">long</span> operationTime = System.currentTimeMillis() - startTime;
+<span class="lineno"> 1014 </span>
+<span class="lineno"> 1015 </span>  String sensorType = data.getSensorType(); <span class="comment">// use getSensorType instead of getType</span>
+<span class="caretline"><span class="lineno"> 1016 </span>  <span class="warning">Log.d(Constants.TAG_MAIN, <span class="string">"Saved "</span> + sensorType + <span class="string">" data to database in "</span> + operationTime + <span class="string">"ms"</span>)</span>;</span>
+<span class="lineno"> 1017 </span>
+<span class="lineno"> 1018 </span>  <span class="keyword">if</span> (Math.random() &lt; <span class="number">0.01</span>) {
+<span class="lineno"> 1019 </span>      Log.d(Constants.TAG_MAIN, <span class="string">"Running database maintenance"</span>);
 </pre>
 
 <span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/MockBleConnectionManager.java">../../src/main/java/com/team12/smarthat/bluetooth/core/MockBleConnectionManager.java</a>:58</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
@@ -1159,23 +1177,23 @@ Dismiss</button>            </div>
 <span class="lineno">  61 </span>      mockHandler.post(() -> {
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/utils/NotificationUtils.java">../../src/main/java/com/team12/smarthat/utils/NotificationUtils.java</a>:296</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
-<span class="lineno"> 293 </span>              .putBoolean(Constants.PREF_NOTIFICATIONS_ENABLED, enabled)
-<span class="lineno"> 294 </span>              .apply();
-<span class="lineno"> 295 </span>      
-<span class="caretline"><span class="lineno"> 296 </span>      <span class="warning">Log.d(Constants.TAG_MAIN, <span class="string">"Notifications "</span> + (enabled ? <span class="string">"enabled"</span> : <span class="string">"disabled"</span>) + <span class="string">" by user"</span>)</span>;</span>
-<span class="lineno"> 297 </span>  }
-<span class="lineno"> 298 </span>  
-<span class="lineno"> 299 </span>  <span class="javadoc">/**
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/utils/NotificationUtils.java">../../src/main/java/com/team12/smarthat/utils/NotificationUtils.java</a>:321</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
+<span class="lineno"> 318 </span>              .putBoolean(Constants.PREF_NOTIFICATIONS_ENABLED, enabled)
+<span class="lineno"> 319 </span>              .apply();
+<span class="lineno"> 320 </span>      
+<span class="caretline"><span class="lineno"> 321 </span>      <span class="warning">Log.d(Constants.TAG_MAIN, <span class="string">"Notifications "</span> + (enabled ? <span class="string">"enabled"</span> : <span class="string">"disabled"</span>) + <span class="string">" by user"</span>)</span>;</span>
+<span class="lineno"> 322 </span>  }
+<span class="lineno"> 323 </span>  
+<span class="lineno"> 324 </span>  <span class="javadoc">/**
 </span></pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/utils/NotificationUtils.java">../../src/main/java/com/team12/smarthat/utils/NotificationUtils.java</a>:320</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
-<span class="lineno"> 317 </span>                .putBoolean(prefKey, enabled)
-<span class="lineno"> 318 </span>                .apply();
-<span class="lineno"> 319 </span>        
-<span class="caretline"><span class="lineno"> 320 </span>        <span class="warning">Log.d(Constants.TAG_MAIN, alertType + <span class="string">" notifications "</span> + (enabled ? <span class="string">"enabled"</span> : <span class="string">"disabled"</span>) + <span class="string">" by user"</span>)</span>;</span>
-<span class="lineno"> 321 </span>    }
-<span class="lineno"> 322 </span>}
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/utils/NotificationUtils.java">../../src/main/java/com/team12/smarthat/utils/NotificationUtils.java</a>:347</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
+<span class="lineno"> 344 </span>                .putBoolean(prefKey, enabled)
+<span class="lineno"> 345 </span>                .apply();
+<span class="lineno"> 346 </span>        
+<span class="caretline"><span class="lineno"> 347 </span>        <span class="warning">Log.d(Constants.TAG_MAIN, alertType + <span class="string">" notifications "</span> + (enabled ? <span class="string">"enabled"</span> : <span class="string">"disabled"</span>) + <span class="string">" by user"</span>)</span>;</span>
+<span class="lineno"> 348 </span>    }
+<span class="lineno"> 349 </span>}
 </pre>
 
 <span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/SettingsActivity.java">../../src/main/java/com/team12/smarthat/activities/SettingsActivity.java</a>:161</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
@@ -1756,143 +1774,143 @@ Dismiss</button>            </div>
 <span class="lineno">  89 </span>    
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:632</span>: <span class="message">Access to <code>private</code> field <code>connectionManager</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  629 </span>                    <span class="keyword">if</span> (device != <span class="keyword">null</span>) {
-<span class="lineno">  630 </span>                        Log.d(Constants.TAG_MAIN, <span class="string">"ESP32 device found: "</span> + 
-<span class="lineno">  631 </span>                              device.getAddress() + <span class="string">", connecting..."</span>);
-<span class="caretline"><span class="lineno">  632 </span>                        <span class="warning">connectionManager</span>.connect(device);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  633 </span>                    }
-<span class="lineno">  634 </span>                }
-<span class="lineno">  635 </span>                
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:661</span>: <span class="message">Access to <code>private</code> field <code>connectionManager</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  658 </span>                    <span class="keyword">if</span> (device != <span class="keyword">null</span>) {
+<span class="lineno">  659 </span>                        Log.d(Constants.TAG_MAIN, <span class="string">"ESP32 device found: "</span> + 
+<span class="lineno">  660 </span>                              device.getAddress() + <span class="string">", connecting..."</span>);
+<span class="caretline"><span class="lineno">  661 </span>                        <span class="warning">connectionManager</span>.connect(device);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  662 </span>                    }
+<span class="lineno">  663 </span>                }
+<span class="lineno">  664 </span>                
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:639</span>: <span class="message">Access to <code>private</code> method <code>showToast</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  636 </span>        <span class="annotation">@Override</span>
-<span class="lineno">  637 </span>        <span class="keyword">public</span> <span class="keyword">void</span> onScanFailed(<span class="keyword">int</span> errorCode, String errorMessage) {
-<span class="lineno">  638 </span>            Log.e(Constants.TAG_MAIN, <span class="string">"Scan failed: "</span> + errorMessage);
-<span class="caretline"><span class="lineno">  639 </span>            <span class="warning">showToast</span>(<span class="string">"Scan failed: "</span> + errorMessage);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  640 </span>            updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
-<span class="lineno">  641 </span>        }
-<span class="lineno">  642 </span>        
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:668</span>: <span class="message">Access to <code>private</code> method <code>showToast</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  665 </span>        <span class="annotation">@Override</span>
+<span class="lineno">  666 </span>        <span class="keyword">public</span> <span class="keyword">void</span> onScanFailed(<span class="keyword">int</span> errorCode, String errorMessage) {
+<span class="lineno">  667 </span>            Log.e(Constants.TAG_MAIN, <span class="string">"Scan failed: "</span> + errorMessage);
+<span class="caretline"><span class="lineno">  668 </span>            <span class="warning">showToast</span>(<span class="string">"Scan failed: "</span> + errorMessage);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  669 </span>            updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+<span class="lineno">  670 </span>        }
+<span class="lineno">  671 </span>        
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:640</span>: <span class="message">Access to <code>private</code> method <code>updateConnectionUI</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  637 </span>        <span class="keyword">public</span> <span class="keyword">void</span> onScanFailed(<span class="keyword">int</span> errorCode, String errorMessage) {
-<span class="lineno">  638 </span>            Log.e(Constants.TAG_MAIN, <span class="string">"Scan failed: "</span> + errorMessage);
-<span class="lineno">  639 </span>            showToast(<span class="string">"Scan failed: "</span> + errorMessage);
-<span class="caretline"><span class="lineno">  640 </span>            <span class="warning">updateConnectionUI</span>(BleConnectionManager.ConnectionState.DISCONNECTED);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  641 </span>        }
-<span class="lineno">  642 </span>        
-<span class="lineno">  643 </span>        <span class="annotation">@Override</span></pre>
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:669</span>: <span class="message">Access to <code>private</code> method <code>updateConnectionUI</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  666 </span>        <span class="keyword">public</span> <span class="keyword">void</span> onScanFailed(<span class="keyword">int</span> errorCode, String errorMessage) {
+<span class="lineno">  667 </span>            Log.e(Constants.TAG_MAIN, <span class="string">"Scan failed: "</span> + errorMessage);
+<span class="lineno">  668 </span>            showToast(<span class="string">"Scan failed: "</span> + errorMessage);
+<span class="caretline"><span class="lineno">  669 </span>            <span class="warning">updateConnectionUI</span>(BleConnectionManager.ConnectionState.DISCONNECTED);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  670 </span>        }
+<span class="lineno">  671 </span>        
+<span class="lineno">  672 </span>        <span class="annotation">@Override</span></pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:646</span>: <span class="message">Access to <code>private</code> method <code>showToast</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  643 </span>            <span class="annotation">@Override</span>
-<span class="lineno">  644 </span>            <span class="keyword">public</span> <span class="keyword">void</span> onScanTimeout() {
-<span class="lineno">  645 </span>                Log.d(Constants.TAG_MAIN, <span class="string">"Scan timed out, no ESP32 devices found"</span>);
-<span class="caretline"><span class="lineno">  646 </span>                <span class="warning">showToast</span>(<span class="string">"No ESP32 devices found nearby"</span>);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  647 </span>                updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
-<span class="lineno">  648 </span>            }
-<span class="lineno">  649 </span>        }, SCAN_TIMEOUT);
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:675</span>: <span class="message">Access to <code>private</code> method <code>showToast</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  672 </span>            <span class="annotation">@Override</span>
+<span class="lineno">  673 </span>            <span class="keyword">public</span> <span class="keyword">void</span> onScanTimeout() {
+<span class="lineno">  674 </span>                Log.d(Constants.TAG_MAIN, <span class="string">"Scan timed out, no ESP32 devices found"</span>);
+<span class="caretline"><span class="lineno">  675 </span>                <span class="warning">showToast</span>(<span class="string">"No ESP32 devices found nearby"</span>);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  676 </span>                updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+<span class="lineno">  677 </span>            }
+<span class="lineno">  678 </span>        }, SCAN_TIMEOUT);
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:647</span>: <span class="message">Access to <code>private</code> method <code>updateConnectionUI</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  644 </span>            <span class="keyword">public</span> <span class="keyword">void</span> onScanTimeout() {
-<span class="lineno">  645 </span>                Log.d(Constants.TAG_MAIN, <span class="string">"Scan timed out, no ESP32 devices found"</span>);
-<span class="lineno">  646 </span>                showToast(<span class="string">"No ESP32 devices found nearby"</span>);
-<span class="caretline"><span class="lineno">  647 </span>                <span class="warning">updateConnectionUI</span>(BleConnectionManager.ConnectionState.DISCONNECTED);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  648 </span>            }
-<span class="lineno">  649 </span>        }, SCAN_TIMEOUT);
-<span class="lineno">  650 </span>        
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:676</span>: <span class="message">Access to <code>private</code> method <code>updateConnectionUI</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  673 </span>            <span class="keyword">public</span> <span class="keyword">void</span> onScanTimeout() {
+<span class="lineno">  674 </span>                Log.d(Constants.TAG_MAIN, <span class="string">"Scan timed out, no ESP32 devices found"</span>);
+<span class="lineno">  675 </span>                showToast(<span class="string">"No ESP32 devices found nearby"</span>);
+<span class="caretline"><span class="lineno">  676 </span>                <span class="warning">updateConnectionUI</span>(BleConnectionManager.ConnectionState.DISCONNECTED);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  677 </span>            }
+<span class="lineno">  678 </span>        }, SCAN_TIMEOUT);
+<span class="lineno">  679 </span>        
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:821</span>: <span class="message">Access to <code>private</code> field <code>mainHandler</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  818 </span>  <span class="keyword">if</span> (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
-<span class="lineno">  819 </span>      <span class="keyword">final</span> <span class="keyword">int</span> state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-<span class="lineno">  820 </span>
-<span class="caretline"><span class="lineno">  821 </span>      <span class="warning">mainHandler</span>.post(() -> {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  822 </span>          <span class="keyword">switch</span> (state) {
-<span class="lineno">  823 </span>              <span class="keyword">case</span> BluetoothAdapter.STATE_OFF:
-<span class="lineno">  824 </span>                  Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turned off"</span>);
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:867</span>: <span class="message">Access to <code>private</code> field <code>mainHandler</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  864 </span>  <span class="keyword">if</span> (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
+<span class="lineno">  865 </span>      <span class="keyword">final</span> <span class="keyword">int</span> state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+<span class="lineno">  866 </span>
+<span class="caretline"><span class="lineno">  867 </span>      <span class="warning">mainHandler</span>.post(() -> {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  868 </span>          <span class="keyword">switch</span> (state) {
+<span class="lineno">  869 </span>              <span class="keyword">case</span> BluetoothAdapter.STATE_OFF:
+<span class="lineno">  870 </span>                  Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turned off"</span>);
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:825</span>: <span class="message">Access to <code>private</code> method <code>updateConnectionUI</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  822 </span>  <span class="keyword">switch</span> (state) {
-<span class="lineno">  823 </span>      <span class="keyword">case</span> BluetoothAdapter.STATE_OFF:
-<span class="lineno">  824 </span>          Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turned off"</span>);
-<span class="caretline"><span class="lineno">  825 </span>          <span class="warning">updateConnectionUI</span>(BleConnectionManager.ConnectionState.DISCONNECTED);&nbsp;&nbsp;</span>
-<span class="lineno">  826 </span>          connectionHelper.setText(R.string.bluetooth_disabled);
-<span class="lineno">  827 </span>          <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
-<span class="lineno">  828 </span>              showToast(<span class="string">"Bluetooth turned off"</span>);
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:871</span>: <span class="message">Access to <code>private</code> method <code>updateConnectionUI</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  868 </span>  <span class="keyword">switch</span> (state) {
+<span class="lineno">  869 </span>      <span class="keyword">case</span> BluetoothAdapter.STATE_OFF:
+<span class="lineno">  870 </span>          Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turned off"</span>);
+<span class="caretline"><span class="lineno">  871 </span>          <span class="warning">updateConnectionUI</span>(BleConnectionManager.ConnectionState.DISCONNECTED);&nbsp;&nbsp;</span>
+<span class="lineno">  872 </span>          connectionHelper.setText(R.string.bluetooth_disabled);
+<span class="lineno">  873 </span>          <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
+<span class="lineno">  874 </span>              showToast(<span class="string">"Bluetooth turned off"</span>);
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:826</span>: <span class="message">Access to <code>private</code> field <code>connectionHelper</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  823 </span>  <span class="keyword">case</span> BluetoothAdapter.STATE_OFF:
-<span class="lineno">  824 </span>      Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turned off"</span>);
-<span class="lineno">  825 </span>      updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
-<span class="caretline"><span class="lineno">  826 </span>      <span class="warning">connectionHelper</span>.setText(R.string.bluetooth_disabled);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  827 </span>      <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
-<span class="lineno">  828 </span>          showToast(<span class="string">"Bluetooth turned off"</span>);
-<span class="lineno">  829 </span>      }
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:872</span>: <span class="message">Access to <code>private</code> field <code>connectionHelper</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  869 </span>  <span class="keyword">case</span> BluetoothAdapter.STATE_OFF:
+<span class="lineno">  870 </span>      Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turned off"</span>);
+<span class="lineno">  871 </span>      updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+<span class="caretline"><span class="lineno">  872 </span>      <span class="warning">connectionHelper</span>.setText(R.string.bluetooth_disabled);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  873 </span>      <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
+<span class="lineno">  874 </span>          showToast(<span class="string">"Bluetooth turned off"</span>);
+<span class="lineno">  875 </span>      }
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:828</span>: <span class="message">Access to <code>private</code> method <code>showToast</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  825 </span>  updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
-<span class="lineno">  826 </span>  connectionHelper.setText(R.string.bluetooth_disabled);
-<span class="lineno">  827 </span>  <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
-<span class="caretline"><span class="lineno">  828 </span>      <span class="warning">showToast</span>(<span class="string">"Bluetooth turned off"</span>);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  829 </span>  }
-<span class="lineno">  830 </span>  <span class="keyword">break</span>;
-<span class="lineno">  831 </span>  
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:874</span>: <span class="message">Access to <code>private</code> method <code>showToast</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  871 </span>  updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+<span class="lineno">  872 </span>  connectionHelper.setText(R.string.bluetooth_disabled);
+<span class="lineno">  873 </span>  <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
+<span class="caretline"><span class="lineno">  874 </span>      <span class="warning">showToast</span>(<span class="string">"Bluetooth turned off"</span>);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  875 </span>  }
+<span class="lineno">  876 </span>  <span class="keyword">break</span>;
+<span class="lineno">  877 </span>  
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:838</span>: <span class="message">Access to <code>private</code> field <code>connectionHelper</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  835 </span>                
-<span class="lineno">  836 </span>                    <span class="keyword">case</span> BluetoothAdapter.STATE_TURNING_ON:
-<span class="lineno">  837 </span>                        Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turning on"</span>);
-<span class="caretline"><span class="lineno">  838 </span>                        <span class="warning">connectionHelper</span>.setText(R.string.bluetooth_enabling);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  839 </span>                <span class="keyword">break</span>;
-<span class="lineno">  840 </span>                
-<span class="lineno">  841 </span>                    <span class="keyword">case</span> BluetoothAdapter.STATE_ON:
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:884</span>: <span class="message">Access to <code>private</code> field <code>connectionHelper</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  881 </span>                
+<span class="lineno">  882 </span>                    <span class="keyword">case</span> BluetoothAdapter.STATE_TURNING_ON:
+<span class="lineno">  883 </span>                        Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turning on"</span>);
+<span class="caretline"><span class="lineno">  884 </span>                        <span class="warning">connectionHelper</span>.setText(R.string.bluetooth_enabling);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  885 </span>                <span class="keyword">break</span>;
+<span class="lineno">  886 </span>                
+<span class="lineno">  887 </span>                    <span class="keyword">case</span> BluetoothAdapter.STATE_ON:
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:846</span>: <span class="message">Access to <code>private</code> field <code>connectionManager</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  843 </span>  <span class="keyword">boolean</span> autoReconnect = getSharedPreferences(<span class="string">"app_prefs"</span>, MODE_PRIVATE)
-<span class="lineno">  844 </span>          .getBoolean(<span class="string">"auto_reconnect"</span>, <span class="keyword">true</span>);
-<span class="lineno">  845 </span>  
-<span class="caretline"><span class="lineno">  846 </span>  <span class="keyword">if</span> (autoReconnect &amp;&amp; <span class="warning">connectionManager</span>.getLastConnectedDevice() != <span class="keyword">null</span>) {</span>
-<span class="lineno">  847 </span>
-<span class="lineno">  848 </span>      mainHandler.postDelayed(() -> {
-<span class="lineno">  849 </span>          <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:892</span>: <span class="message">Access to <code>private</code> field <code>connectionManager</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  889 </span>  <span class="keyword">boolean</span> autoReconnect = getSharedPreferences(<span class="string">"app_prefs"</span>, MODE_PRIVATE)
+<span class="lineno">  890 </span>          .getBoolean(<span class="string">"auto_reconnect"</span>, <span class="keyword">true</span>);
+<span class="lineno">  891 </span>  
+<span class="caretline"><span class="lineno">  892 </span>  <span class="keyword">if</span> (autoReconnect &amp;&amp; <span class="warning">connectionManager</span>.getLastConnectedDevice() != <span class="keyword">null</span>) {</span>
+<span class="lineno">  893 </span>
+<span class="lineno">  894 </span>      mainHandler.postDelayed(() -> {
+<span class="lineno">  895 </span>          <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:848</span>: <span class="message">Access to <code>private</code> field <code>mainHandler</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  845 </span>  
-<span class="lineno">  846 </span>  <span class="keyword">if</span> (autoReconnect &amp;&amp; connectionManager.getLastConnectedDevice() != <span class="keyword">null</span>) {
-<span class="lineno">  847 </span>
-<span class="caretline"><span class="lineno">  848 </span>      <span class="warning">mainHandler</span>.postDelayed(() -> {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  849 </span>          <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
-<span class="lineno">  850 </span>              startReconnectionProcess();
-<span class="lineno">  851 </span>          }
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:894</span>: <span class="message">Access to <code>private</code> field <code>mainHandler</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  891 </span>  
+<span class="lineno">  892 </span>  <span class="keyword">if</span> (autoReconnect &amp;&amp; connectionManager.getLastConnectedDevice() != <span class="keyword">null</span>) {
+<span class="lineno">  893 </span>
+<span class="caretline"><span class="lineno">  894 </span>      <span class="warning">mainHandler</span>.postDelayed(() -> {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  895 </span>          <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
+<span class="lineno">  896 </span>              startReconnectionProcess();
+<span class="lineno">  897 </span>          }
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:850</span>: <span class="message">Access to <code>private</code> method <code>startReconnectionProcess</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  847 </span>
-<span class="lineno">  848 </span>                                mainHandler.postDelayed(() -> {
-<span class="lineno">  849 </span>                                    <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
-<span class="caretline"><span class="lineno">  850 </span>                                        <span class="warning">startReconnectionProcess</span>();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  851 </span>                                    }
-<span class="lineno">  852 </span>                                }, <span class="number">1500</span>);
-<span class="lineno">  853 </span>        } <span class="keyword">else</span> {
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:896</span>: <span class="message">Access to <code>private</code> method <code>startReconnectionProcess</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  893 </span>
+<span class="lineno">  894 </span>                                mainHandler.postDelayed(() -> {
+<span class="lineno">  895 </span>                                    <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
+<span class="caretline"><span class="lineno">  896 </span>                                        <span class="warning">startReconnectionProcess</span>();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  897 </span>                                    }
+<span class="lineno">  898 </span>                                }, <span class="number">1500</span>);
+<span class="lineno">  899 </span>        } <span class="keyword">else</span> {
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:854</span>: <span class="message">Access to <code>private</code> field <code>connectionHelper</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  851 </span>                                    }
-<span class="lineno">  852 </span>                                }, <span class="number">1500</span>);
-<span class="lineno">  853 </span>        } <span class="keyword">else</span> {
-<span class="caretline"><span class="lineno">  854 </span>                                <span class="warning">connectionHelper</span>.setText(R.string.ready_to_connect);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  855 </span>                            }
-<span class="lineno">  856 </span>                            
-<span class="lineno">  857 </span>                            <span class="comment">// Only show toast if app is in foreground</span></pre>
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:900</span>: <span class="message">Access to <code>private</code> field <code>connectionHelper</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  897 </span>                                    }
+<span class="lineno">  898 </span>                                }, <span class="number">1500</span>);
+<span class="lineno">  899 </span>        } <span class="keyword">else</span> {
+<span class="caretline"><span class="lineno">  900 </span>                                <span class="warning">connectionHelper</span>.setText(R.string.ready_to_connect);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  901 </span>                            }
+<span class="lineno">  902 </span>                            
+<span class="lineno">  903 </span>                            <span class="comment">// Only show toast if app is in foreground</span></pre>
 
 <br/><b>NOTE: 30 results omitted.</b><br/><br/></div>
 </div>
@@ -2006,14 +2024,14 @@ Dismiss</button>            </div>
 <span class="lineno">  97 </span>            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
 <span class="lineno">  98 </span>            <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"12sp"</span></pre>
 
-<span class="location"><a href="../../src/main/res/layout/activity_main.xml">../../src/main/res/layout/activity_main.xml</a>:252</span>: <span class="message">The resource <code>R.id.tv_footer</code> appears to be unused</span><br /><pre class="errorlines">
-<span class="lineno"> 249 </span>
-<span class="lineno"> 250 </span>    <span class="comment">&lt;!-- App version at bottom with improved positioning --></span>
-<span class="lineno"> 251 </span>    <span class="tag">&lt;TextView</span><span class="attribute">
-</span><span class="caretline"><span class="lineno"> 252 </span><span class="attribute">        </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/tv_footer"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 253 </span>        <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 254 </span>        <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 255 </span>        <span class="prefix">android:</span><span class="attribute">layout_marginBottom</span>=<span class="value">"12dp"</span></pre>
+<span class="location"><a href="../../src/main/res/layout/activity_main.xml">../../src/main/res/layout/activity_main.xml</a>:320</span>: <span class="message">The resource <code>R.id.tv_footer</code> appears to be unused</span><br /><pre class="errorlines">
+<span class="lineno"> 317 </span>
+<span class="lineno"> 318 </span>    <span class="comment">&lt;!-- App version at bottom with improved positioning --></span>
+<span class="lineno"> 319 </span>    <span class="tag">&lt;TextView</span><span class="attribute">
+</span><span class="caretline"><span class="lineno"> 320 </span><span class="attribute">        </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/tv_footer"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 321 </span>        <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 322 </span>        <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 323 </span>        <span class="prefix">android:</span><span class="attribute">layout_marginBottom</span>=<span class="value">"12dp"</span></pre>
 
 <span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:13</span>: <span class="message">The resource <code>R.id.settings_toolbar</code> appears to be unused</span><br /><pre class="errorlines">
 <span class="lineno">  10 </span>    <span class="prefix">tools:</span><span class="attribute">context</span>=<span class="value">".activities.SettingsActivity"</span>>
@@ -2177,22 +2195,22 @@ Dismiss</button>            </div>
 <span class="lineno">  5 </span>    <span class="comment">&lt;!-- Connection Status --></span>
 <span class="lineno">  6 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"bluetooth_required"</span>>Bluetooth is required<span class="tag">&lt;/string></span></pre>
 
-<ul><span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:48</span>: <span class="message">Duplicates value in <code>app_name</code></span><br /><pre class="errorlines">
-<span class="lineno"> 45 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"noise_format"</span>>Noise: %.1f dB<span class="tag">&lt;/string></span>
-<span class="lineno"> 46 </span>    
-<span class="lineno"> 47 </span>    <span class="comment">&lt;!-- Main Layout Strings --></span>
-<span class="caretline"><span class="lineno"> 48 </span>    <span class="warning"><span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"app_title"</span>>SmartHat<span class="tag">&lt;/string></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 49 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"test_mode_active"</span>>TEST MODE ACTIVE<span class="tag">&lt;/string></span>
-<span class="lineno"> 50 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"status_label"</span>>Status<span class="tag">&lt;/string></span>
-<span class="lineno"> 51 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"tap_to_pair"</span>>Tap Connect to pair<span class="tag">&lt;/string></span></pre>
-<span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:57</span>: <span class="message">Duplicates value in <code>app_name</code></span><br /><pre class="errorlines">
-<span class="lineno"> 54 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"dust_placeholder"</span>>-- µg/m³<span class="tag">&lt;/string></span>
-<span class="lineno"> 55 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"noise_level"</span>>Noise Level<span class="tag">&lt;/string></span>
-<span class="lineno"> 56 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"noise_placeholder"</span>>-- dB<span class="tag">&lt;/string></span>
-<span class="caretline"><span class="lineno"> 57 </span>    <span class="warning"><span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"footer_text"</span>>SmartHat<span class="tag">&lt;/string></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 58 </span>    
-<span class="lineno"> 59 </span>    <span class="comment">&lt;!-- BLE Test Activity Strings --></span>
-<span class="lineno"> 60 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ble_test_title"</span>>BLE Test Activity<span class="tag">&lt;/string></span></pre>
+<ul><span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:50</span>: <span class="message">Duplicates value in <code>app_name</code></span><br /><pre class="errorlines">
+<span class="lineno"> 47 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"gas_format"</span>>Gas: %.1f ppm<span class="tag">&lt;/string></span>
+<span class="lineno"> 48 </span>    
+<span class="lineno"> 49 </span>    <span class="comment">&lt;!-- Main Layout Strings --></span>
+<span class="caretline"><span class="lineno"> 50 </span>    <span class="warning"><span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"app_title"</span>>SmartHat<span class="tag">&lt;/string></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 51 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"test_mode_active"</span>>TEST MODE ACTIVE<span class="tag">&lt;/string></span>
+<span class="lineno"> 52 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"status_label"</span>>Status<span class="tag">&lt;/string></span>
+<span class="lineno"> 53 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"tap_to_pair"</span>>Tap Connect to pair<span class="tag">&lt;/string></span></pre>
+<span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:61</span>: <span class="message">Duplicates value in <code>app_name</code></span><br /><pre class="errorlines">
+<span class="lineno"> 58 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"noise_placeholder"</span>>-- dB<span class="tag">&lt;/string></span>
+<span class="lineno"> 59 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"gas_level"</span>>Air Quality<span class="tag">&lt;/string></span>
+<span class="lineno"> 60 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"gas_placeholder"</span>>-- ppm<span class="tag">&lt;/string></span>
+<span class="caretline"><span class="lineno"> 61 </span>    <span class="warning"><span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"footer_text"</span>>SmartHat<span class="tag">&lt;/string></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 62 </span>    
+<span class="lineno"> 63 </span>    <span class="comment">&lt;!-- BLE Test Activity Strings --></span>
+<span class="lineno"> 64 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"ble_test_title"</span>>BLE Test Activity<span class="tag">&lt;/string></span></pre>
 </ul><span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:9</span>: <span class="message">Duplicate string value <code>Disconnected</code>, used in <code>disconnected</code> and <code>status_disconnected</code></span><br /><pre class="errorlines">
 <span class="lineno">  6 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"bluetooth_required"</span>>Bluetooth is required<span class="tag">&lt;/string></span>
 <span class="lineno">  7 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"connecting"</span>>Connecting…<span class="tag">&lt;/string></span>
@@ -2219,31 +2237,31 @@ Dismiss</button>            </div>
 <span class="lineno"> 17 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"bluetooth_disabled"</span>>Bluetooth is disabled<span class="tag">&lt;/string></span>
 <span class="lineno"> 18 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"bluetooth_enabling"</span>>Enabling Bluetooth...<span class="tag">&lt;/string></span></pre>
 
-<ul><span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:51</span>: <span class="message">Duplicates value in <code>helper_disconnected</code></span><br /><pre class="errorlines">
-<span class="lineno"> 48 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"app_title"</span>>SmartHat<span class="tag">&lt;/string></span>
-<span class="lineno"> 49 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"test_mode_active"</span>>TEST MODE ACTIVE<span class="tag">&lt;/string></span>
-<span class="lineno"> 50 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"status_label"</span>>Status<span class="tag">&lt;/string></span>
-<span class="caretline"><span class="lineno"> 51 </span>    <span class="warning"><span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"tap_to_pair"</span>>Tap Connect to pair<span class="tag">&lt;/string></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 52 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"environmental_readings"</span>>Environmental Readings<span class="tag">&lt;/string></span>
-<span class="lineno"> 53 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"dust_level"</span>>Dust Level<span class="tag">&lt;/string></span>
-<span class="lineno"> 54 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"dust_placeholder"</span>>-- µg/m³<span class="tag">&lt;/string></span></pre>
+<ul><span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:53</span>: <span class="message">Duplicates value in <code>helper_disconnected</code></span><br /><pre class="errorlines">
+<span class="lineno"> 50 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"app_title"</span>>SmartHat<span class="tag">&lt;/string></span>
+<span class="lineno"> 51 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"test_mode_active"</span>>TEST MODE ACTIVE<span class="tag">&lt;/string></span>
+<span class="lineno"> 52 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"status_label"</span>>Status<span class="tag">&lt;/string></span>
+<span class="caretline"><span class="lineno"> 53 </span>    <span class="warning"><span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"tap_to_pair"</span>>Tap Connect to pair<span class="tag">&lt;/string></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 54 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"environmental_readings"</span>>Environmental Readings<span class="tag">&lt;/string></span>
+<span class="lineno"> 55 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"dust_level"</span>>Dust Level<span class="tag">&lt;/string></span>
+<span class="lineno"> 56 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"dust_placeholder"</span>>-- µg/m³<span class="tag">&lt;/string></span></pre>
 </ul><span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:41</span>: <span class="message">Duplicate string value <code>Noise: %.1f dB</code>, used in <code>noise_display</code> and <code>noise_format</code></span><br /><pre class="errorlines">
 <span class="lineno"> 38 </span>
 <span class="lineno"> 39 </span>    <span class="comment">&lt;!-- Sensor Displays --></span>
 <span class="lineno"> 40 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"dust_display"</span>>PM2.5: %.1f µg/m³<span class="tag">&lt;/string></span>
 <span class="caretline"><span class="lineno"> 41 </span>    <span class="warning"><span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"noise_display"</span>>Noise: %.1f dB<span class="tag">&lt;/string></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 42 </span>    
-<span class="lineno"> 43 </span>    <span class="comment">&lt;!-- Sensor Format Strings - Optimized for Android 12 --></span>
-<span class="lineno"> 44 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"dust_format"</span>>Dust: %.1f µg/m³<span class="tag">&lt;/string></span></pre>
+<span class="lineno"> 42 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"gas_display"</span>>Air Quality: %.1f ppm<span class="tag">&lt;/string></span>
+<span class="lineno"> 43 </span>    
+<span class="lineno"> 44 </span>    <span class="comment">&lt;!-- Sensor Format Strings - Optimized for Android 12 --></span></pre>
 
-<ul><span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:45</span>: <span class="message">Duplicates value in <code>noise_display</code></span><br /><pre class="errorlines">
-<span class="lineno"> 42 </span>    
-<span class="lineno"> 43 </span>    <span class="comment">&lt;!-- Sensor Format Strings - Optimized for Android 12 --></span>
-<span class="lineno"> 44 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"dust_format"</span>>Dust: %.1f µg/m³<span class="tag">&lt;/string></span>
-<span class="caretline"><span class="lineno"> 45 </span>    <span class="warning"><span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"noise_format"</span>>Noise: %.1f dB<span class="tag">&lt;/string></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 46 </span>    
-<span class="lineno"> 47 </span>    <span class="comment">&lt;!-- Main Layout Strings --></span>
-<span class="lineno"> 48 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"app_title"</span>>SmartHat<span class="tag">&lt;/string></span></pre>
+<ul><span class="location"><a href="../../src/main/res/values/strings.xml">../../src/main/res/values/strings.xml</a>:46</span>: <span class="message">Duplicates value in <code>noise_display</code></span><br /><pre class="errorlines">
+<span class="lineno"> 43 </span>    
+<span class="lineno"> 44 </span>    <span class="comment">&lt;!-- Sensor Format Strings - Optimized for Android 12 --></span>
+<span class="lineno"> 45 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"dust_format"</span>>Dust: %.1f µg/m³<span class="tag">&lt;/string></span>
+<span class="caretline"><span class="lineno"> 46 </span>    <span class="warning"><span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"noise_format"</span>>Noise: %.1f dB<span class="tag">&lt;/string></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 47 </span>    <span class="tag">&lt;string</span><span class="attribute"> name</span>=<span class="value">"gas_format"</span>>Gas: %.1f ppm<span class="tag">&lt;/string></span>
+<span class="lineno"> 48 </span>    
+<span class="lineno"> 49 </span>    <span class="comment">&lt;!-- Main Layout Strings --></span></pre>
 </ul></div>
 <div class="metadata"><div class="explanation" id="explanationDuplicateStrings" style="display: none;">
 Duplicate strings can make applications larger unnecessarily.<br/>
@@ -2433,7 +2451,7 @@ Dismiss</button>            </div>
 <span class="lineno"> 124 </span>    
 </pre>
 
-<button class="mdl-button mdl-js-button mdl-button--primary" id="UseTomlInsteadDivLink" onclick="reveal('UseTomlInsteadDiv');" />+ 9 More Occurrences...</button>
+<button class="mdl-button mdl-js-button mdl-button--primary" id="UseTomlInsteadDivLink" onclick="reveal('UseTomlInsteadDiv');" />+ 10 More Occurrences...</button>
 <div id="UseTomlInsteadDiv" style="display: none">
 <span class="location"><a href="../../build.gradle.kts">../../build.gradle.kts</a>:122</span>: <span class="message">Use version catalog instead</span><br /><pre class="errorlines">
 <span class="lineno"> 119 </span>    // androidx test for LiveData testing
@@ -2502,7 +2520,7 @@ Dismiss</button>            </div>
 <span class="caretline"><span class="lineno"> 132 </span>    androidTestImplementation("<span class="warning">androidx.test:rules:1.5.0</span>")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 <span class="lineno"> 133 </span>    androidTestImplementation("androidx.test:runner:1.5.2")
 <span class="lineno"> 134 </span>    androidTestImplementation("org.mockito:mockito-android:5.4.0")
-<span class="lineno"> 135 </span>}</pre>
+</pre>
 
 <span class="location"><a href="../../build.gradle.kts">../../build.gradle.kts</a>:133</span>: <span class="message">Use version catalog instead</span><br /><pre class="errorlines">
 <span class="lineno"> 130 </span>    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -2510,14 +2528,26 @@ Dismiss</button>            </div>
 <span class="lineno"> 132 </span>    androidTestImplementation("androidx.test:rules:1.5.0")
 <span class="caretline"><span class="lineno"> 133 </span>    androidTestImplementation("<span class="warning">androidx.test:runner:1.5.2</span>")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 <span class="lineno"> 134 </span>    androidTestImplementation("org.mockito:mockito-android:5.4.0")
-<span class="lineno"> 135 </span>}</pre>
+<span class="lineno"> 135 </span>
+<span class="lineno"> 136 </span>    //SpeedView
+</pre>
 
 <span class="location"><a href="../../build.gradle.kts">../../build.gradle.kts</a>:134</span>: <span class="message">Use version catalog instead</span><br /><pre class="errorlines">
 <span class="lineno"> 131 </span>    androidTestImplementation("androidx.test:core:1.5.0")
 <span class="lineno"> 132 </span>    androidTestImplementation("androidx.test:rules:1.5.0")
 <span class="lineno"> 133 </span>    androidTestImplementation("androidx.test:runner:1.5.2")
 <span class="caretline"><span class="lineno"> 134 </span>    androidTestImplementation("<span class="warning">org.mockito:mockito-android:5.4.0</span>")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 135 </span>}</pre>
+<span class="lineno"> 135 </span>
+<span class="lineno"> 136 </span>    //SpeedView
+<span class="lineno"> 137 </span>    implementation("com.github.anastr:SpeedView:1.5.2")
+</pre>
+
+<span class="location"><a href="../../build.gradle.kts">../../build.gradle.kts</a>:137</span>: <span class="message">Use version catalog instead</span><br /><pre class="errorlines">
+<span class="lineno"> 134 </span>    androidTestImplementation("org.mockito:mockito-android:5.4.0")
+<span class="lineno"> 135 </span>
+<span class="lineno"> 136 </span>    //SpeedView
+<span class="caretline"><span class="lineno"> 137 </span>    implementation("<span class="warning">com.github.anastr:SpeedView:1.5.2</span>")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 138 </span>}</pre>
 
 </div>
 </div>
@@ -3090,14 +3120,14 @@ Dismiss</button>            </div>
 <span class="lineno"> 1209 </span>    }
 <span class="lineno"> 1210 </span>}  </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/utils/NotificationUtils.java">../../src/main/java/com/team12/smarthat/utils/NotificationUtils.java</a>:250</span>: <span class="message">This method should be called <code>getNotificationsEnabled</code> such that <code>notificationsEnabled</code> can be accessed as a property from Kotlin; see <a href="https://android.github.io/kotlin-guides/interop.html#property-prefixes">https://android.github.io/kotlin-guides/interop.html#property-prefixes</a></span><br /><pre class="errorlines">
-<span class="lineno"> 247 </span><span class="javadoc">   * Check if notifications are enabled in app preferences
-</span><span class="lineno"> 248 </span><span class="javadoc">   * @return true if notifications are enabled, false otherwise
-</span><span class="lineno"> 249 </span><span class="javadoc">   */</span>
-<span class="caretline"><span class="lineno"> 250 </span>  <span class="keyword">public</span> <span class="keyword">boolean</span> <span class="warning">areNotificationsEnabled</span>() {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 251 </span>      <span class="comment">// Check system permission, POST_NOTIFICATIONS permission on Android 13+, and app preference</span>
-<span class="lineno"> 252 </span>      <span class="keyword">boolean</span> systemEnabled = NotificationManagerCompat.from(context).areNotificationsEnabled();
-<span class="lineno"> 253 </span>      <span class="keyword">boolean</span> permissionGranted = hasNotificationPermission();
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/utils/NotificationUtils.java">../../src/main/java/com/team12/smarthat/utils/NotificationUtils.java</a>:273</span>: <span class="message">This method should be called <code>getNotificationsEnabled</code> such that <code>notificationsEnabled</code> can be accessed as a property from Kotlin; see <a href="https://android.github.io/kotlin-guides/interop.html#property-prefixes">https://android.github.io/kotlin-guides/interop.html#property-prefixes</a></span><br /><pre class="errorlines">
+<span class="lineno"> 270 </span><span class="javadoc">   * Check if notifications are enabled in app preferences
+</span><span class="lineno"> 271 </span><span class="javadoc">   * @return true if notifications are enabled, false otherwise
+</span><span class="lineno"> 272 </span><span class="javadoc">   */</span>
+<span class="caretline"><span class="lineno"> 273 </span>  <span class="keyword">public</span> <span class="keyword">boolean</span> <span class="warning">areNotificationsEnabled</span>() {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 274 </span>      <span class="comment">// Check system permission, POST_NOTIFICATIONS permission on Android 13+, and app preference</span>
+<span class="lineno"> 275 </span>      <span class="keyword">boolean</span> systemEnabled = NotificationManagerCompat.from(context).areNotificationsEnabled();
+<span class="lineno"> 276 </span>      <span class="keyword">boolean</span> permissionGranted = hasNotificationPermission();
 </pre>
 
 </div>
@@ -3240,7 +3270,7 @@ Dismiss</button>            </div>
 </span><span class="lineno">  124 </span><span class="javadoc">         * called when the scan fails
 </span></pre>
 
-<button class="mdl-button mdl-js-button mdl-button--primary" id="UnknownNullnessDivLink" onclick="reveal('UnknownNullnessDiv');" />+ 105 More Occurrences...</button>
+<button class="mdl-button mdl-js-button mdl-button--primary" id="UnknownNullnessDivLink" onclick="reveal('UnknownNullnessDiv');" />+ 106 More Occurrences...</button>
 <div id="UnknownNullnessDiv" style="display: none">
 <span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BleConnectionManager.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BleConnectionManager.java</a>:128</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://developer.android.com/kotlin/interop#nullability_annotations">https://developer.android.com/kotlin/interop#nullability_annotations</a></span><br /><pre class="errorlines">
 <span class="lineno">  125 </span><span class="javadoc">         * @param errorCode standard android error code from scancallback constants
@@ -3689,7 +3719,7 @@ Dismiss</button>            </div>
 <span class="lineno"> 111 </span>    }
 </pre>
 
-<br/><b>NOTE: 60 results omitted.</b><br/><br/></div>
+<br/><b>NOTE: 61 results omitted.</b><br/><br/></div>
 </div>
 <div class="metadata"><div class="explanation" id="explanationUnknownNullness" style="display: none;">
 To improve referencing this code from Kotlin, consider adding explicit nullness information here with either <code>@NonNull</code> or <code>@Nullable</code>.<br/><br/>

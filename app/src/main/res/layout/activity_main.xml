@@ -226,6 +226,74 @@
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_noise_label" />
+
+            <ProgressBar
+                android:id="@+id/sound_meter"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="16dp"
+                android:layout_marginTop="8dp"
+                android:max="100"
+                android:progressDrawable="@drawable/sound_meter_progressbar"
+                app:layout_constraintTop_toBottomOf="@id/tv_noise"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Gas Panel with speedometer gauge -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_gas"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="3dp"
+        app:strokeWidth="0dp"
+        app:cardBackgroundColor="@color/surface"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/card_noise">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp">
+
+            <ImageView
+                android:id="@+id/gas_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:contentDescription="@string/gas_level"
+                android:src="@android:drawable/ic_menu_compass"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/dust_icon_tint" />
+
+            <TextView
+                android:id="@+id/tv_gas_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/gas_level"
+                android:textColor="@color/sensor_label"
+                android:textSize="16sp"
+                app:layout_constraintStart_toEndOf="@id/gas_icon"
+                app:layout_constraintTop_toTopOf="@id/gas_icon"
+                app:layout_constraintBottom_toBottomOf="@id/gas_icon"/>
+
+            <com.github.anastr.speedviewlib.PointerSpeedometer
+                android:id="@+id/gas_gauge"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_gas_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -245,7 +313,7 @@
         app:elevation="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_noise" />
+        app:layout_constraintTop_toBottomOf="@id/card_gas" />
 
     <!-- App version at bottom with improved positioning -->
     <TextView
