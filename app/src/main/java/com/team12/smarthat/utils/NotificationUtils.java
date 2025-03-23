@@ -196,9 +196,13 @@ public class NotificationUtils {
         boolean isTestData = data.isTestData();
         float value = data.getValue();
         
+        // Get custom threshold if available
+        float threshold = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                .getFloat("dust_threshold", Constants.DUST_THRESHOLD);
+        
         String title = isTestData ? "Test Dust Alert" : "Dust Alert";
-        String message = String.format("Dust level of %.1f µg/m³ exceeds safe limit (%d µg/m³)%s", 
-                                      value, (int)Constants.DUST_THRESHOLD,
+        String message = String.format("Dust level of %.1f µg/m³ exceeds safe limit (%.1f µg/m³)%s", 
+                                      value, threshold,
                                       isTestData ? " [TEST DATA]" : "");
         
         sendAlert(title, message);
@@ -214,9 +218,13 @@ public class NotificationUtils {
         boolean isTestData = data.isTestData();
         float value = data.getValue();
         
+        // Get custom threshold if available
+        float threshold = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                .getFloat("noise_threshold", Constants.NOISE_THRESHOLD);
+        
         String title = isTestData ? "Test Noise Alert" : "Noise Alert";
-        String message = String.format("Noise level of %.1f dB exceeds safe limit (%d dB)%s", 
-                                      value, (int)Constants.NOISE_THRESHOLD,
+        String message = String.format("Noise level of %.1f dB exceeds safe limit (%.1f dB)%s", 
+                                      value, threshold,
                                       isTestData ? " [TEST DATA]" : "");
         
         sendAlert(title, message);

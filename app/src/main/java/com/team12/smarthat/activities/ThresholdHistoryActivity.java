@@ -56,20 +56,18 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
     }
     
     private void loadThresholdBreaches() {
-        // treashold from db
-        databaseHelper.getThresholdBreaches(Constants.DUST_THRESHOLD, Constants.NOISE_THRESHOLD)
-                .observe(this, this::updateUI);
-    }
-    
-    private void updateUI(List<SensorData> breaches) {
-        if (breaches == null || breaches.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            tvNoData.setVisibility(View.VISIBLE);
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            tvNoData.setVisibility(View.GONE);
-            adapter.setBreaches(breaches);
-        }
+        // Use custom thresholds from preferences instead of constants
+        databaseHelper.getThresholdBreachesWithCustomThresholds(this)
+            .observe(this, sensorDataList -> {
+                if (sensorDataList != null && !sensorDataList.isEmpty()) {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    tvNoData.setVisibility(View.GONE);
+                    adapter.setBreaches(sensorDataList);
+                } else {
+                    recyclerView.setVisibility(View.GONE);
+                    tvNoData.setVisibility(View.VISIBLE);
+                }
+            });
     }
     
     @Override
