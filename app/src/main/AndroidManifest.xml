@@ -45,6 +45,13 @@
             android:exported="false"
             android:parentActivityName=".activities.MainActivity" />
             
+        <!-- Profile Activity -->
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartHat.NoActionBar"
+            android:parentActivityName=".activities.MainActivity" />
+            
         <!-- Settings Activity -->
         <activity
             android:name=".activities.SettingsActivity"

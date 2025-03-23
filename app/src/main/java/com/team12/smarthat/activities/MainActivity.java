@@ -170,6 +170,11 @@ public class MainActivity extends AppCompatActivity implements
             Intent intent = new Intent(this, ThresholdHistoryActivity.class);
             startActivity(intent);
             return true;
+        } else if (id == R.id.action_profile) {
+            // Open profile activity
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
+            return true;
         } else if (id == R.id.action_settings) {
             // Open settings activity
             Intent intent = new Intent(this, SettingsActivity.class);

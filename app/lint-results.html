@@ -177,9 +177,9 @@ document.getElementById(id).style.display = 'none';
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
   <header class="mdl-layout__header">
     <div class="mdl-layout__header-row">
-      <span class="mdl-layout-title">Lint Report: 347 warnings</span>
+      <span class="mdl-layout-title">Lint Report: 351 warnings</span>
       <div class="mdl-layout-spacer"></div>
-      <nav class="mdl-navigation mdl-layout--large-screen-only">Check performed at Sun Mar 23 07:32:08 EDT 2025 by AGP (8.4.1)</nav>
+      <nav class="mdl-navigation mdl-layout--large-screen-only">Check performed at Sun Mar 23 08:45:51 EDT 2025 by AGP (8.4.1)</nav>
     </div>
   </header>
   <div class="mdl-layout__drawer">
@@ -200,15 +200,15 @@ document.getElementById(id).style.display = 'none';
       <a class="mdl-navigation__link" href="#VectorPath"><i class="material-icons warning-icon">warning</i>Long vector paths (1)</a>
       <a class="mdl-navigation__link" href="#Overdraw"><i class="material-icons warning-icon">warning</i>Overdraw: Painting regions more than once (2)</a>
       <a class="mdl-navigation__link" href="#SyntheticAccessor"><i class="material-icons warning-icon">warning</i>Synthetic Accessor (80)</a>
-      <a class="mdl-navigation__link" href="#UnusedIds"><i class="material-icons warning-icon">warning</i>Unused id (21)</a>
+      <a class="mdl-navigation__link" href="#UnusedIds"><i class="material-icons warning-icon">warning</i>Unused id (22)</a>
       <a class="mdl-navigation__link" href="#DuplicateStrings"><i class="material-icons warning-icon">warning</i>Duplicate Strings (4)</a>
       <a class="mdl-navigation__link" href="#TypographyEllipsis"><i class="material-icons warning-icon">warning</i>Ellipsis string can be replaced with ellipsis character (6)</a>
       <a class="mdl-navigation__link" href="#UseTomlInstead"><i class="material-icons warning-icon">warning</i>Use TOML Version Catalog Instead (15)</a>
       <a class="mdl-navigation__link" href="#SetTextI18n"><i class="material-icons warning-icon">warning</i>TextView Internationalization (14)</a>
-      <a class="mdl-navigation__link" href="#HardcodedText"><i class="material-icons warning-icon">warning</i>Hardcoded text (32)</a>
+      <a class="mdl-navigation__link" href="#HardcodedText"><i class="material-icons warning-icon">warning</i>Hardcoded text (34)</a>
       <a class="mdl-navigation__link" href="#KotlinPropertyAccess"><i class="material-icons warning-icon">warning</i>Kotlin Property Access (2)</a>
       <a class="mdl-navigation__link" href="#LambdaLast"><i class="material-icons warning-icon">warning</i>Lambda Parameters Last (1)</a>
-      <a class="mdl-navigation__link" href="#UnknownNullness"><i class="material-icons warning-icon">warning</i>Unknown nullness (111)</a>
+      <a class="mdl-navigation__link" href="#UnknownNullness"><i class="material-icons warning-icon">warning</i>Unknown nullness (112)</a>
     </nav>
   </div>
   <main class="mdl-layout__content">
@@ -270,7 +270,7 @@ document.getElementById(id).style.display = 'none';
 <td class="countColumn">80</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
 <a href="#SyntheticAccessor">SyntheticAccessor</a>: Synthetic Accessor</td></tr>
 <tr>
-<td class="countColumn">21</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
+<td class="countColumn">22</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
 <a href="#UnusedIds">UnusedIds</a>: Unused id</td></tr>
 <tr><td class="countColumn"></td><td class="categoryColumn"><a href="#Performance:Application Size">Performance:Application Size</a>
 </td></tr>
@@ -293,7 +293,7 @@ document.getElementById(id).style.display = 'none';
 <td class="countColumn">14</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
 <a href="#SetTextI18n">SetTextI18n</a>: TextView Internationalization</td></tr>
 <tr>
-<td class="countColumn">32</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
+<td class="countColumn">34</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
 <a href="#HardcodedText">HardcodedText</a>: Hardcoded text</td></tr>
 <tr><td class="countColumn"></td><td class="categoryColumn"><a href="#Interoperability:Kotlin Interoperability">Interoperability:Kotlin Interoperability</a>
 </td></tr>
@@ -304,7 +304,7 @@ document.getElementById(id).style.display = 'none';
 <td class="countColumn">1</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
 <a href="#LambdaLast">LambdaLast</a>: Lambda Parameters Last</td></tr>
 <tr>
-<td class="countColumn">111</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
+<td class="countColumn">112</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
 <a href="#UnknownNullness">UnknownNullness</a>: Unknown nullness</td></tr>
 <tr><td></td><td class="categoryColumn"><a href="#ExtraIssues">Included Additional Checks (24)</a>
 </td></tr>
@@ -946,14 +946,14 @@ Dismiss</button>            </div>
               <div class="mdl-card__supporting-text">
 <div class="issue">
 <div class="warningslist">
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:298</span>: <span class="message">This method should only be accessed from tests or within private scope</span><br /><pre class="errorlines">
-<span class="lineno">  295 </span>            <span class="comment">// clean up both connection managers</span>
-<span class="lineno">  296 </span>            <span class="keyword">if</span> (connectionManager != <span class="keyword">null</span>) {
-<span class="lineno">  297 </span>                connectionManager.cleanup();
-<span class="caretline"><span class="lineno">  298 </span>                BleConnectionManager.<span class="warning">resetInstanceForTesting</span>();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  299 </span>            }
-<span class="lineno">  300 </span>            
-<span class="lineno">  301 </span>            <span class="keyword">if</span> (mockConnectionManager != <span class="keyword">null</span>) {
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:303</span>: <span class="message">This method should only be accessed from tests or within private scope</span><br /><pre class="errorlines">
+<span class="lineno">  300 </span>            <span class="comment">// clean up both connection managers</span>
+<span class="lineno">  301 </span>            <span class="keyword">if</span> (connectionManager != <span class="keyword">null</span>) {
+<span class="lineno">  302 </span>                connectionManager.cleanup();
+<span class="caretline"><span class="lineno">  303 </span>                BleConnectionManager.<span class="warning">resetInstanceForTesting</span>();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  304 </span>            }
+<span class="lineno">  305 </span>            
+<span class="lineno">  306 </span>            <span class="keyword">if</span> (mockConnectionManager != <span class="keyword">null</span>) {
 </pre>
 
 </div>
@@ -1138,33 +1138,33 @@ Dismiss</button>            </div>
 <span class="lineno"> 112 </span>    
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:541</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
-<span class="lineno">  538 </span>        }
-<span class="lineno">  539 </span>        
-<span class="lineno">  540 </span>        tvTestMode.setText(modeText);
-<span class="caretline"><span class="lineno">  541 </span>        <span class="warning">Log.d(Constants.TAG_MAIN, <span class="string">"Updated test mode UI: "</span> + modeText)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  542 </span>    }
-<span class="lineno">  543 </span>
-<span class="lineno">  544 </span>    <span class="comment">// region connection management</span></pre>
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:546</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
+<span class="lineno">  543 </span>        }
+<span class="lineno">  544 </span>        
+<span class="lineno">  545 </span>        tvTestMode.setText(modeText);
+<span class="caretline"><span class="lineno">  546 </span>        <span class="warning">Log.d(Constants.TAG_MAIN, <span class="string">"Updated test mode UI: "</span> + modeText)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  547 </span>    }
+<span class="lineno">  548 </span>
+<span class="lineno">  549 </span>    <span class="comment">// region connection management</span></pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:946</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
-<span class="lineno">  943 </span>      updateConnectionUI(BleConnectionManager.ConnectionState.CONNECTING);
-<span class="lineno">  944 </span>      showToast(<span class="string">"Reconnecting to SmartHat..."</span>);
-<span class="lineno">  945 </span>
-<span class="caretline"><span class="lineno">  946 </span>      <span class="warning">Log.d(Constants.TAG_MAIN, <span class="string">"Attempting reconnection to: "</span> + lastDevice.getAddress())</span>;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  947 </span>      connectionManager.connect(lastDevice);
-<span class="lineno">  948 </span>      
-<span class="lineno">  949 </span>  } <span class="keyword">catch</span> (SecurityException e) {
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:951</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
+<span class="lineno">  948 </span>      updateConnectionUI(BleConnectionManager.ConnectionState.CONNECTING);
+<span class="lineno">  949 </span>      showToast(<span class="string">"Reconnecting to SmartHat..."</span>);
+<span class="lineno">  950 </span>
+<span class="caretline"><span class="lineno">  951 </span>      <span class="warning">Log.d(Constants.TAG_MAIN, <span class="string">"Attempting reconnection to: "</span> + lastDevice.getAddress())</span>;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  952 </span>      connectionManager.connect(lastDevice);
+<span class="lineno">  953 </span>      
+<span class="lineno">  954 </span>  } <span class="keyword">catch</span> (SecurityException e) {
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:1016</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
-<span class="lineno"> 1013 </span>  <span class="keyword">long</span> operationTime = System.currentTimeMillis() - startTime;
-<span class="lineno"> 1014 </span>
-<span class="lineno"> 1015 </span>  String sensorType = data.getSensorType(); <span class="comment">// use getSensorType instead of getType</span>
-<span class="caretline"><span class="lineno"> 1016 </span>  <span class="warning">Log.d(Constants.TAG_MAIN, <span class="string">"Saved "</span> + sensorType + <span class="string">" data to database in "</span> + operationTime + <span class="string">"ms"</span>)</span>;</span>
-<span class="lineno"> 1017 </span>
-<span class="lineno"> 1018 </span>  <span class="keyword">if</span> (Math.random() &lt; <span class="number">0.01</span>) {
-<span class="lineno"> 1019 </span>      Log.d(Constants.TAG_MAIN, <span class="string">"Running database maintenance"</span>);
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:1021</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
+<span class="lineno"> 1018 </span>  <span class="keyword">long</span> operationTime = System.currentTimeMillis() - startTime;
+<span class="lineno"> 1019 </span>
+<span class="lineno"> 1020 </span>  String sensorType = data.getSensorType(); <span class="comment">// use getSensorType instead of getType</span>
+<span class="caretline"><span class="lineno"> 1021 </span>  <span class="warning">Log.d(Constants.TAG_MAIN, <span class="string">"Saved "</span> + sensorType + <span class="string">" data to database in "</span> + operationTime + <span class="string">"ms"</span>)</span>;</span>
+<span class="lineno"> 1022 </span>
+<span class="lineno"> 1023 </span>  <span class="keyword">if</span> (Math.random() &lt; <span class="number">0.01</span>) {
+<span class="lineno"> 1024 </span>      Log.d(Constants.TAG_MAIN, <span class="string">"Running database maintenance"</span>);
 </pre>
 
 <span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/MockBleConnectionManager.java">../../src/main/java/com/team12/smarthat/bluetooth/core/MockBleConnectionManager.java</a>:58</span>: <span class="message">The log call Log.d(...) should be conditional: surround with <code>if (Log.isLoggable(...))</code> or <code>if (BuildConfig.DEBUG) { ... }</code></span><br /><pre class="errorlines">
@@ -1774,143 +1774,143 @@ Dismiss</button>            </div>
 <span class="lineno">  89 </span>    
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:661</span>: <span class="message">Access to <code>private</code> field <code>connectionManager</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  658 </span>                    <span class="keyword">if</span> (device != <span class="keyword">null</span>) {
-<span class="lineno">  659 </span>                        Log.d(Constants.TAG_MAIN, <span class="string">"ESP32 device found: "</span> + 
-<span class="lineno">  660 </span>                              device.getAddress() + <span class="string">", connecting..."</span>);
-<span class="caretline"><span class="lineno">  661 </span>                        <span class="warning">connectionManager</span>.connect(device);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  662 </span>                    }
-<span class="lineno">  663 </span>                }
-<span class="lineno">  664 </span>                
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:666</span>: <span class="message">Access to <code>private</code> field <code>connectionManager</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  663 </span>                    <span class="keyword">if</span> (device != <span class="keyword">null</span>) {
+<span class="lineno">  664 </span>                        Log.d(Constants.TAG_MAIN, <span class="string">"ESP32 device found: "</span> + 
+<span class="lineno">  665 </span>                              device.getAddress() + <span class="string">", connecting..."</span>);
+<span class="caretline"><span class="lineno">  666 </span>                        <span class="warning">connectionManager</span>.connect(device);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  667 </span>                    }
+<span class="lineno">  668 </span>                }
+<span class="lineno">  669 </span>                
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:668</span>: <span class="message">Access to <code>private</code> method <code>showToast</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  665 </span>        <span class="annotation">@Override</span>
-<span class="lineno">  666 </span>        <span class="keyword">public</span> <span class="keyword">void</span> onScanFailed(<span class="keyword">int</span> errorCode, String errorMessage) {
-<span class="lineno">  667 </span>            Log.e(Constants.TAG_MAIN, <span class="string">"Scan failed: "</span> + errorMessage);
-<span class="caretline"><span class="lineno">  668 </span>            <span class="warning">showToast</span>(<span class="string">"Scan failed: "</span> + errorMessage);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  669 </span>            updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
-<span class="lineno">  670 </span>        }
-<span class="lineno">  671 </span>        
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:673</span>: <span class="message">Access to <code>private</code> method <code>showToast</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  670 </span>        <span class="annotation">@Override</span>
+<span class="lineno">  671 </span>        <span class="keyword">public</span> <span class="keyword">void</span> onScanFailed(<span class="keyword">int</span> errorCode, String errorMessage) {
+<span class="lineno">  672 </span>            Log.e(Constants.TAG_MAIN, <span class="string">"Scan failed: "</span> + errorMessage);
+<span class="caretline"><span class="lineno">  673 </span>            <span class="warning">showToast</span>(<span class="string">"Scan failed: "</span> + errorMessage);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  674 </span>            updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+<span class="lineno">  675 </span>        }
+<span class="lineno">  676 </span>        
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:669</span>: <span class="message">Access to <code>private</code> method <code>updateConnectionUI</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  666 </span>        <span class="keyword">public</span> <span class="keyword">void</span> onScanFailed(<span class="keyword">int</span> errorCode, String errorMessage) {
-<span class="lineno">  667 </span>            Log.e(Constants.TAG_MAIN, <span class="string">"Scan failed: "</span> + errorMessage);
-<span class="lineno">  668 </span>            showToast(<span class="string">"Scan failed: "</span> + errorMessage);
-<span class="caretline"><span class="lineno">  669 </span>            <span class="warning">updateConnectionUI</span>(BleConnectionManager.ConnectionState.DISCONNECTED);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  670 </span>        }
-<span class="lineno">  671 </span>        
-<span class="lineno">  672 </span>        <span class="annotation">@Override</span></pre>
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:674</span>: <span class="message">Access to <code>private</code> method <code>updateConnectionUI</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  671 </span>        <span class="keyword">public</span> <span class="keyword">void</span> onScanFailed(<span class="keyword">int</span> errorCode, String errorMessage) {
+<span class="lineno">  672 </span>            Log.e(Constants.TAG_MAIN, <span class="string">"Scan failed: "</span> + errorMessage);
+<span class="lineno">  673 </span>            showToast(<span class="string">"Scan failed: "</span> + errorMessage);
+<span class="caretline"><span class="lineno">  674 </span>            <span class="warning">updateConnectionUI</span>(BleConnectionManager.ConnectionState.DISCONNECTED);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  675 </span>        }
+<span class="lineno">  676 </span>        
+<span class="lineno">  677 </span>        <span class="annotation">@Override</span></pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:675</span>: <span class="message">Access to <code>private</code> method <code>showToast</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  672 </span>            <span class="annotation">@Override</span>
-<span class="lineno">  673 </span>            <span class="keyword">public</span> <span class="keyword">void</span> onScanTimeout() {
-<span class="lineno">  674 </span>                Log.d(Constants.TAG_MAIN, <span class="string">"Scan timed out, no ESP32 devices found"</span>);
-<span class="caretline"><span class="lineno">  675 </span>                <span class="warning">showToast</span>(<span class="string">"No ESP32 devices found nearby"</span>);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  676 </span>                updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
-<span class="lineno">  677 </span>            }
-<span class="lineno">  678 </span>        }, SCAN_TIMEOUT);
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:680</span>: <span class="message">Access to <code>private</code> method <code>showToast</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  677 </span>            <span class="annotation">@Override</span>
+<span class="lineno">  678 </span>            <span class="keyword">public</span> <span class="keyword">void</span> onScanTimeout() {
+<span class="lineno">  679 </span>                Log.d(Constants.TAG_MAIN, <span class="string">"Scan timed out, no ESP32 devices found"</span>);
+<span class="caretline"><span class="lineno">  680 </span>                <span class="warning">showToast</span>(<span class="string">"No ESP32 devices found nearby"</span>);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  681 </span>                updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+<span class="lineno">  682 </span>            }
+<span class="lineno">  683 </span>        }, SCAN_TIMEOUT);
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:676</span>: <span class="message">Access to <code>private</code> method <code>updateConnectionUI</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  673 </span>            <span class="keyword">public</span> <span class="keyword">void</span> onScanTimeout() {
-<span class="lineno">  674 </span>                Log.d(Constants.TAG_MAIN, <span class="string">"Scan timed out, no ESP32 devices found"</span>);
-<span class="lineno">  675 </span>                showToast(<span class="string">"No ESP32 devices found nearby"</span>);
-<span class="caretline"><span class="lineno">  676 </span>                <span class="warning">updateConnectionUI</span>(BleConnectionManager.ConnectionState.DISCONNECTED);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  677 </span>            }
-<span class="lineno">  678 </span>        }, SCAN_TIMEOUT);
-<span class="lineno">  679 </span>        
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:681</span>: <span class="message">Access to <code>private</code> method <code>updateConnectionUI</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  678 </span>            <span class="keyword">public</span> <span class="keyword">void</span> onScanTimeout() {
+<span class="lineno">  679 </span>                Log.d(Constants.TAG_MAIN, <span class="string">"Scan timed out, no ESP32 devices found"</span>);
+<span class="lineno">  680 </span>                showToast(<span class="string">"No ESP32 devices found nearby"</span>);
+<span class="caretline"><span class="lineno">  681 </span>                <span class="warning">updateConnectionUI</span>(BleConnectionManager.ConnectionState.DISCONNECTED);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  682 </span>            }
+<span class="lineno">  683 </span>        }, SCAN_TIMEOUT);
+<span class="lineno">  684 </span>        
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:867</span>: <span class="message">Access to <code>private</code> field <code>mainHandler</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  864 </span>  <span class="keyword">if</span> (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
-<span class="lineno">  865 </span>      <span class="keyword">final</span> <span class="keyword">int</span> state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-<span class="lineno">  866 </span>
-<span class="caretline"><span class="lineno">  867 </span>      <span class="warning">mainHandler</span>.post(() -> {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  868 </span>          <span class="keyword">switch</span> (state) {
-<span class="lineno">  869 </span>              <span class="keyword">case</span> BluetoothAdapter.STATE_OFF:
-<span class="lineno">  870 </span>                  Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turned off"</span>);
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:872</span>: <span class="message">Access to <code>private</code> field <code>mainHandler</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  869 </span>  <span class="keyword">if</span> (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
+<span class="lineno">  870 </span>      <span class="keyword">final</span> <span class="keyword">int</span> state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+<span class="lineno">  871 </span>
+<span class="caretline"><span class="lineno">  872 </span>      <span class="warning">mainHandler</span>.post(() -> {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  873 </span>          <span class="keyword">switch</span> (state) {
+<span class="lineno">  874 </span>              <span class="keyword">case</span> BluetoothAdapter.STATE_OFF:
+<span class="lineno">  875 </span>                  Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turned off"</span>);
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:871</span>: <span class="message">Access to <code>private</code> method <code>updateConnectionUI</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  868 </span>  <span class="keyword">switch</span> (state) {
-<span class="lineno">  869 </span>      <span class="keyword">case</span> BluetoothAdapter.STATE_OFF:
-<span class="lineno">  870 </span>          Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turned off"</span>);
-<span class="caretline"><span class="lineno">  871 </span>          <span class="warning">updateConnectionUI</span>(BleConnectionManager.ConnectionState.DISCONNECTED);&nbsp;&nbsp;</span>
-<span class="lineno">  872 </span>          connectionHelper.setText(R.string.bluetooth_disabled);
-<span class="lineno">  873 </span>          <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
-<span class="lineno">  874 </span>              showToast(<span class="string">"Bluetooth turned off"</span>);
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:876</span>: <span class="message">Access to <code>private</code> method <code>updateConnectionUI</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  873 </span>  <span class="keyword">switch</span> (state) {
+<span class="lineno">  874 </span>      <span class="keyword">case</span> BluetoothAdapter.STATE_OFF:
+<span class="lineno">  875 </span>          Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turned off"</span>);
+<span class="caretline"><span class="lineno">  876 </span>          <span class="warning">updateConnectionUI</span>(BleConnectionManager.ConnectionState.DISCONNECTED);&nbsp;&nbsp;</span>
+<span class="lineno">  877 </span>          connectionHelper.setText(R.string.bluetooth_disabled);
+<span class="lineno">  878 </span>          <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
+<span class="lineno">  879 </span>              showToast(<span class="string">"Bluetooth turned off"</span>);
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:872</span>: <span class="message">Access to <code>private</code> field <code>connectionHelper</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  869 </span>  <span class="keyword">case</span> BluetoothAdapter.STATE_OFF:
-<span class="lineno">  870 </span>      Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turned off"</span>);
-<span class="lineno">  871 </span>      updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
-<span class="caretline"><span class="lineno">  872 </span>      <span class="warning">connectionHelper</span>.setText(R.string.bluetooth_disabled);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  873 </span>      <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
-<span class="lineno">  874 </span>          showToast(<span class="string">"Bluetooth turned off"</span>);
-<span class="lineno">  875 </span>      }
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:877</span>: <span class="message">Access to <code>private</code> field <code>connectionHelper</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  874 </span>  <span class="keyword">case</span> BluetoothAdapter.STATE_OFF:
+<span class="lineno">  875 </span>      Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turned off"</span>);
+<span class="lineno">  876 </span>      updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+<span class="caretline"><span class="lineno">  877 </span>      <span class="warning">connectionHelper</span>.setText(R.string.bluetooth_disabled);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  878 </span>      <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
+<span class="lineno">  879 </span>          showToast(<span class="string">"Bluetooth turned off"</span>);
+<span class="lineno">  880 </span>      }
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:874</span>: <span class="message">Access to <code>private</code> method <code>showToast</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  871 </span>  updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
-<span class="lineno">  872 </span>  connectionHelper.setText(R.string.bluetooth_disabled);
-<span class="lineno">  873 </span>  <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
-<span class="caretline"><span class="lineno">  874 </span>      <span class="warning">showToast</span>(<span class="string">"Bluetooth turned off"</span>);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  875 </span>  }
-<span class="lineno">  876 </span>  <span class="keyword">break</span>;
-<span class="lineno">  877 </span>  
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:879</span>: <span class="message">Access to <code>private</code> method <code>showToast</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  876 </span>  updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
+<span class="lineno">  877 </span>  connectionHelper.setText(R.string.bluetooth_disabled);
+<span class="lineno">  878 </span>  <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
+<span class="caretline"><span class="lineno">  879 </span>      <span class="warning">showToast</span>(<span class="string">"Bluetooth turned off"</span>);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  880 </span>  }
+<span class="lineno">  881 </span>  <span class="keyword">break</span>;
+<span class="lineno">  882 </span>  
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:884</span>: <span class="message">Access to <code>private</code> field <code>connectionHelper</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  881 </span>                
-<span class="lineno">  882 </span>                    <span class="keyword">case</span> BluetoothAdapter.STATE_TURNING_ON:
-<span class="lineno">  883 </span>                        Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turning on"</span>);
-<span class="caretline"><span class="lineno">  884 </span>                        <span class="warning">connectionHelper</span>.setText(R.string.bluetooth_enabling);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  885 </span>                <span class="keyword">break</span>;
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:889</span>: <span class="message">Access to <code>private</code> field <code>connectionHelper</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
 <span class="lineno">  886 </span>                
-<span class="lineno">  887 </span>                    <span class="keyword">case</span> BluetoothAdapter.STATE_ON:
+<span class="lineno">  887 </span>                    <span class="keyword">case</span> BluetoothAdapter.STATE_TURNING_ON:
+<span class="lineno">  888 </span>                        Log.d(Constants.TAG_MAIN, <span class="string">"Bluetooth turning on"</span>);
+<span class="caretline"><span class="lineno">  889 </span>                        <span class="warning">connectionHelper</span>.setText(R.string.bluetooth_enabling);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  890 </span>                <span class="keyword">break</span>;
+<span class="lineno">  891 </span>                
+<span class="lineno">  892 </span>                    <span class="keyword">case</span> BluetoothAdapter.STATE_ON:
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:892</span>: <span class="message">Access to <code>private</code> field <code>connectionManager</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  889 </span>  <span class="keyword">boolean</span> autoReconnect = getSharedPreferences(<span class="string">"app_prefs"</span>, MODE_PRIVATE)
-<span class="lineno">  890 </span>          .getBoolean(<span class="string">"auto_reconnect"</span>, <span class="keyword">true</span>);
-<span class="lineno">  891 </span>  
-<span class="caretline"><span class="lineno">  892 </span>  <span class="keyword">if</span> (autoReconnect &amp;&amp; <span class="warning">connectionManager</span>.getLastConnectedDevice() != <span class="keyword">null</span>) {</span>
-<span class="lineno">  893 </span>
-<span class="lineno">  894 </span>      mainHandler.postDelayed(() -> {
-<span class="lineno">  895 </span>          <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:897</span>: <span class="message">Access to <code>private</code> field <code>connectionManager</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  894 </span>  <span class="keyword">boolean</span> autoReconnect = getSharedPreferences(<span class="string">"app_prefs"</span>, MODE_PRIVATE)
+<span class="lineno">  895 </span>          .getBoolean(<span class="string">"auto_reconnect"</span>, <span class="keyword">true</span>);
+<span class="lineno">  896 </span>  
+<span class="caretline"><span class="lineno">  897 </span>  <span class="keyword">if</span> (autoReconnect &amp;&amp; <span class="warning">connectionManager</span>.getLastConnectedDevice() != <span class="keyword">null</span>) {</span>
+<span class="lineno">  898 </span>
+<span class="lineno">  899 </span>      mainHandler.postDelayed(() -> {
+<span class="lineno">  900 </span>          <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:894</span>: <span class="message">Access to <code>private</code> field <code>mainHandler</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  891 </span>  
-<span class="lineno">  892 </span>  <span class="keyword">if</span> (autoReconnect &amp;&amp; connectionManager.getLastConnectedDevice() != <span class="keyword">null</span>) {
-<span class="lineno">  893 </span>
-<span class="caretline"><span class="lineno">  894 </span>      <span class="warning">mainHandler</span>.postDelayed(() -> {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  895 </span>          <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
-<span class="lineno">  896 </span>              startReconnectionProcess();
-<span class="lineno">  897 </span>          }
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:899</span>: <span class="message">Access to <code>private</code> field <code>mainHandler</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  896 </span>  
+<span class="lineno">  897 </span>  <span class="keyword">if</span> (autoReconnect &amp;&amp; connectionManager.getLastConnectedDevice() != <span class="keyword">null</span>) {
+<span class="lineno">  898 </span>
+<span class="caretline"><span class="lineno">  899 </span>      <span class="warning">mainHandler</span>.postDelayed(() -> {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  900 </span>          <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
+<span class="lineno">  901 </span>              startReconnectionProcess();
+<span class="lineno">  902 </span>          }
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:896</span>: <span class="message">Access to <code>private</code> method <code>startReconnectionProcess</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  893 </span>
-<span class="lineno">  894 </span>                                mainHandler.postDelayed(() -> {
-<span class="lineno">  895 </span>                                    <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
-<span class="caretline"><span class="lineno">  896 </span>                                        <span class="warning">startReconnectionProcess</span>();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  897 </span>                                    }
-<span class="lineno">  898 </span>                                }, <span class="number">1500</span>);
-<span class="lineno">  899 </span>        } <span class="keyword">else</span> {
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:901</span>: <span class="message">Access to <code>private</code> method <code>startReconnectionProcess</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  898 </span>
+<span class="lineno">  899 </span>                                mainHandler.postDelayed(() -> {
+<span class="lineno">  900 </span>                                    <span class="keyword">if</span> (!isFinishing() &amp;&amp; !isDestroyed()) {
+<span class="caretline"><span class="lineno">  901 </span>                                        <span class="warning">startReconnectionProcess</span>();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  902 </span>                                    }
+<span class="lineno">  903 </span>                                }, <span class="number">1500</span>);
+<span class="lineno">  904 </span>        } <span class="keyword">else</span> {
 </pre>
 
-<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:900</span>: <span class="message">Access to <code>private</code> field <code>connectionHelper</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
-<span class="lineno">  897 </span>                                    }
-<span class="lineno">  898 </span>                                }, <span class="number">1500</span>);
-<span class="lineno">  899 </span>        } <span class="keyword">else</span> {
-<span class="caretline"><span class="lineno">  900 </span>                                <span class="warning">connectionHelper</span>.setText(R.string.ready_to_connect);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  901 </span>                            }
-<span class="lineno">  902 </span>                            
-<span class="lineno">  903 </span>                            <span class="comment">// Only show toast if app is in foreground</span></pre>
+<span class="location"><a href="../../src/main/java/com/team12/smarthat/activities/MainActivity.java">../../src/main/java/com/team12/smarthat/activities/MainActivity.java</a>:905</span>: <span class="message">Access to <code>private</code> field <code>connectionHelper</code> of class <code>MainActivity</code> requires synthetic accessor</span><br /><pre class="errorlines">
+<span class="lineno">  902 </span>                                    }
+<span class="lineno">  903 </span>                                }, <span class="number">1500</span>);
+<span class="lineno">  904 </span>        } <span class="keyword">else</span> {
+<span class="caretline"><span class="lineno">  905 </span>                                <span class="warning">connectionHelper</span>.setText(R.string.ready_to_connect);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  906 </span>                            }
+<span class="lineno">  907 </span>                            
+<span class="lineno">  908 </span>                            <span class="comment">// Only show toast if app is in foreground</span></pre>
 
 <br/><b>NOTE: 30 results omitted.</b><br/><br/></div>
 </div>
@@ -1994,7 +1994,7 @@ Dismiss</button>            </div>
 <span class="lineno">  69 </span>            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
 <span class="lineno">  70 </span>            <span class="prefix">android:</span><span class="attribute">layout_weight</span>=<span class="value">"1"</span></pre>
 
-<button class="mdl-button mdl-js-button mdl-button--primary" id="UnusedIdsDivLink" onclick="reveal('UnusedIdsDiv');" />+ 16 More Occurrences...</button>
+<button class="mdl-button mdl-js-button mdl-button--primary" id="UnusedIdsDivLink" onclick="reveal('UnusedIdsDiv');" />+ 17 More Occurrences...</button>
 <div id="UnusedIdsDiv" style="display: none">
 <span class="location"><a href="../../src/main/res/layout/activity_ble_test.xml">../../src/main/res/layout/activity_ble_test.xml</a>:76</span>: <span class="message">The resource <code>R.id.btn_read_rssi</code> appears to be unused</span><br /><pre class="errorlines">
 <span class="lineno">  73 </span>    <span class="tag">&lt;/LinearLayout></span>
@@ -2033,6 +2033,15 @@ Dismiss</button>            </div>
 <span class="lineno"> 322 </span>        <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
 <span class="lineno"> 323 </span>        <span class="prefix">android:</span><span class="attribute">layout_marginBottom</span>=<span class="value">"12dp"</span></pre>
 
+<span class="location"><a href="../../src/main/res/layout/activity_profile.xml">../../src/main/res/layout/activity_profile.xml</a>:36</span>: <span class="message">The resource <code>R.id.profile_image</code> appears to be unused</span><br /><pre class="errorlines">
+<span class="lineno"> 33 </span>            <span class="prefix">android:</span><span class="attribute">padding</span>=<span class="value">"16dp"</span>>
+<span class="lineno"> 34 </span>
+<span class="lineno"> 35 </span>            <span class="tag">&lt;ImageView</span><span class="attribute">
+</span><span class="caretline"><span class="lineno"> 36 </span><span class="attribute">                </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/profile_image"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 37 </span>                <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"120dp"</span>
+<span class="lineno"> 38 </span>                <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"120dp"</span>
+<span class="lineno"> 39 </span>                <span class="prefix">android:</span><span class="attribute">layout_marginTop</span>=<span class="value">"32dp"</span></pre>
+
 <span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:13</span>: <span class="message">The resource <code>R.id.settings_toolbar</code> appears to be unused</span><br /><pre class="errorlines">
 <span class="lineno">  10 </span>    <span class="prefix">tools:</span><span class="attribute">context</span>=<span class="value">".activities.SettingsActivity"</span>>
 <span class="lineno">  11 </span>
@@ -2042,96 +2051,96 @@ Dismiss</button>            </div>
 <span class="lineno">  15 </span>        <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"?attr/actionBarSize"</span>
 <span class="lineno">  16 </span>        <span class="prefix">android:</span><span class="attribute">background</span>=<span class="value">"?attr/colorPrimary"</span></pre>
 
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:89</span>: <span class="message">The resource <code>R.id.switch_notifications</code> appears to be unused</span><br /><pre class="errorlines">
-<span class="lineno">  86 </span>                        <span class="tag">&lt;/LinearLayout></span>
-<span class="lineno">  87 </span>
-<span class="lineno">  88 </span>                        <span class="tag">&lt;androidx.appcompat.widget.SwitchCompat</span><span class="attribute">
-</span><span class="caretline"><span class="lineno">  89 </span><span class="attribute">                            </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/switch_notifications"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  90 </span>                            <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
-<span class="lineno">  91 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="lineno">  92 </span>                            <span class="prefix">android:</span><span class="attribute">layout_gravity</span>=<span class="value">"center_vertical"</span></pre>
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:82</span>: <span class="message">The resource <code>R.id.switch_notifications</code> appears to be unused</span><br /><pre class="errorlines">
+<span class="lineno">  79 </span>                        <span class="tag">&lt;/LinearLayout></span>
+<span class="lineno">  80 </span>
+<span class="lineno">  81 </span>                        <span class="tag">&lt;androidx.appcompat.widget.SwitchCompat</span><span class="attribute">
+</span><span class="caretline"><span class="lineno">  82 </span><span class="attribute">                            </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/switch_notifications"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  83 </span>                            <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
+<span class="lineno">  84 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="lineno">  85 </span>                            <span class="prefix">android:</span><span class="attribute">layout_gravity</span>=<span class="value">"center_vertical"</span></pre>
 
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:136</span>: <span class="message">The resource <code>R.id.switch_dust_notifications</code> appears to be unused</span><br /><pre class="errorlines">
-<span class="lineno"> 133 </span>                        <span class="tag">&lt;/LinearLayout></span>
-<span class="lineno"> 134 </span>
-<span class="lineno"> 135 </span>                        <span class="tag">&lt;androidx.appcompat.widget.SwitchCompat</span><span class="attribute">
-</span><span class="caretline"><span class="lineno"> 136 </span><span class="attribute">                            </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/switch_dust_notifications"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 137 </span>                            <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 138 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 139 </span>                            <span class="prefix">android:</span><span class="attribute">layout_gravity</span>=<span class="value">"center_vertical"</span></pre>
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:122</span>: <span class="message">The resource <code>R.id.switch_dust_notifications</code> appears to be unused</span><br /><pre class="errorlines">
+<span class="lineno"> 119 </span>                        <span class="tag">&lt;/LinearLayout></span>
+<span class="lineno"> 120 </span>
+<span class="lineno"> 121 </span>                        <span class="tag">&lt;androidx.appcompat.widget.SwitchCompat</span><span class="attribute">
+</span><span class="caretline"><span class="lineno"> 122 </span><span class="attribute">                            </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/switch_dust_notifications"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 123 </span>                            <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 124 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 125 </span>                            <span class="prefix">android:</span><span class="attribute">layout_gravity</span>=<span class="value">"center_vertical"</span></pre>
 
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:173</span>: <span class="message">The resource <code>R.id.switch_noise_notifications</code> appears to be unused</span><br /><pre class="errorlines">
-<span class="lineno"> 170 </span>                        <span class="tag">&lt;/LinearLayout></span>
-<span class="lineno"> 171 </span>
-<span class="lineno"> 172 </span>                        <span class="tag">&lt;androidx.appcompat.widget.SwitchCompat</span><span class="attribute">
-</span><span class="caretline"><span class="lineno"> 173 </span><span class="attribute">                            </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/switch_noise_notifications"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 174 </span>                            <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 175 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 176 </span>                            <span class="prefix">android:</span><span class="attribute">layout_gravity</span>=<span class="value">"center_vertical"</span> />
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:152</span>: <span class="message">The resource <code>R.id.switch_noise_notifications</code> appears to be unused</span><br /><pre class="errorlines">
+<span class="lineno"> 149 </span>                        <span class="tag">&lt;/LinearLayout></span>
+<span class="lineno"> 150 </span>
+<span class="lineno"> 151 </span>                        <span class="tag">&lt;androidx.appcompat.widget.SwitchCompat</span><span class="attribute">
+</span><span class="caretline"><span class="lineno"> 152 </span><span class="attribute">                            </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/switch_noise_notifications"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 153 </span>                            <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 154 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 155 </span>                            <span class="prefix">android:</span><span class="attribute">layout_gravity</span>=<span class="value">"center_vertical"</span> />
 </pre>
 
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:228</span>: <span class="message">The resource <code>R.id.txt_dust_threshold_value</code> appears to be unused</span><br /><pre class="errorlines">
-<span class="lineno"> 225 </span>                            <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"14sp"</span> />
-<span class="lineno"> 226 </span>
-<span class="lineno"> 227 </span>                        <span class="tag">&lt;TextView</span><span class="attribute">
-</span><span class="caretline"><span class="lineno"> 228 </span><span class="attribute">                            </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/txt_dust_threshold_value"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 229 </span>                            <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 230 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 231 </span>                            <span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"50.0 μg/m³"</span></pre>
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:207</span>: <span class="message">The resource <code>R.id.txt_dust_threshold_value</code> appears to be unused</span><br /><pre class="errorlines">
+<span class="lineno"> 204 </span>                            <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"14sp"</span> />
+<span class="lineno"> 205 </span>
+<span class="lineno"> 206 </span>                        <span class="tag">&lt;TextView</span><span class="attribute">
+</span><span class="caretline"><span class="lineno"> 207 </span><span class="attribute">                            </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/txt_dust_threshold_value"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 208 </span>                            <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 209 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 210 </span>                            <span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"50.0 μg/m³"</span></pre>
 
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:236</span>: <span class="message">The resource <code>R.id.txt_dust_threshold_risk</code> appears to be unused</span><br /><pre class="errorlines">
-<span class="lineno"> 233 </span>                            <span class="prefix">android:</span><span class="attribute">textStyle</span>=<span class="value">"bold"</span> />
-<span class="lineno"> 234 </span>                        
-<span class="lineno"> 235 </span>                        <span class="tag">&lt;TextView</span><span class="attribute">
-</span><span class="caretline"><span class="lineno"> 236 </span><span class="attribute">                            </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/txt_dust_threshold_risk"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 237 </span>                            <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"0dp"</span>
-<span class="lineno"> 238 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 239 </span>                            <span class="prefix">android:</span><span class="attribute">layout_weight</span>=<span class="value">"1"</span></pre>
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:215</span>: <span class="message">The resource <code>R.id.txt_dust_threshold_risk</code> appears to be unused</span><br /><pre class="errorlines">
+<span class="lineno"> 212 </span>                            <span class="prefix">android:</span><span class="attribute">textStyle</span>=<span class="value">"bold"</span> />
+<span class="lineno"> 213 </span>                        
+<span class="lineno"> 214 </span>                        <span class="tag">&lt;TextView</span><span class="attribute">
+</span><span class="caretline"><span class="lineno"> 215 </span><span class="attribute">                            </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/txt_dust_threshold_risk"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 216 </span>                            <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"0dp"</span>
+<span class="lineno"> 217 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 218 </span>                            <span class="prefix">android:</span><span class="attribute">layout_weight</span>=<span class="value">"1"</span></pre>
 
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:247</span>: <span class="message">The resource <code>R.id.slider_dust_threshold</code> appears to be unused</span><br /><pre class="errorlines">
-<span class="lineno"> 244 </span>                    <span class="tag">&lt;/LinearLayout></span>
-<span class="lineno"> 245 </span>
-<span class="lineno"> 246 </span>                    <span class="tag">&lt;com.google.android.material.slider.Slider</span><span class="attribute">
-</span><span class="caretline"><span class="lineno"> 247 </span><span class="attribute">                        </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/slider_dust_threshold"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 248 </span>                        <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"match_parent"</span>
-<span class="lineno"> 249 </span>                        <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 250 </span>                        <span class="prefix">android:</span><span class="attribute">layout_marginTop</span>=<span class="value">"4dp"</span></pre>
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:226</span>: <span class="message">The resource <code>R.id.slider_dust_threshold</code> appears to be unused</span><br /><pre class="errorlines">
+<span class="lineno"> 223 </span>                    <span class="tag">&lt;/LinearLayout></span>
+<span class="lineno"> 224 </span>
+<span class="lineno"> 225 </span>                    <span class="tag">&lt;com.google.android.material.slider.Slider</span><span class="attribute">
+</span><span class="caretline"><span class="lineno"> 226 </span><span class="attribute">                        </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/slider_dust_threshold"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 227 </span>                        <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"match_parent"</span>
+<span class="lineno"> 228 </span>                        <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 229 </span>                        <span class="prefix">android:</span><span class="attribute">layout_marginTop</span>=<span class="value">"4dp"</span></pre>
 
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:284</span>: <span class="message">The resource <code>R.id.txt_noise_threshold_value</code> appears to be unused</span><br /><pre class="errorlines">
-<span class="lineno"> 281 </span>                            <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"14sp"</span> />
-<span class="lineno"> 282 </span>
-<span class="lineno"> 283 </span>                        <span class="tag">&lt;TextView</span><span class="attribute">
-</span><span class="caretline"><span class="lineno"> 284 </span><span class="attribute">                            </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/txt_noise_threshold_value"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 285 </span>                            <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 286 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 287 </span>                            <span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"85.0 dB"</span></pre>
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:263</span>: <span class="message">The resource <code>R.id.txt_noise_threshold_value</code> appears to be unused</span><br /><pre class="errorlines">
+<span class="lineno"> 260 </span>                            <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"14sp"</span> />
+<span class="lineno"> 261 </span>
+<span class="lineno"> 262 </span>                        <span class="tag">&lt;TextView</span><span class="attribute">
+</span><span class="caretline"><span class="lineno"> 263 </span><span class="attribute">                            </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/txt_noise_threshold_value"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 264 </span>                            <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 265 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 266 </span>                            <span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"85.0 dB"</span></pre>
 
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:292</span>: <span class="message">The resource <code>R.id.txt_noise_threshold_risk</code> appears to be unused</span><br /><pre class="errorlines">
-<span class="lineno"> 289 </span>                            <span class="prefix">android:</span><span class="attribute">textStyle</span>=<span class="value">"bold"</span> />
-<span class="lineno"> 290 </span>                        
-<span class="lineno"> 291 </span>                        <span class="tag">&lt;TextView</span><span class="attribute">
-</span><span class="caretline"><span class="lineno"> 292 </span><span class="attribute">                            </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/txt_noise_threshold_risk"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 293 </span>                            <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"0dp"</span>
-<span class="lineno"> 294 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 295 </span>                            <span class="prefix">android:</span><span class="attribute">layout_weight</span>=<span class="value">"1"</span></pre>
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:271</span>: <span class="message">The resource <code>R.id.txt_noise_threshold_risk</code> appears to be unused</span><br /><pre class="errorlines">
+<span class="lineno"> 268 </span>                            <span class="prefix">android:</span><span class="attribute">textStyle</span>=<span class="value">"bold"</span> />
+<span class="lineno"> 269 </span>                        
+<span class="lineno"> 270 </span>                        <span class="tag">&lt;TextView</span><span class="attribute">
+</span><span class="caretline"><span class="lineno"> 271 </span><span class="attribute">                            </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/txt_noise_threshold_risk"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 272 </span>                            <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"0dp"</span>
+<span class="lineno"> 273 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 274 </span>                            <span class="prefix">android:</span><span class="attribute">layout_weight</span>=<span class="value">"1"</span></pre>
 
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:303</span>: <span class="message">The resource <code>R.id.slider_noise_threshold</code> appears to be unused</span><br /><pre class="errorlines">
-<span class="lineno"> 300 </span>                    <span class="tag">&lt;/LinearLayout></span>
-<span class="lineno"> 301 </span>
-<span class="lineno"> 302 </span>                    <span class="tag">&lt;com.google.android.material.slider.Slider</span><span class="attribute">
-</span><span class="caretline"><span class="lineno"> 303 </span><span class="attribute">                        </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/slider_noise_threshold"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 304 </span>                        <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"match_parent"</span>
-<span class="lineno"> 305 </span>                        <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 306 </span>                        <span class="prefix">android:</span><span class="attribute">layout_marginTop</span>=<span class="value">"4dp"</span></pre>
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:282</span>: <span class="message">The resource <code>R.id.slider_noise_threshold</code> appears to be unused</span><br /><pre class="errorlines">
+<span class="lineno"> 279 </span>                    <span class="tag">&lt;/LinearLayout></span>
+<span class="lineno"> 280 </span>
+<span class="lineno"> 281 </span>                    <span class="tag">&lt;com.google.android.material.slider.Slider</span><span class="attribute">
+</span><span class="caretline"><span class="lineno"> 282 </span><span class="attribute">                        </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/slider_noise_threshold"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 283 </span>                        <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"match_parent"</span>
+<span class="lineno"> 284 </span>                        <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 285 </span>                        <span class="prefix">android:</span><span class="attribute">layout_marginTop</span>=<span class="value">"4dp"</span></pre>
 
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:319</span>: <span class="message">The resource <code>R.id.btn_reset_thresholds</code> appears to be unused</span><br /><pre class="errorlines">
-<span class="lineno"> 316 </span>                        <span class="prefix">app:</span><span class="attribute">trackColorInactive</span>=<span class="value">"#E0E0E0"</span> />
-<span class="lineno"> 317 </span>
-<span class="lineno"> 318 </span>                    <span class="tag">&lt;androidx.appcompat.widget.AppCompatButton</span><span class="attribute">
-</span><span class="caretline"><span class="lineno"> 319 </span><span class="attribute">                        </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/btn_reset_thresholds"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 320 </span>                        <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 321 </span>                        <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"36dp"</span>
-<span class="lineno"> 322 </span>                        <span class="prefix">android:</span><span class="attribute">layout_gravity</span>=<span class="value">"end"</span></pre>
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:298</span>: <span class="message">The resource <code>R.id.btn_reset_thresholds</code> appears to be unused</span><br /><pre class="errorlines">
+<span class="lineno"> 295 </span>                        <span class="prefix">app:</span><span class="attribute">trackColorInactive</span>=<span class="value">"#E0E0E0"</span> />
+<span class="lineno"> 296 </span>
+<span class="lineno"> 297 </span>                    <span class="tag">&lt;androidx.appcompat.widget.AppCompatButton</span><span class="attribute">
+</span><span class="caretline"><span class="lineno"> 298 </span><span class="attribute">                        </span><span class="warning"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/btn_reset_thresholds"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 299 </span>                        <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 300 </span>                        <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"36dp"</span>
+<span class="lineno"> 301 </span>                        <span class="prefix">android:</span><span class="attribute">layout_gravity</span>=<span class="value">"end"</span></pre>
 
 <span class="location"><a href="../../src/main/res/layout/activity_threshold_history.xml">../../src/main/res/layout/activity_threshold_history.xml</a>:30</span>: <span class="message">The resource <code>R.id.tv_history_title</code> appears to be unused</span><br /><pre class="errorlines">
 <span class="lineno"> 27 </span>            <span class="prefix">android:</span><span class="attribute">tint</span>=<span class="value">"#3F51B5"</span> />
@@ -2778,6 +2787,46 @@ Dismiss</button>            </div>
 <span class="lineno"> 16 </span>        <span class="prefix">app:</span><span class="attribute">layout_constraintBottom_toBottomOf</span>=<span class="value">"parent"</span>
 <span class="lineno"> 17 </span>        <span class="prefix">app:</span><span class="attribute">layout_constraintEnd_toEndOf</span>=<span class="value">"parent"</span></pre>
 
+<span class="location"><a href="../../src/main/res/layout/activity_profile.xml">../../src/main/res/layout/activity_profile.xml</a>:21</span>: <span class="message">Hardcoded string "Profile toolbar", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 18 </span>        <span class="prefix">android:</span><span class="attribute">theme</span>=<span class="value">"@style/ThemeOverlay.AppCompat.ActionBar"</span>
+<span class="lineno"> 19 </span>        <span class="prefix">app:</span><span class="attribute">popupTheme</span>=<span class="value">"@style/ThemeOverlay.AppCompat.Light"</span>
+<span class="lineno"> 20 </span>        <span class="prefix">app:</span><span class="attribute">title</span>=<span class="value">"Profile"</span> 
+<span class="caretline"><span class="lineno"> 21 </span>        <span class="warning"><span class="prefix">android:</span><span class="attribute">contentDescription</span>=<span class="value">"Profile toolbar"</span></span>/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 22 </span>
+<span class="lineno"> 23 </span>    <span class="tag">&lt;ScrollView</span><span class="attribute">
+</span><span class="lineno"> 24 </span><span class="attribute">        </span><span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"match_parent"</span></pre>
+
+<span class="location"><a href="../../src/main/res/layout/activity_profile.xml">../../src/main/res/layout/activity_profile.xml</a>:42</span>: <span class="message">Hardcoded string "Profile picture", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 39 </span>                <span class="prefix">android:</span><span class="attribute">layout_marginTop</span>=<span class="value">"32dp"</span>
+<span class="lineno"> 40 </span>                <span class="prefix">android:</span><span class="attribute">layout_marginBottom</span>=<span class="value">"24dp"</span>
+<span class="lineno"> 41 </span>                <span class="prefix">android:</span><span class="attribute">src</span>=<span class="value">"@drawable/ic_profile"</span>
+<span class="caretline"><span class="lineno"> 42 </span>                <span class="warning"><span class="prefix">android:</span><span class="attribute">contentDescription</span>=<span class="value">"Profile picture"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 43 </span>                <span class="prefix">android:</span><span class="attribute">background</span>=<span class="value">"@android:color/darker_gray"</span>
+<span class="lineno"> 44 </span>                <span class="prefix">android:</span><span class="attribute">scaleType</span>=<span class="value">"fitCenter"</span>
+<span class="lineno"> 45 </span>                <span class="prefix">android:</span><span class="attribute">padding</span>=<span class="value">"16dp"</span>/>
+</pre>
+
+<span class="location"><a href="../../src/main/res/layout/activity_profile.xml">../../src/main/res/layout/activity_profile.xml</a>:50</span>: <span class="message">Hardcoded string "User Profile", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 47 </span>            <span class="tag">&lt;TextView</span><span class="attribute">
+</span><span class="lineno"> 48 </span><span class="attribute">                </span><span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"match_parent"</span>
+<span class="lineno"> 49 </span>                <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="caretline"><span class="lineno"> 50 </span>                <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"User Profile"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 51 </span>                <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"24sp"</span>
+<span class="lineno"> 52 </span>                <span class="prefix">android:</span><span class="attribute">textStyle</span>=<span class="value">"bold"</span>
+<span class="lineno"> 53 </span>                <span class="prefix">android:</span><span class="attribute">layout_marginBottom</span>=<span class="value">"32dp"</span></pre>
+
+<span class="location"><a href="../../src/main/res/layout/activity_profile.xml">../../src/main/res/layout/activity_profile.xml</a>:59</span>: <span class="message">Hardcoded string "This section will be used for user authentication and profile information in future updates. Stay tuned!", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 56 </span>  <span class="tag">&lt;TextView</span><span class="attribute">
+</span><span class="lineno"> 57 </span><span class="attribute">      </span><span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"match_parent"</span>
+<span class="lineno"> 58 </span>      <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="caretline"><span class="lineno"> 59 </span>      <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"This section will be used for user authentication and profile information in future updates. Stay tuned!"</span></span></span>
+<span class="lineno"> 60 </span>      <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"16sp"</span>
+<span class="lineno"> 61 </span>      <span class="prefix">android:</span><span class="attribute">gravity</span>=<span class="value">"center"</span>
+<span class="lineno"> 62 </span>      <span class="prefix">android:</span><span class="attribute">layout_marginBottom</span>=<span class="value">"24dp"</span>/>
+</pre>
+
+<button class="mdl-button mdl-js-button mdl-button--primary" id="HardcodedTextDivLink" onclick="reveal('HardcodedTextDiv');" />+ 29 More Occurrences...</button>
+<div id="HardcodedTextDiv" style="display: none">
 <span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:21</span>: <span class="message">Hardcoded string "Settings toolbar", should use <code>@string</code> resource</span><br /><pre class="errorlines">
 <span class="lineno">  18 </span>        <span class="prefix">android:</span><span class="attribute">theme</span>=<span class="value">"@style/ThemeOverlay.AppCompat.ActionBar"</span>
 <span class="lineno">  19 </span>        <span class="prefix">app:</span><span class="attribute">popupTheme</span>=<span class="value">"@style/ThemeOverlay.AppCompat.Light"</span>
@@ -2812,260 +2861,241 @@ Dismiss</button>            </div>
 <span class="caretline"><span class="lineno">  76 </span>                                <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Alert Notifications"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 <span class="lineno">  77 </span>                                <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"16sp"</span>
 <span class="lineno">  78 </span>                                <span class="prefix">android:</span><span class="attribute">textStyle</span>=<span class="value">"bold"</span> />
+<span class="lineno">  79 </span>                        <span class="tag">&lt;/LinearLayout></span></pre>
+
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:88</span>: <span class="message">Hardcoded string "Toggle all notifications", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno">  85 </span>                      <span class="prefix">android:</span><span class="attribute">layout_gravity</span>=<span class="value">"center_vertical"</span>
+<span class="lineno">  86 </span>                      <span class="prefix">android:</span><span class="attribute">minHeight</span>=<span class="value">"48dp"</span>
+<span class="lineno">  87 </span>                      <span class="prefix">android:</span><span class="attribute">minWidth</span>=<span class="value">"48dp"</span>
+<span class="caretline"><span class="lineno">  88 </span>                      <span class="warning"><span class="prefix">android:</span><span class="attribute">contentDescription</span>=<span class="value">"Toggle all notifications"</span></span> />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  89 </span>              <span class="tag">&lt;/LinearLayout></span>
+<span class="lineno">  90 </span>
+<span class="lineno">  91 </span>              <span class="tag">&lt;View</span></pre>
+
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:117</span>: <span class="message">Hardcoded string "Dust Notifications", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 114 </span>                            <span class="tag">&lt;TextView</span><span class="attribute">
+</span><span class="lineno"> 115 </span><span class="attribute">                                </span><span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 116 </span>                                <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="caretline"><span class="lineno"> 117 </span>                                <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Dust Notifications"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 118 </span>                                <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"16sp"</span> />
+<span class="lineno"> 119 </span>                        <span class="tag">&lt;/LinearLayout></span>
 </pre>
 
-<button class="mdl-button mdl-js-button mdl-button--primary" id="HardcodedTextDivLink" onclick="reveal('HardcodedTextDiv');" />+ 27 More Occurrences...</button>
-<div id="HardcodedTextDiv" style="display: none">
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:83</span>: <span class="message">Hardcoded string "Master switch for all sensor notifications", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno">  80 </span>             <span class="tag">&lt;TextView</span><span class="attribute">
-</span><span class="lineno">  81 </span><span class="attribute">                 </span><span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
-<span class="lineno">  82 </span>                 <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="caretline"><span class="lineno">  83 </span>                 <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Master switch for all sensor notifications"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  84 </span>                 <span class="prefix">android:</span><span class="attribute">textColor</span>=<span class="value">"@android:color/darker_gray"</span>
-<span class="lineno">  85 </span>                 <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"14sp"</span> />
-<span class="lineno">  86 </span>         <span class="tag">&lt;/LinearLayout></span></pre>
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:128</span>: <span class="message">Hardcoded string "Toggle dust notifications", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 125 </span>                     <span class="prefix">android:</span><span class="attribute">layout_gravity</span>=<span class="value">"center_vertical"</span>
+<span class="lineno"> 126 </span>                     <span class="prefix">android:</span><span class="attribute">minHeight</span>=<span class="value">"48dp"</span>
+<span class="lineno"> 127 </span>                     <span class="prefix">android:</span><span class="attribute">minWidth</span>=<span class="value">"48dp"</span>
+<span class="caretline"><span class="lineno"> 128 </span>                     <span class="warning"><span class="prefix">android:</span><span class="attribute">contentDescription</span>=<span class="value">"Toggle dust notifications"</span></span> />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 129 </span>             <span class="tag">&lt;/LinearLayout></span>
+<span class="lineno"> 130 </span>
+<span class="lineno"> 131 </span>             <span class="comment">&lt;!-- Noise Notifications Toggle --></span></pre>
 
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:95</span>: <span class="message">Hardcoded string "Toggle all notifications", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno">  92 </span>                      <span class="prefix">android:</span><span class="attribute">layout_gravity</span>=<span class="value">"center_vertical"</span>
-<span class="lineno">  93 </span>                      <span class="prefix">android:</span><span class="attribute">minHeight</span>=<span class="value">"48dp"</span>
-<span class="lineno">  94 </span>                      <span class="prefix">android:</span><span class="attribute">minWidth</span>=<span class="value">"48dp"</span>
-<span class="caretline"><span class="lineno">  95 </span>                      <span class="warning"><span class="prefix">android:</span><span class="attribute">contentDescription</span>=<span class="value">"Toggle all notifications"</span></span> />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  96 </span>              <span class="tag">&lt;/LinearLayout></span>
-<span class="lineno">  97 </span>
-<span class="lineno">  98 </span>              <span class="tag">&lt;View</span></pre>
-
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:124</span>: <span class="message">Hardcoded string "Dust Notifications", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 121 </span>                            <span class="tag">&lt;TextView</span><span class="attribute">
-</span><span class="lineno"> 122 </span><span class="attribute">                                </span><span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 123 </span>                                <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="caretline"><span class="lineno"> 124 </span>                                <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Dust Notifications"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 125 </span>                                <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"16sp"</span> />
-<span class="lineno"> 126 </span>
-<span class="lineno"> 127 </span>                            <span class="tag">&lt;TextView</span></pre>
-
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:130</span>: <span class="message">Hardcoded string "Get notifications when dust levels exceed threshold", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 127 </span>      <span class="tag">&lt;TextView</span><span class="attribute">
-</span><span class="lineno"> 128 </span><span class="attribute">          </span><span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 129 </span>          <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="caretline"><span class="lineno"> 130 </span>          <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Get notifications when dust levels exceed threshold"</span></span>&nbsp;&nbsp;</span>
-<span class="lineno"> 131 </span>          <span class="prefix">android:</span><span class="attribute">textColor</span>=<span class="value">"@android:color/darker_gray"</span>
-<span class="lineno"> 132 </span>          <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"14sp"</span> />
-<span class="lineno"> 133 </span>  <span class="tag">&lt;/LinearLayout></span></pre>
-
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:142</span>: <span class="message">Hardcoded string "Toggle dust notifications", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 139 </span>                     <span class="prefix">android:</span><span class="attribute">layout_gravity</span>=<span class="value">"center_vertical"</span>
-<span class="lineno"> 140 </span>                     <span class="prefix">android:</span><span class="attribute">minHeight</span>=<span class="value">"48dp"</span>
-<span class="lineno"> 141 </span>                     <span class="prefix">android:</span><span class="attribute">minWidth</span>=<span class="value">"48dp"</span>
-<span class="caretline"><span class="lineno"> 142 </span>                     <span class="warning"><span class="prefix">android:</span><span class="attribute">contentDescription</span>=<span class="value">"Toggle dust notifications"</span></span> />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 143 </span>             <span class="tag">&lt;/LinearLayout></span>
-<span class="lineno"> 144 </span>
-<span class="lineno"> 145 </span>             <span class="comment">&lt;!-- Noise Notifications Toggle --></span></pre>
-
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:161</span>: <span class="message">Hardcoded string "Noise Notifications", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 158 </span>                            <span class="tag">&lt;TextView</span><span class="attribute">
-</span><span class="lineno"> 159 </span><span class="attribute">                                </span><span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 160 </span>                                <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="caretline"><span class="lineno"> 161 </span>                                <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Noise Notifications"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 162 </span>                                <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"16sp"</span> />
-<span class="lineno"> 163 </span>
-<span class="lineno"> 164 </span>                            <span class="tag">&lt;TextView</span></pre>
-
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:167</span>: <span class="message">Hardcoded string "Get notifications when noise levels exceed threshold", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 164 </span>      <span class="tag">&lt;TextView</span><span class="attribute">
-</span><span class="lineno"> 165 </span><span class="attribute">          </span><span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 166 </span>          <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="caretline"><span class="lineno"> 167 </span>          <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Get notifications when noise levels exceed threshold"</span></span>&nbsp;</span>
-<span class="lineno"> 168 </span>          <span class="prefix">android:</span><span class="attribute">textColor</span>=<span class="value">"@android:color/darker_gray"</span>
-<span class="lineno"> 169 </span>          <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"14sp"</span> />
-<span class="lineno"> 170 </span>  <span class="tag">&lt;/LinearLayout></span></pre>
-
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:188</span>: <span class="message">Hardcoded string "Alert Thresholds", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 185 </span>                <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 186 </span>                <span class="prefix">android:</span><span class="attribute">layout_marginTop</span>=<span class="value">"16dp"</span>
-<span class="lineno"> 187 </span>                <span class="prefix">android:</span><span class="attribute">layout_marginBottom</span>=<span class="value">"8dp"</span>
-<span class="caretline"><span class="lineno"> 188 </span>                <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Alert Thresholds"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 189 </span>                <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"18sp"</span>
-<span class="lineno"> 190 </span>                <span class="prefix">android:</span><span class="attribute">textStyle</span>=<span class="value">"bold"</span> />
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:147</span>: <span class="message">Hardcoded string "Noise Notifications", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 144 </span>                            <span class="tag">&lt;TextView</span><span class="attribute">
+</span><span class="lineno"> 145 </span><span class="attribute">                                </span><span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 146 </span>                                <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="caretline"><span class="lineno"> 147 </span>                                <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Noise Notifications"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 148 </span>                                <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"16sp"</span> />
+<span class="lineno"> 149 </span>                        <span class="tag">&lt;/LinearLayout></span>
 </pre>
 
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:211</span>: <span class="message">Hardcoded string "Dust Alert Threshold", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 208 </span>                    <span class="tag">&lt;TextView</span><span class="attribute">
-</span><span class="lineno"> 209 </span><span class="attribute">                        </span><span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"match_parent"</span>
-<span class="lineno"> 210 </span>                        <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="caretline"><span class="lineno"> 211 </span>                        <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Dust Alert Threshold"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 212 </span>                        <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"16sp"</span> />
-<span class="lineno"> 213 </span>
-<span class="lineno"> 214 </span>                    <span class="tag">&lt;LinearLayout</span></pre>
-
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:224</span>: <span class="message">Hardcoded string "Value: ", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 221 </span>                        <span class="tag">&lt;TextView</span><span class="attribute">
-</span><span class="lineno"> 222 </span><span class="attribute">                            </span><span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 223 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="caretline"><span class="lineno"> 224 </span>                            <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Value: "</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 225 </span>                            <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"14sp"</span> />
-<span class="lineno"> 226 </span>
-<span class="lineno"> 227 </span>                        <span class="tag">&lt;TextView</span></pre>
-
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:231</span>: <span class="message">Hardcoded string "50.0 &#956;g/m³", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 228 </span><span class="attribute">                            </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/txt_dust_threshold_value"</span>
-<span class="lineno"> 229 </span>                            <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 230 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="caretline"><span class="lineno"> 231 </span>                            <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"50.0 μg/m³"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 232 </span>                            <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"14sp"</span>
-<span class="lineno"> 233 </span>                            <span class="prefix">android:</span><span class="attribute">textStyle</span>=<span class="value">"bold"</span> />
-<span class="lineno"> 234 </span>                        
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:167</span>: <span class="message">Hardcoded string "Alert Thresholds", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 164 </span>                <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 165 </span>                <span class="prefix">android:</span><span class="attribute">layout_marginTop</span>=<span class="value">"16dp"</span>
+<span class="lineno"> 166 </span>                <span class="prefix">android:</span><span class="attribute">layout_marginBottom</span>=<span class="value">"8dp"</span>
+<span class="caretline"><span class="lineno"> 167 </span>                <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Alert Thresholds"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 168 </span>                <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"18sp"</span>
+<span class="lineno"> 169 </span>                <span class="prefix">android:</span><span class="attribute">textStyle</span>=<span class="value">"bold"</span> />
 </pre>
 
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:241</span>: <span class="message">Hardcoded string "Moderate Risk", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 238 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 239 </span>                            <span class="prefix">android:</span><span class="attribute">layout_weight</span>=<span class="value">"1"</span>
-<span class="lineno"> 240 </span>                            <span class="prefix">android:</span><span class="attribute">gravity</span>=<span class="value">"end"</span>
-<span class="caretline"><span class="lineno"> 241 </span>                            <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Moderate Risk"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 242 </span>                            <span class="prefix">android:</span><span class="attribute">textColor</span>=<span class="value">"#FFC107"</span>
-<span class="lineno"> 243 </span>                            <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"12sp"</span> />
-<span class="lineno"> 244 </span>                    <span class="tag">&lt;/LinearLayout></span></pre>
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:190</span>: <span class="message">Hardcoded string "Dust Alert Threshold", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 187 </span>                    <span class="tag">&lt;TextView</span><span class="attribute">
+</span><span class="lineno"> 188 </span><span class="attribute">                        </span><span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"match_parent"</span>
+<span class="lineno"> 189 </span>                        <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="caretline"><span class="lineno"> 190 </span>                        <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Dust Alert Threshold"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 191 </span>                        <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"16sp"</span> />
+<span class="lineno"> 192 </span>
+<span class="lineno"> 193 </span>                    <span class="tag">&lt;LinearLayout</span></pre>
 
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:252</span>: <span class="message">Hardcoded string "Adjust dust threshold value", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 249 </span>                  <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 250 </span>                  <span class="prefix">android:</span><span class="attribute">layout_marginTop</span>=<span class="value">"4dp"</span>
-<span class="lineno"> 251 </span>                  <span class="prefix">android:</span><span class="attribute">layout_marginBottom</span>=<span class="value">"16dp"</span>
-<span class="caretline"><span class="lineno"> 252 </span>                  <span class="warning"><span class="prefix">android:</span><span class="attribute">contentDescription</span>=<span class="value">"Adjust dust threshold value"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 253 </span>                  <span class="prefix">android:</span><span class="attribute">stepSize</span>=<span class="value">"1.0"</span>
-<span class="lineno"> 254 </span>                  <span class="prefix">android:</span><span class="attribute">valueFrom</span>=<span class="value">"10"</span>
-<span class="lineno"> 255 </span>                  <span class="prefix">android:</span><span class="attribute">valueTo</span>=<span class="value">"500"</span></pre>
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:203</span>: <span class="message">Hardcoded string "Value: ", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 200 </span>                        <span class="tag">&lt;TextView</span><span class="attribute">
+</span><span class="lineno"> 201 </span><span class="attribute">                            </span><span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 202 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="caretline"><span class="lineno"> 203 </span>                            <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Value: "</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 204 </span>                            <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"14sp"</span> />
+<span class="lineno"> 205 </span>
+<span class="lineno"> 206 </span>                        <span class="tag">&lt;TextView</span></pre>
 
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:267</span>: <span class="message">Hardcoded string "Noise Alert Threshold", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 264 </span><span class="attribute">                        </span><span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"match_parent"</span>
-<span class="lineno"> 265 </span>                        <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 266 </span>                        <span class="prefix">android:</span><span class="attribute">layout_marginTop</span>=<span class="value">"8dp"</span>
-<span class="caretline"><span class="lineno"> 267 </span>                        <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Noise Alert Threshold"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 268 </span>                        <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"16sp"</span> />
-<span class="lineno"> 269 </span>
-<span class="lineno"> 270 </span>                    <span class="tag">&lt;LinearLayout</span></pre>
-
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:280</span>: <span class="message">Hardcoded string "Value: ", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 277 </span>                        <span class="tag">&lt;TextView</span><span class="attribute">
-</span><span class="lineno"> 278 </span><span class="attribute">                            </span><span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 279 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="caretline"><span class="lineno"> 280 </span>                            <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Value: "</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 281 </span>                            <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"14sp"</span> />
-<span class="lineno"> 282 </span>
-<span class="lineno"> 283 </span>                        <span class="tag">&lt;TextView</span></pre>
-
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:287</span>: <span class="message">Hardcoded string "85.0 dB", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 284 </span><span class="attribute">                           </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/txt_noise_threshold_value"</span>
-<span class="lineno"> 285 </span>                           <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 286 </span>                           <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="caretline"><span class="lineno"> 287 </span>                           <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"85.0 dB"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 288 </span>                           <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"14sp"</span>
-<span class="lineno"> 289 </span>                           <span class="prefix">android:</span><span class="attribute">textStyle</span>=<span class="value">"bold"</span> />
-<span class="lineno"> 290 </span>                       
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:210</span>: <span class="message">Hardcoded string "50.0 &#956;g/m³", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 207 </span><span class="attribute">                            </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/txt_dust_threshold_value"</span>
+<span class="lineno"> 208 </span>                            <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 209 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="caretline"><span class="lineno"> 210 </span>                            <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"50.0 μg/m³"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 211 </span>                            <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"14sp"</span>
+<span class="lineno"> 212 </span>                            <span class="prefix">android:</span><span class="attribute">textStyle</span>=<span class="value">"bold"</span> />
+<span class="lineno"> 213 </span>                        
 </pre>
 
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:297</span>: <span class="message">Hardcoded string "OSHA Standard", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 294 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 295 </span>                            <span class="prefix">android:</span><span class="attribute">layout_weight</span>=<span class="value">"1"</span>
-<span class="lineno"> 296 </span>                            <span class="prefix">android:</span><span class="attribute">gravity</span>=<span class="value">"end"</span>
-<span class="caretline"><span class="lineno"> 297 </span>                            <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"OSHA Standard"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 298 </span>                            <span class="prefix">android:</span><span class="attribute">textColor</span>=<span class="value">"#4CAF50"</span>
-<span class="lineno"> 299 </span>                            <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"12sp"</span> />
-<span class="lineno"> 300 </span>                    <span class="tag">&lt;/LinearLayout></span></pre>
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:220</span>: <span class="message">Hardcoded string "Moderate Risk", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 217 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 218 </span>                            <span class="prefix">android:</span><span class="attribute">layout_weight</span>=<span class="value">"1"</span>
+<span class="lineno"> 219 </span>                            <span class="prefix">android:</span><span class="attribute">gravity</span>=<span class="value">"end"</span>
+<span class="caretline"><span class="lineno"> 220 </span>                            <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Moderate Risk"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 221 </span>                            <span class="prefix">android:</span><span class="attribute">textColor</span>=<span class="value">"#FFC107"</span>
+<span class="lineno"> 222 </span>                            <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"12sp"</span> />
+<span class="lineno"> 223 </span>                    <span class="tag">&lt;/LinearLayout></span></pre>
 
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:308</span>: <span class="message">Hardcoded string "Adjust noise threshold value", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 305 </span>                 <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 306 </span>                 <span class="prefix">android:</span><span class="attribute">layout_marginTop</span>=<span class="value">"4dp"</span>
-<span class="lineno"> 307 </span>                 <span class="prefix">android:</span><span class="attribute">layout_marginBottom</span>=<span class="value">"8dp"</span>
-<span class="caretline"><span class="lineno"> 308 </span>                 <span class="warning"><span class="prefix">android:</span><span class="attribute">contentDescription</span>=<span class="value">"Adjust noise threshold value"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 309 </span>                 <span class="prefix">android:</span><span class="attribute">stepSize</span>=<span class="value">"1.0"</span>
-<span class="lineno"> 310 </span>                 <span class="prefix">android:</span><span class="attribute">valueFrom</span>=<span class="value">"50"</span>
-<span class="lineno"> 311 </span>                 <span class="prefix">android:</span><span class="attribute">valueTo</span>=<span class="value">"115"</span></pre>
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:231</span>: <span class="message">Hardcoded string "Adjust dust threshold value", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 228 </span>                  <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 229 </span>                  <span class="prefix">android:</span><span class="attribute">layout_marginTop</span>=<span class="value">"4dp"</span>
+<span class="lineno"> 230 </span>                  <span class="prefix">android:</span><span class="attribute">layout_marginBottom</span>=<span class="value">"16dp"</span>
+<span class="caretline"><span class="lineno"> 231 </span>                  <span class="warning"><span class="prefix">android:</span><span class="attribute">contentDescription</span>=<span class="value">"Adjust dust threshold value"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 232 </span>                  <span class="prefix">android:</span><span class="attribute">stepSize</span>=<span class="value">"1.0"</span>
+<span class="lineno"> 233 </span>                  <span class="prefix">android:</span><span class="attribute">valueFrom</span>=<span class="value">"10"</span>
+<span class="lineno"> 234 </span>                  <span class="prefix">android:</span><span class="attribute">valueTo</span>=<span class="value">"500"</span></pre>
 
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:327</span>: <span class="message">Hardcoded string "Reset to Default", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 324 </span>                       <span class="prefix">android:</span><span class="attribute">background</span>=<span class="value">"?attr/selectableItemBackground"</span>
-<span class="lineno"> 325 </span>                       <span class="prefix">android:</span><span class="attribute">paddingStart</span>=<span class="value">"12dp"</span>
-<span class="lineno"> 326 </span>                       <span class="prefix">android:</span><span class="attribute">paddingEnd</span>=<span class="value">"12dp"</span>
-<span class="caretline"><span class="lineno"> 327 </span>                       <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Reset to Default"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 328 </span>                       <span class="prefix">android:</span><span class="attribute">textAllCaps</span>=<span class="value">"false"</span>
-<span class="lineno"> 329 </span>                       <span class="prefix">android:</span><span class="attribute">textColor</span>=<span class="value">"?attr/colorPrimary"</span>
-<span class="lineno"> 330 </span>                       <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"14sp"</span> />
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:246</span>: <span class="message">Hardcoded string "Noise Alert Threshold", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 243 </span><span class="attribute">                        </span><span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"match_parent"</span>
+<span class="lineno"> 244 </span>                        <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 245 </span>                        <span class="prefix">android:</span><span class="attribute">layout_marginTop</span>=<span class="value">"8dp"</span>
+<span class="caretline"><span class="lineno"> 246 </span>                        <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Noise Alert Threshold"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 247 </span>                        <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"16sp"</span> />
+<span class="lineno"> 248 </span>
+<span class="lineno"> 249 </span>                    <span class="tag">&lt;LinearLayout</span></pre>
+
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:259</span>: <span class="message">Hardcoded string "Value: ", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 256 </span>                        <span class="tag">&lt;TextView</span><span class="attribute">
+</span><span class="lineno"> 257 </span><span class="attribute">                            </span><span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 258 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="caretline"><span class="lineno"> 259 </span>                            <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Value: "</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 260 </span>                            <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"14sp"</span> />
+<span class="lineno"> 261 </span>
+<span class="lineno"> 262 </span>                        <span class="tag">&lt;TextView</span></pre>
+
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:266</span>: <span class="message">Hardcoded string "85.0 dB", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 263 </span><span class="attribute">                           </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/txt_noise_threshold_value"</span>
+<span class="lineno"> 264 </span>                           <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 265 </span>                           <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="caretline"><span class="lineno"> 266 </span>                           <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"85.0 dB"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 267 </span>                           <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"14sp"</span>
+<span class="lineno"> 268 </span>                           <span class="prefix">android:</span><span class="attribute">textStyle</span>=<span class="value">"bold"</span> />
+<span class="lineno"> 269 </span>                       
 </pre>
 
-<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:336</span>: <span class="message">Hardcoded string "Note: Changing these thresholds affects when you'll receive alerts. OSHA recommends keeping noise alerts at 85dB and dust at 50 &#956;g/m³.", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 333 </span><span class="attribute">  </span><span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"match_parent"</span>
-<span class="lineno"> 334 </span>  <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
-<span class="lineno"> 335 </span>  <span class="prefix">android:</span><span class="attribute">layout_marginTop</span>=<span class="value">"16dp"</span>
-<span class="caretline"><span class="lineno"> 336 </span>  <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Note: Changing these thresholds affects when you'll receive alerts. OSHA recommends keeping noise alerts at 85dB and dust at 50 μg/m³."</span></span></span>
-<span class="lineno"> 337 </span>  <span class="prefix">android:</span><span class="attribute">textColor</span>=<span class="value">"@android:color/darker_gray"</span>
-<span class="lineno"> 338 </span>  <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"12sp"</span> />
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:276</span>: <span class="message">Hardcoded string "OSHA Standard", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 273 </span>                            <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 274 </span>                            <span class="prefix">android:</span><span class="attribute">layout_weight</span>=<span class="value">"1"</span>
+<span class="lineno"> 275 </span>                            <span class="prefix">android:</span><span class="attribute">gravity</span>=<span class="value">"end"</span>
+<span class="caretline"><span class="lineno"> 276 </span>                            <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"OSHA Standard"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 277 </span>                            <span class="prefix">android:</span><span class="attribute">textColor</span>=<span class="value">"#4CAF50"</span>
+<span class="lineno"> 278 </span>                            <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"12sp"</span> />
+<span class="lineno"> 279 </span>                    <span class="tag">&lt;/LinearLayout></span></pre>
+
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:287</span>: <span class="message">Hardcoded string "Adjust noise threshold value", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 284 </span>                 <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 285 </span>                 <span class="prefix">android:</span><span class="attribute">layout_marginTop</span>=<span class="value">"4dp"</span>
+<span class="lineno"> 286 </span>                 <span class="prefix">android:</span><span class="attribute">layout_marginBottom</span>=<span class="value">"8dp"</span>
+<span class="caretline"><span class="lineno"> 287 </span>                 <span class="warning"><span class="prefix">android:</span><span class="attribute">contentDescription</span>=<span class="value">"Adjust noise threshold value"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 288 </span>                 <span class="prefix">android:</span><span class="attribute">stepSize</span>=<span class="value">"1.0"</span>
+<span class="lineno"> 289 </span>                 <span class="prefix">android:</span><span class="attribute">valueFrom</span>=<span class="value">"50"</span>
+<span class="lineno"> 290 </span>                 <span class="prefix">android:</span><span class="attribute">valueTo</span>=<span class="value">"115"</span></pre>
+
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:306</span>: <span class="message">Hardcoded string "Reset to Default", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 303 </span>                       <span class="prefix">android:</span><span class="attribute">background</span>=<span class="value">"?attr/selectableItemBackground"</span>
+<span class="lineno"> 304 </span>                       <span class="prefix">android:</span><span class="attribute">paddingStart</span>=<span class="value">"12dp"</span>
+<span class="lineno"> 305 </span>                       <span class="prefix">android:</span><span class="attribute">paddingEnd</span>=<span class="value">"12dp"</span>
+<span class="caretline"><span class="lineno"> 306 </span>                       <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Reset to Default"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 307 </span>                       <span class="prefix">android:</span><span class="attribute">textAllCaps</span>=<span class="value">"false"</span>
+<span class="lineno"> 308 </span>                       <span class="prefix">android:</span><span class="attribute">textColor</span>=<span class="value">"?attr/colorPrimary"</span>
+<span class="lineno"> 309 </span>                       <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"14sp"</span> />
 </pre>
 
-<span class="location"><a href="../../src/main/res/menu/main_menu.xml">../../src/main/res/menu/main_menu.xml</a>:13</span>: <span class="message">Hardcoded string "Settings", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="location"><a href="../../src/main/res/layout/activity_settings.xml">../../src/main/res/layout/activity_settings.xml</a>:315</span>: <span class="message">Hardcoded string "Note: Changing these thresholds affects when you'll receive alerts. OSHA recommends keeping noise alerts at 85dB and dust at 50 &#956;g/m³.", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 312 </span><span class="attribute">  </span><span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"match_parent"</span>
+<span class="lineno"> 313 </span>  <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="lineno"> 314 </span>  <span class="prefix">android:</span><span class="attribute">layout_marginTop</span>=<span class="value">"16dp"</span>
+<span class="caretline"><span class="lineno"> 315 </span>  <span class="warning"><span class="prefix">android:</span><span class="attribute">text</span>=<span class="value">"Note: Changing these thresholds affects when you'll receive alerts. OSHA recommends keeping noise alerts at 85dB and dust at 50 μg/m³."</span></span></span>
+<span class="lineno"> 316 </span>  <span class="prefix">android:</span><span class="attribute">textColor</span>=<span class="value">"@android:color/darker_gray"</span>
+<span class="lineno"> 317 </span>  <span class="prefix">android:</span><span class="attribute">textSize</span>=<span class="value">"12sp"</span> />
+</pre>
+
+<span class="location"><a href="../../src/main/res/menu/main_menu.xml">../../src/main/res/menu/main_menu.xml</a>:13</span>: <span class="message">Hardcoded string "Profile", should use <code>@string</code> resource</span><br /><pre class="errorlines">
 <span class="lineno"> 10 </span>    
 <span class="lineno"> 11 </span>    <span class="tag">&lt;item</span><span class="attribute">
-</span><span class="lineno"> 12 </span><span class="attribute">        </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_settings"</span>
-<span class="caretline"><span class="lineno"> 13 </span>        <span class="warning"><span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"Settings"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 14 </span>        <span class="prefix">android:</span><span class="attribute">icon</span>=<span class="value">"@drawable/ic_settings"</span>
+</span><span class="lineno"> 12 </span><span class="attribute">        </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_profile"</span>
+<span class="caretline"><span class="lineno"> 13 </span>        <span class="warning"><span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"Profile"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 14 </span>        <span class="prefix">android:</span><span class="attribute">icon</span>=<span class="value">"@drawable/ic_profile"</span>
 <span class="lineno"> 15 </span>        <span class="prefix">app:</span><span class="attribute">showAsAction</span>=<span class="value">"ifRoom"</span> />
 <span class="lineno"> 16 </span>    
 </pre>
 
-<span class="location"><a href="../../src/main/res/menu/main_menu.xml">../../src/main/res/menu/main_menu.xml</a>:19</span>: <span class="message">Hardcoded string "Data Visualization", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="location"><a href="../../src/main/res/menu/main_menu.xml">../../src/main/res/menu/main_menu.xml</a>:19</span>: <span class="message">Hardcoded string "Settings", should use <code>@string</code> resource</span><br /><pre class="errorlines">
 <span class="lineno"> 16 </span>    
 <span class="lineno"> 17 </span>    <span class="tag">&lt;item</span><span class="attribute">
-</span><span class="lineno"> 18 </span><span class="attribute">        </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_visualization"</span>
-<span class="caretline"><span class="lineno"> 19 </span>        <span class="warning"><span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"Data Visualization"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 20 </span>        <span class="prefix">android:</span><span class="attribute">icon</span>=<span class="value">"@drawable/ic_visualization"</span>
+</span><span class="lineno"> 18 </span><span class="attribute">        </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_settings"</span>
+<span class="caretline"><span class="lineno"> 19 </span>        <span class="warning"><span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"Settings"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 20 </span>        <span class="prefix">android:</span><span class="attribute">icon</span>=<span class="value">"@drawable/ic_settings"</span>
 <span class="lineno"> 21 </span>        <span class="prefix">app:</span><span class="attribute">showAsAction</span>=<span class="value">"ifRoom"</span> />
 <span class="lineno"> 22 </span>    
 </pre>
 
-<span class="location"><a href="../../src/main/res/menu/main_menu.xml">../../src/main/res/menu/main_menu.xml</a>:32</span>: <span class="message">Hardcoded string "Off", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 29 </span>            <span class="tag">&lt;group</span><span class="attribute"> </span><span class="prefix">android:</span><span class="attribute">checkableBehavior</span>=<span class="value">"single"</span>>
-<span class="lineno"> 30 </span>                <span class="tag">&lt;item</span><span class="attribute">
-</span><span class="lineno"> 31 </span><span class="attribute">                    </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_test_mode_off"</span>
-<span class="caretline"><span class="lineno"> 32 </span>                    <span class="warning"><span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"Off"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 33 </span>                    <span class="prefix">android:</span><span class="attribute">checked</span>=<span class="value">"true"</span> />
-<span class="lineno"> 34 </span>                <span class="tag">&lt;item</span><span class="attribute">
-</span><span class="lineno"> 35 </span><span class="attribute">                    </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_test_mode_normal"</span></pre>
-
-<span class="location"><a href="../../src/main/res/menu/main_menu.xml">../../src/main/res/menu/main_menu.xml</a>:36</span>: <span class="message">Hardcoded string "Normal Values", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 33 </span>                    <span class="prefix">android:</span><span class="attribute">checked</span>=<span class="value">"true"</span> />
-<span class="lineno"> 34 </span>                <span class="tag">&lt;item</span><span class="attribute">
-</span><span class="lineno"> 35 </span><span class="attribute">                    </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_test_mode_normal"</span>
-<span class="caretline"><span class="lineno"> 36 </span>                    <span class="warning"><span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"Normal Values"</span></span> />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 37 </span>                <span class="tag">&lt;item</span><span class="attribute">
-</span><span class="lineno"> 38 </span><span class="attribute">                    </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_test_mode_high_dust"</span>
-<span class="lineno"> 39 </span>                    <span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"High Dust Values"</span> />
+<span class="location"><a href="../../src/main/res/menu/main_menu.xml">../../src/main/res/menu/main_menu.xml</a>:25</span>: <span class="message">Hardcoded string "Data Visualization", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 22 </span>    
+<span class="lineno"> 23 </span>    <span class="tag">&lt;item</span><span class="attribute">
+</span><span class="lineno"> 24 </span><span class="attribute">        </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_visualization"</span>
+<span class="caretline"><span class="lineno"> 25 </span>        <span class="warning"><span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"Data Visualization"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 26 </span>        <span class="prefix">android:</span><span class="attribute">icon</span>=<span class="value">"@drawable/ic_visualization"</span>
+<span class="lineno"> 27 </span>        <span class="prefix">app:</span><span class="attribute">showAsAction</span>=<span class="value">"ifRoom"</span> />
+<span class="lineno"> 28 </span>    
 </pre>
 
-<span class="location"><a href="../../src/main/res/menu/main_menu.xml">../../src/main/res/menu/main_menu.xml</a>:39</span>: <span class="message">Hardcoded string "High Dust Values", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 36 </span>                    <span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"Normal Values"</span> />
-<span class="lineno"> 37 </span>                <span class="tag">&lt;item</span><span class="attribute">
-</span><span class="lineno"> 38 </span><span class="attribute">                    </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_test_mode_high_dust"</span>
-<span class="caretline"><span class="lineno"> 39 </span>                    <span class="warning"><span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"High Dust Values"</span></span> />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="location"><a href="../../src/main/res/menu/main_menu.xml">../../src/main/res/menu/main_menu.xml</a>:38</span>: <span class="message">Hardcoded string "Off", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 35 </span>            <span class="tag">&lt;group</span><span class="attribute"> </span><span class="prefix">android:</span><span class="attribute">checkableBehavior</span>=<span class="value">"single"</span>>
+<span class="lineno"> 36 </span>                <span class="tag">&lt;item</span><span class="attribute">
+</span><span class="lineno"> 37 </span><span class="attribute">                    </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_test_mode_off"</span>
+<span class="caretline"><span class="lineno"> 38 </span>                    <span class="warning"><span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"Off"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 39 </span>                    <span class="prefix">android:</span><span class="attribute">checked</span>=<span class="value">"true"</span> />
 <span class="lineno"> 40 </span>                <span class="tag">&lt;item</span><span class="attribute">
-</span><span class="lineno"> 41 </span><span class="attribute">                    </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_test_mode_high_noise"</span>
-<span class="lineno"> 42 </span>                    <span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"High Noise Values"</span> />
-</pre>
+</span><span class="lineno"> 41 </span><span class="attribute">                    </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_test_mode_normal"</span></pre>
 
-<span class="location"><a href="../../src/main/res/menu/main_menu.xml">../../src/main/res/menu/main_menu.xml</a>:42</span>: <span class="message">Hardcoded string "High Noise Values", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 39 </span>                    <span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"High Dust Values"</span> />
+<span class="location"><a href="../../src/main/res/menu/main_menu.xml">../../src/main/res/menu/main_menu.xml</a>:42</span>: <span class="message">Hardcoded string "Normal Values", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 39 </span>                    <span class="prefix">android:</span><span class="attribute">checked</span>=<span class="value">"true"</span> />
 <span class="lineno"> 40 </span>                <span class="tag">&lt;item</span><span class="attribute">
-</span><span class="lineno"> 41 </span><span class="attribute">                    </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_test_mode_high_noise"</span>
-<span class="caretline"><span class="lineno"> 42 </span>                    <span class="warning"><span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"High Noise Values"</span></span> />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+</span><span class="lineno"> 41 </span><span class="attribute">                    </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_test_mode_normal"</span>
+<span class="caretline"><span class="lineno"> 42 </span>                    <span class="warning"><span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"Normal Values"</span></span> />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 <span class="lineno"> 43 </span>                <span class="tag">&lt;item</span><span class="attribute">
-</span><span class="lineno"> 44 </span><span class="attribute">                    </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_test_mode_random"</span>
-<span class="lineno"> 45 </span>                    <span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"Random Values"</span> />
+</span><span class="lineno"> 44 </span><span class="attribute">                    </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_test_mode_high_dust"</span>
+<span class="lineno"> 45 </span>                    <span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"High Dust Values"</span> />
 </pre>
 
-<span class="location"><a href="../../src/main/res/menu/main_menu.xml">../../src/main/res/menu/main_menu.xml</a>:45</span>: <span class="message">Hardcoded string "Random Values", should use <code>@string</code> resource</span><br /><pre class="errorlines">
-<span class="lineno"> 42 </span>                    <span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"High Noise Values"</span> />
+<span class="location"><a href="../../src/main/res/menu/main_menu.xml">../../src/main/res/menu/main_menu.xml</a>:45</span>: <span class="message">Hardcoded string "High Dust Values", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 42 </span>                    <span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"Normal Values"</span> />
 <span class="lineno"> 43 </span>                <span class="tag">&lt;item</span><span class="attribute">
-</span><span class="lineno"> 44 </span><span class="attribute">                    </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_test_mode_random"</span>
-<span class="caretline"><span class="lineno"> 45 </span>                    <span class="warning"><span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"Random Values"</span></span> />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 46 </span>            <span class="tag">&lt;/group></span>
-<span class="lineno"> 47 </span>        <span class="tag">&lt;/menu></span>
-<span class="lineno"> 48 </span>    <span class="tag">&lt;/item></span></pre>
+</span><span class="lineno"> 44 </span><span class="attribute">                    </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_test_mode_high_dust"</span>
+<span class="caretline"><span class="lineno"> 45 </span>                    <span class="warning"><span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"High Dust Values"</span></span> />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 46 </span>                <span class="tag">&lt;item</span><span class="attribute">
+</span><span class="lineno"> 47 </span><span class="attribute">                    </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_test_mode_high_noise"</span>
+<span class="lineno"> 48 </span>                    <span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"High Noise Values"</span> />
+</pre>
+
+<span class="location"><a href="../../src/main/res/menu/main_menu.xml">../../src/main/res/menu/main_menu.xml</a>:48</span>: <span class="message">Hardcoded string "High Noise Values", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 45 </span>                    <span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"High Dust Values"</span> />
+<span class="lineno"> 46 </span>                <span class="tag">&lt;item</span><span class="attribute">
+</span><span class="lineno"> 47 </span><span class="attribute">                    </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_test_mode_high_noise"</span>
+<span class="caretline"><span class="lineno"> 48 </span>                    <span class="warning"><span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"High Noise Values"</span></span> />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 49 </span>                <span class="tag">&lt;item</span><span class="attribute">
+</span><span class="lineno"> 50 </span><span class="attribute">                    </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_test_mode_random"</span>
+<span class="lineno"> 51 </span>                    <span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"Random Values"</span> />
+</pre>
+
+<span class="location"><a href="../../src/main/res/menu/main_menu.xml">../../src/main/res/menu/main_menu.xml</a>:51</span>: <span class="message">Hardcoded string "Random Values", should use <code>@string</code> resource</span><br /><pre class="errorlines">
+<span class="lineno"> 48 </span>                    <span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"High Noise Values"</span> />
+<span class="lineno"> 49 </span>                <span class="tag">&lt;item</span><span class="attribute">
+</span><span class="lineno"> 50 </span><span class="attribute">                    </span><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/action_test_mode_random"</span>
+<span class="caretline"><span class="lineno"> 51 </span>                    <span class="warning"><span class="prefix">android:</span><span class="attribute">title</span>=<span class="value">"Random Values"</span></span> />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 52 </span>            <span class="tag">&lt;/group></span>
+<span class="lineno"> 53 </span>        <span class="tag">&lt;/menu></span>
+<span class="lineno"> 54 </span>    <span class="tag">&lt;/item></span></pre>
 
 </div>
 </div>
@@ -3270,7 +3300,7 @@ Dismiss</button>            </div>
 </span><span class="lineno">  124 </span><span class="javadoc">         * called when the scan fails
 </span></pre>
 
-<button class="mdl-button mdl-js-button mdl-button--primary" id="UnknownNullnessDivLink" onclick="reveal('UnknownNullnessDiv');" />+ 106 More Occurrences...</button>
+<button class="mdl-button mdl-js-button mdl-button--primary" id="UnknownNullnessDivLink" onclick="reveal('UnknownNullnessDiv');" />+ 107 More Occurrences...</button>
 <div id="UnknownNullnessDiv" style="display: none">
 <span class="location"><a href="../../src/main/java/com/team12/smarthat/bluetooth/core/BleConnectionManager.java">../../src/main/java/com/team12/smarthat/bluetooth/core/BleConnectionManager.java</a>:128</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://developer.android.com/kotlin/interop#nullability_annotations">https://developer.android.com/kotlin/interop#nullability_annotations</a></span><br /><pre class="errorlines">
 <span class="lineno">  125 </span><span class="javadoc">         * @param errorCode standard android error code from scancallback constants
@@ -3719,7 +3749,7 @@ Dismiss</button>            </div>
 <span class="lineno"> 111 </span>    }
 </pre>
 
-<br/><b>NOTE: 61 results omitted.</b><br/><br/></div>
+<br/><b>NOTE: 62 results omitted.</b><br/><br/></div>
 </div>
 <div class="metadata"><div class="explanation" id="explanationUnknownNullness" style="display: none;">
 To improve referencing this code from Kotlin, consider adding explicit nullness information here with either <code>@NonNull</code> or <code>@Nullable</code>.<br/><br/>

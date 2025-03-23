@@ -76,13 +76,6 @@
                                 android:text="Alert Notifications"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Master switch for all sensor notifications"
-                                android:textColor="@android:color/darker_gray"
-                                android:textSize="14sp" />
                         </LinearLayout>
 
                         <androidx.appcompat.widget.SwitchCompat
@@ -123,13 +116,6 @@
                                 android:layout_height="wrap_content"
                                 android:text="Dust Notifications"
                                 android:textSize="16sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Get notifications when dust levels exceed threshold"
-                                android:textColor="@android:color/darker_gray"
-                                android:textSize="14sp" />
                         </LinearLayout>
 
                         <androidx.appcompat.widget.SwitchCompat
@@ -160,13 +146,6 @@
                                 android:layout_height="wrap_content"
                                 android:text="Noise Notifications"
                                 android:textSize="16sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Get notifications when noise levels exceed threshold"
-                                android:textColor="@android:color/darker_gray"
-                                android:textSize="14sp" />
                         </LinearLayout>
 
                         <androidx.appcompat.widget.SwitchCompat

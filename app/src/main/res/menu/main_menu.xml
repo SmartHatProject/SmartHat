@@ -6,6 +6,12 @@
         android:id="@+id/action_history"
         android:title="Threshold History"
         android:icon="@android:drawable/ic_menu_recent_history"
+        app:showAsAction="ifRoom" />
+    
+    <item
+        android:id="@+id/action_profile"
+        android:title="Profile"
+        android:icon="@drawable/ic_profile"
         app:showAsAction="never" />
     
     <item
