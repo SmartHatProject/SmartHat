@@ -47,6 +47,9 @@
                     android:id="@+id/action_test_mode_high_noise"
                     android:title="High Noise Values" />
                 <item
+                    android:id="@+id/action_test_mode_high_gas"
+                    android:title="High Gas Values" />
+                <item
                     android:id="@+id/action_test_mode_random"
                     android:title="Random Values" />
             </group>

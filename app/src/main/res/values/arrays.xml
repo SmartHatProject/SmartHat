@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark mode preference options -->
+    <string-array name="dark_mode_entries">
+        <item>System Default</item>
+        <item>Light</item>
+        <item>Dark</item>
+        <item>Battery Saver</item>
+    </string-array>
+    
+    <string-array name="dark_mode_values">
+        <item>-1</item>  <!-- MODE_NIGHT_FOLLOW_SYSTEM -->
+        <item>1</item>   <!-- MODE_NIGHT_NO -->
+        <item>2</item>   <!-- MODE_NIGHT_YES -->
+        <item>3</item>   <!-- MODE_NIGHT_AUTO_BATTERY -->
+    </string-array>
+    
+    <!-- ... existing arrays ... -->
+</resources> 

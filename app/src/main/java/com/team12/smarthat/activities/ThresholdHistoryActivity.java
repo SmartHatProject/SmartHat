@@ -33,7 +33,7 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
         // back button
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Threshold Breach History");
+            getSupportActionBar().setTitle("");
         }
 
         initializeComponents();

@@ -72,11 +72,11 @@ public class MainActivity extends AppCompatActivity implements
     private NotificationUtils notificationUtils;
     
     // ui components
-    private TextView tvStatus, tvDust, tvNoise, tvTestMode;
+    private TextView tvStatus, tvDust, tvNoise, tvTestMode, tvGasValue;
     private Button btnConnect;
     private View connectionIndicator;
     private TextView connectionHelper;
-    private ProgressBar soundMeter;
+    private ProgressBar soundMeter, dustMeter;
     private PointerSpeedometer gasGauge;
     
     // ble connection management
@@ -149,12 +149,14 @@ public class MainActivity extends AppCompatActivity implements
             MenuItem normalItem = menu.findItem(R.id.action_test_mode_normal);
             MenuItem highDustItem = menu.findItem(R.id.action_test_mode_high_dust);
             MenuItem highNoiseItem = menu.findItem(R.id.action_test_mode_high_noise);
+            MenuItem highGasItem = menu.findItem(R.id.action_test_mode_high_gas);
             MenuItem randomItem = menu.findItem(R.id.action_test_mode_random);
             
             if (offItem != null) offItem.setChecked(currentMode == TestDataGenerator.TestMode.OFF);
             if (normalItem != null) normalItem.setChecked(currentMode == TestDataGenerator.TestMode.NORMAL);
             if (highDustItem != null) highDustItem.setChecked(currentMode == TestDataGenerator.TestMode.HIGH_DUST);
             if (highNoiseItem != null) highNoiseItem.setChecked(currentMode == TestDataGenerator.TestMode.HIGH_NOISE);
+            if (highGasItem != null) highGasItem.setChecked(currentMode == TestDataGenerator.TestMode.HIGH_GAS);
             if (randomItem != null) randomItem.setChecked(currentMode == TestDataGenerator.TestMode.RANDOM);
         }
         
@@ -196,6 +198,9 @@ public class MainActivity extends AppCompatActivity implements
             return true;
         } else if (id == R.id.action_test_mode_high_noise) {
             setTestMode(TestDataGenerator.TestMode.HIGH_NOISE);
+            return true;
+        } else if (id == R.id.action_test_mode_high_gas) {
+            setTestMode(TestDataGenerator.TestMode.HIGH_GAS);
             return true;
         } else if (id == R.id.action_test_mode_random) {
             setTestMode(TestDataGenerator.TestMode.RANDOM);
@@ -374,10 +379,12 @@ public class MainActivity extends AppCompatActivity implements
         tvDust = findViewById(R.id.tv_dust);
         tvNoise = findViewById(R.id.tv_noise);
         tvTestMode = findViewById(R.id.tv_test_mode);
+        tvGasValue = findViewById(R.id.tv_gas_value);
         btnConnect = findViewById(R.id.btn_connect);
         connectionIndicator = findViewById(R.id.connection_indicator);
         connectionHelper = findViewById(R.id.connection_helper);
         soundMeter = findViewById(R.id.sound_meter);
+        dustMeter = findViewById(R.id.dust_meter);
         gasGauge = findViewById(R.id.gas_gauge);
         
         // initialize database helper singleton
@@ -417,6 +424,16 @@ public class MainActivity extends AppCompatActivity implements
         tvStatus.setText(R.string.status_disconnected);
         tvDust.setText(R.string.dust_initial);
         tvNoise.setText(R.string.noise_initial);
+        tvGasValue.setText(R.string.gas_initial);
+        
+        // Initialize progress bars
+        if (dustMeter != null) {
+            dustMeter.setProgress(0);
+        }
+        
+        if (soundMeter != null) {
+            soundMeter.setProgress(0);
+        }
         
         // Configure gas gauge
         if (gasGauge != null) {
@@ -425,15 +442,18 @@ public class MainActivity extends AppCompatActivity implements
             gasGauge.setSpeedTextColor(Color.BLACK);
             gasGauge.setCenterCircleColor(Color.WHITE);
             gasGauge.setMarkColor(Color.DKGRAY);
-            gasGauge.setTextSize(36f);
-            gasGauge.setUnitTextSize(18f);
+            gasGauge.setTextSize(30f);
+            gasGauge.setUnitTextSize(15f);
             gasGauge.setWithTremble(false);
+            
+            // Get custom gas threshold to configure the sections
+            float gasThreshold = getCustomGasThreshold();
+            float thresholdRatio = Math.min(gasThreshold / gasGauge.getMaxSpeed(), 0.9f);
             
             gasGauge.clearSections();
             gasGauge.addSections(
-                new Section(0f, .3f, Color.parseColor("#4CAF50"), 30),
-                new Section(.3f, .7f, Color.parseColor("#FFC107"), 30),
-                new Section(.7f, 1f, Color.parseColor("#F44336"), 30)
+                new Section(0f, thresholdRatio, Color.parseColor("#4CAF50"), 30),
+                new Section(thresholdRatio, 1f, Color.parseColor("#F44336"), 30)
             );
             
             // Set initial speed to 0
@@ -455,9 +475,24 @@ public class MainActivity extends AppCompatActivity implements
             return;
         }
 
+        // First, remove any existing observers to prevent duplicates
+        if (connectionManager.getConnectionState().hasActiveObservers()) {
+            connectionManager.getConnectionState().removeObservers(this);
+        }
+        if (mockConnectionManager.getConnectionState().hasActiveObservers()) {
+            mockConnectionManager.getConnectionState().removeObservers(this);
+        }
+        if (connectionManager.getConnectionError().hasActiveObservers()) {
+            connectionManager.getConnectionError().removeObservers(this);
+        }
+        if (mockConnectionManager.getConnectionError().hasActiveObservers()) {
+            mockConnectionManager.getConnectionError().removeObservers(this);
+        }
+
         // Observe the real connection manager
         connectionManager.getConnectionState().observe(this, state -> {
             if (!testModeActive) {
+                Log.d(Constants.TAG_MAIN, "Real connection state changed: " + state);
                 updateConnectionUI(state);
             }
         });
@@ -465,6 +500,7 @@ public class MainActivity extends AppCompatActivity implements
         // Observe mock connection manager
         mockConnectionManager.getConnectionState().observe(this, state -> {
             if (testModeActive) {
+                Log.d(Constants.TAG_MAIN, "Mock connection state changed: " + state);
                 updateConnectionUI(state);
                 
                 // Start/stop test data generation based on connection state
@@ -506,7 +542,8 @@ public class MainActivity extends AppCompatActivity implements
         // Setup Bluetooth service integration
         btIntegration.observeConnectionState(this);
         
-        Log.d(Constants.TAG_MAIN, "Observers setup complete");
+        Log.d(Constants.TAG_MAIN, "Observers setup complete for " + 
+              (testModeActive ? "TEST" : "REAL") + " mode");
     }
     // endregion
 
@@ -537,6 +574,9 @@ public class MainActivity extends AppCompatActivity implements
             case HIGH_NOISE:
                 modeText = "TEST MODE: HIGH NOISE";
                 break;
+            case HIGH_GAS:
+                modeText = "TEST MODE: HIGH GAS";
+                break;
             case RANDOM:
                 modeText = "TEST MODE: RANDOM";
                 break;
@@ -566,6 +606,9 @@ public class MainActivity extends AppCompatActivity implements
         }
         
         try {
+            Log.d(Constants.TAG_MAIN, "Toggle connection in " + (testModeActive ? "TEST" : "REAL") + 
+                " mode, current state: " + currentState);
+            
             switch (currentState) {
                 case CONNECTED:
                     Log.d(Constants.TAG_MAIN, "User requested disconnect from connected state");
@@ -593,7 +636,6 @@ public class MainActivity extends AppCompatActivity implements
                         // in real mode check permissions and start real connection process
                         if (permissionManager.hasRequiredPermissions()) {
                             if (bluetoothAdapter != null) {
-
                                 if (!bluetoothAdapter.isEnabled()) {
                                     requestBluetoothEnable();
                                 } else {
@@ -602,7 +644,7 @@ public class MainActivity extends AppCompatActivity implements
                             } else {
                                 showToast("Bluetooth not available on this device");
                             }
-        } else {
+                        } else {
                             Log.d(Constants.TAG_MAIN, "Requesting permissions before connection");
                             permissionManager.requestPermissions(this);
                         }
@@ -614,7 +656,19 @@ public class MainActivity extends AppCompatActivity implements
             Log.e(Constants.TAG_MAIN, "Security exception in toggleConnection: " + e.getMessage());
             showToast("Permission denied: " + e.getMessage());
             updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
-            permissionManager.requestPermissions(this);
+            
+            if (!testModeActive) {
+                // Only request permissions in real mode
+                permissionManager.requestPermissions(this);
+            }
+        } catch (Exception e) {
+            // Handle any other exceptions
+            Log.e(Constants.TAG_MAIN, "Error in toggleConnection: " + e.getMessage());
+            showToast("Error: " + e.getMessage());
+            
+            // Ensure UI is updated to a consistent state
+            BleConnectionManager.ConnectionState recoveryState = BleConnectionManager.ConnectionState.DISCONNECTED;
+            updateConnectionUI(recoveryState);
         }
     }
     
@@ -782,11 +836,35 @@ public class MainActivity extends AppCompatActivity implements
             if (data.isDustData()) {
                 String dustText = getString(R.string.dust_format, data.getValue());
                 tvDust.setText(dustText);
+                
+                // Check if the value exceeds custom threshold
+                float dustThreshold = getCustomDustThreshold();
+                if (data.getValue() > dustThreshold) {
+                    tvDust.setTextColor(Color.RED);
+                } else {
+                    tvDust.setTextColor(ContextCompat.getColor(this, R.color.sensor_value));
+                }
+                
+                // Update dust meter visualization
+                if (dustMeter != null) {
+                    // Map dust value to progress (0-100)
+                    int progress = (int) Math.min(100, Math.max(0, data.getValue() * 100 / Constants.DUST_MAX_VALUE));
+                    dustMeter.setProgress(progress);
+                }
+                
                 // Use our custom threshold handler
                 handleDustSensorData(data);
             } else if (data.isNoiseData()) {
                 String noiseText = getString(R.string.noise_format, data.getValue());
                 tvNoise.setText(noiseText);
+                
+                // Check if the value exceeds custom threshold
+                float noiseThreshold = getCustomNoiseThreshold();
+                if (data.getValue() > noiseThreshold) {
+                    tvNoise.setTextColor(Color.RED);
+                } else {
+                    tvNoise.setTextColor(ContextCompat.getColor(this, R.color.sensor_value));
+                }
                 
                 // Update sound meter visualization
                 if (soundMeter != null) {
@@ -798,10 +876,31 @@ public class MainActivity extends AppCompatActivity implements
                 // Use our custom threshold handler
                 handleNoiseSensorData(data);
             } else if (data.isGasData()) {
+                // Update gas value text
+                String gasText = getString(R.string.gas_format, data.getValue());
+                tvGasValue.setText(gasText);
+                
+                // Get custom threshold for gas
+                float gasThreshold = getCustomGasThreshold();
+                
+                // Check if the value exceeds custom threshold
+                if (data.getValue() > gasThreshold) {
+                    tvGasValue.setTextColor(Color.RED);
+                } else {
+                    tvGasValue.setTextColor(ContextCompat.getColor(this, R.color.sensor_value));
+                }
+                
                 // Update gas gauge visualization
                 if (gasGauge != null) {
                     float gasValue = data.getValue();
                     gasGauge.speedTo(gasValue, 1000);
+                    
+                    // Update pointer color based on threshold
+                    if (data.getValue() > gasThreshold) {
+                        gasGauge.setPointerColor(Color.RED);
+                    } else {
+                        gasGauge.setPointerColor(Color.DKGRAY);
+                    }
                 }
                 
                 // Use our custom threshold handler
@@ -1083,29 +1182,45 @@ public class MainActivity extends AppCompatActivity implements
 
         // Toggling between test mode and normal mode
         if (enableTestMode != wasTestModeActive) {
-            BleConnectionManager currentConnectionState = enableTestMode ? connectionManager : mockConnectionManager;
-            BleConnectionManager.ConnectionState state = currentConnectionState.getCurrentState();
+            // Check both connection managers to determine if we're in a disconnected state
+            BleConnectionManager.ConnectionState realState = connectionManager.getCurrentState();
+            BleConnectionManager.ConnectionState mockState = mockConnectionManager.getCurrentState();
             
-            if (state == BleConnectionManager.ConnectionState.DISCONNECTED) {
+            // Only allow mode switching when both managers are disconnected
+            boolean canSwitchMode = realState == BleConnectionManager.ConnectionState.DISCONNECTED && 
+                                   mockState == BleConnectionManager.ConnectionState.DISCONNECTED;
+            
+            if (canSwitchMode) {
                 if (enableTestMode) {
+                    // Switch to test mode
                     testDataGenerator.setMockBleManager(mockConnectionManager);
                     btIntegration.cleanup();
                     btIntegration = new BluetoothServiceIntegration(mockConnectionManager);
                     btIntegration.addSensorDataListener(this);
                     testModeActive = true;
                     updateTestModeUI(mode);
+                    
+                    // Ensure UI reflects the current mock connection state
+                    updateConnectionUI(mockConnectionManager.getCurrentState());
                     showToast("Test mode enabled - Use Connect button to simulate connection");
                 } else {
+                    // Switch to real mode
                     if (testDataGenerator != null) {
                         testDataGenerator.stopTestMode();
                     }
                     btIntegration.cleanup();
                     btIntegration = new BluetoothServiceIntegration(connectionManager);
                     btIntegration.addSensorDataListener(this);
-                tvTestMode.setVisibility(View.GONE);
+                    tvTestMode.setVisibility(View.GONE);
                     testModeActive = false;
+                    
+                    // Ensure UI reflects the current real connection state
+                    updateConnectionUI(connectionManager.getCurrentState());
                     showToast("Test mode disabled - Real BLE connection mode");
                 }
+                
+                // Re-setup observers for the new mode
+                setupObservers();
             } else {
                 // Revert test data generator's mode if can't change mode
                 if (testDataGenerator != null) {
@@ -1123,6 +1238,9 @@ public class MainActivity extends AppCompatActivity implements
                 testDataGenerator.stopTestMode();
                 tvTestMode.setVisibility(View.GONE);
                 testModeActive = false;
+                
+                // Ensure UI reflects the current real connection state
+                updateConnectionUI(connectionManager.getCurrentState());
             } else {
                 updateTestModeUI(mode);
                 
@@ -1183,9 +1301,9 @@ public class MainActivity extends AppCompatActivity implements
             
             // Log for test data
             if (data.isTestData()) {
-                Log.d(Constants.TAG_MAIN, "Test dust data triggered notification: " + data.getValue() + " > " + dustThreshold);
+                Log.d(Constants.TAG_MAIN, "Test dust data triggered notification: " + data.getValue() + " µg/m³ (threshold: " + dustThreshold + " µg/m³)");
             } else {
-                Log.d(Constants.TAG_MAIN, "Dust threshold exceeded: " + data.getValue() + " > " + dustThreshold);
+                Log.d(Constants.TAG_MAIN, "Dust threshold exceeded: " + data.getValue() + " µg/m³ (threshold: " + dustThreshold + " µg/m³)");
             }
         }
     }
@@ -1203,7 +1321,7 @@ public class MainActivity extends AppCompatActivity implements
                 // Start tracking high noise
                 isHighNoiseTracking = true;
                 highNoiseStartTime = currentTime;
-                Log.d(Constants.TAG_MAIN, "Started tracking high noise level: " + data.getValue() + " dB");
+                Log.d(Constants.TAG_MAIN, "Started tracking high noise level: " + data.getValue() + " dB (threshold: " + noiseThreshold + " dB)");
             } else if (currentTime - highNoiseStartTime >= SUSTAINED_NOISE_THRESHOLD_MS) {
                 // High noise sustained for required duration, trigger alert
                 if (notificationUtils != null) {
@@ -1212,9 +1330,9 @@ public class MainActivity extends AppCompatActivity implements
                 
                 // log for test data
                 if (data.isTestData()) {
-                    Log.d(Constants.TAG_MAIN, "Test noise data triggered notification after sustained period: " + data.getValue());
+                    Log.d(Constants.TAG_MAIN, "Test noise data triggered notification after sustained period: " + data.getValue() + " dB (threshold: " + noiseThreshold + " dB)");
                 } else {
-                    Log.d(Constants.TAG_MAIN, "Noise data triggered notification after sustained period: " + data.getValue());
+                    Log.d(Constants.TAG_MAIN, "Noise data triggered notification after sustained period: " + data.getValue() + " dB (threshold: " + noiseThreshold + " dB)");
                 }
                 
                 // Reset tracking timestamp to avoid constant alerts
@@ -1224,7 +1342,7 @@ public class MainActivity extends AppCompatActivity implements
             // Reset tracking when noise drops below threshold
             if (isHighNoiseTracking) {
                 isHighNoiseTracking = false;
-                Log.d(Constants.TAG_MAIN, "Stopped tracking high noise, level dropped to: " + data.getValue() + " dB");
+                Log.d(Constants.TAG_MAIN, "Stopped tracking high noise, level dropped to: " + data.getValue() + " dB (below threshold: " + noiseThreshold + " dB)");
             }
         }
     }
@@ -1242,9 +1360,9 @@ public class MainActivity extends AppCompatActivity implements
             
             // Log for test data
             if (data.isTestData()) {
-                Log.d(Constants.TAG_MAIN, "Test gas data triggered notification: " + data.getValue() + " > " + gasThreshold);
+                Log.d(Constants.TAG_MAIN, "Test gas data triggered notification: " + data.getValue() + " ppm (threshold: " + gasThreshold + " ppm)");
             } else {
-                Log.d(Constants.TAG_MAIN, "Gas threshold exceeded: " + data.getValue() + " > " + gasThreshold);
+                Log.d(Constants.TAG_MAIN, "Gas threshold exceeded: " + data.getValue() + " ppm (threshold: " + gasThreshold + " ppm)");
             }
         }
     }

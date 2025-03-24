@@ -13,11 +13,8 @@
         android:id="@+id/settings_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        style="@style/SmartHat.Toolbar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="Settings" 
         android:contentDescription="Settings toolbar"/>
 
     <ScrollView
@@ -36,8 +33,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="8dp"
                 android:text="Notifications"
-                android:textSize="18sp"
-                android:textStyle="bold"
+                style="@style/SmartHat.SectionHeader"
                 android:focusable="true"
                 android:contentDescription="Notifications section" />
 
@@ -45,10 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="#E0E0E0">
+                style="@style/SmartHat.Card">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -80,12 +73,13 @@
 
                         <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/switch_notifications"
+                            style="@style/SmartHat.SwitchCompat"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:minHeight="48dp"
+                            android:contentDescription="Toggle all notifications"
                             android:minWidth="48dp"
-                            android:contentDescription="Toggle all notifications" />
+                            android:minHeight="48dp" />
                     </LinearLayout>
 
                     <View
@@ -93,8 +87,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="16dp"
-                        android:background="@android:color/darker_gray"
-                        android:alpha="0.2" />
+                        android:background="#E0E0E0" />
 
                     <!-- Dust Notifications Toggle -->
                     <LinearLayout
@@ -120,12 +113,10 @@
 
                         <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/switch_dust_notifications"
+                            style="@style/SmartHat.SwitchCompat"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:minHeight="48dp"
-                            android:minWidth="48dp"
-                            android:contentDescription="Toggle dust notifications" />
+                            android:layout_gravity="center_vertical" />
                     </LinearLayout>
 
                     <!-- Noise Notifications Toggle -->
@@ -150,6 +141,35 @@
 
                         <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/switch_noise_notifications"
+                            style="@style/SmartHat.SwitchCompat"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical" />
+                    </LinearLayout>
+
+                    <!-- Gas Notifications Toggle -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="16dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Gas Notifications"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/switch_gas_notifications"
+                            style="@style/SmartHat.SwitchCompat"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical" />
@@ -165,17 +185,13 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
                 android:text="Alert Thresholds"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                style="@style/SmartHat.SectionHeader" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="#E0E0E0">
+                style="@style/SmartHat.Card">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -218,7 +234,7 @@
                             android:layout_weight="1"
                             android:gravity="end"
                             android:text="Moderate Risk"
-                            android:textColor="#FFC107"
+                            android:textColor="?attr/colorSecondary"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -228,15 +244,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="16dp"
+                        style="@style/SmartHat.Slider"
                         android:contentDescription="Adjust dust threshold value"
                         android:stepSize="1.0"
                         android:valueFrom="10"
-                        android:valueTo="500"
-                        app:labelBehavior="floating"
-                        app:thumbColor="@android:color/holo_orange_dark"
-                        app:thumbRadius="6dp"
-                        app:trackColorActive="@android:color/holo_orange_light"
-                        app:trackColorInactive="#E0E0E0" />
+                        android:valueTo="500" />
 
                     <!-- Noise Threshold -->
                     <TextView
@@ -274,7 +286,7 @@
                             android:layout_weight="1"
                             android:gravity="end"
                             android:text="OSHA Standard"
-                            android:textColor="#4CAF50"
+                            android:textColor="?attr/colorSecondary"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -283,16 +295,64 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginBottom="16dp"
+                        style="@style/SmartHat.Slider"
                         android:contentDescription="Adjust noise threshold value"
                         android:stepSize="1.0"
+                        android:valueFrom="30"
+                        android:valueTo="130" />
+
+                    <!-- Gas Threshold -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Gas Alert Threshold"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Value: "
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/txt_gas_threshold_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100.0 ppm"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                        
+                        <TextView
+                            android:id="@+id/txt_gas_threshold_risk"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:text="Moderate"
+                            android:textColor="?attr/colorSecondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <com.google.android.material.slider.Slider
+                        android:id="@+id/slider_gas_threshold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="16dp"
+                        style="@style/SmartHat.Slider"
+                        android:contentDescription="Adjust gas threshold value"
+                        android:stepSize="5.0"
                         android:valueFrom="50"
-                        android:valueTo="115"
-                        app:labelBehavior="floating"
-                        app:thumbColor="@android:color/holo_blue_dark"
-                        app:thumbRadius="6dp"
-                        app:trackColorActive="@android:color/holo_blue_light"
-                        app:trackColorInactive="#E0E0E0" />
+                        android:valueTo="300" />
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btn_reset_thresholds"

@@ -1,67 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Material 3 color system for Android 12 -->
-    <color name="primary">#1F6E8C</color>
+    <!-- Material3 Light Theme Colors based on #266D8D -->
+    <color name="primary">#266D8D</color>
+    <color name="primary_light">#4A8CAD</color>
+    <color name="primary_dark">#16506A</color>
     <color name="on_primary">#FFFFFF</color>
-    <color name="primary_container">#C1EBFF</color>
-    <color name="on_primary_container">#001F2A</color>
+    <color name="primary_container">#D0E4F0</color>
+    <color name="on_primary_container">#0A2635</color>
     
-    <color name="secondary">#4C616B</color>
+    <color name="secondary">#266D8D</color>
+    <color name="secondary_light">#4A8CAD</color>
+    <color name="secondary_dark">#16506A</color>
     <color name="on_secondary">#FFFFFF</color>
-    <color name="secondary_container">#CFE6F1</color>
-    <color name="on_secondary_container">#071E26</color>
+    <color name="secondary_container">#D0E4F0</color>
+    <color name="on_secondary_container">#0A2635</color>
+    
+    <color name="tertiary">#16506A</color>
+    <color name="on_tertiary">#FFFFFF</color>
+    <color name="tertiary_container">#B8DCF0</color>
+    <color name="on_tertiary_container">#0A2635</color>
     
     <color name="error">#BA1A1A</color>
-    <color name="error_container">#FFDAD6</color>
     <color name="on_error">#FFFFFF</color>
+    <color name="error_container">#FFDAD6</color>
     <color name="on_error_container">#410002</color>
     
-    <color name="background">#F8F9FA</color>
-    <color name="on_background">#191C1E</color>
-    <color name="surface">#FBFDFD</color>
-    <color name="on_surface">#191C1E</color>
-    <color name="surface_variant">#DDE3EA</color>
-    <color name="on_surface_variant">#41484D</color>
+    <color name="background">#F8FAFC</color>
+    <color name="on_background">#1A1C18</color>
+    <color name="surface">#F8FAFC</color>
+    <color name="on_surface">#1A1C18</color>
+    <color name="surface_variant">#DFE4F0</color>
+    <color name="on_surface_variant">#43483F</color>
     
-    <!-- Material You harmonized colors (Android 12+) -->
-    <color name="harmonized_primary">#1F6E8C</color>
-    <color name="harmonized_secondary">#4C616B</color>
-    <color name="harmonized_tertiary">#62637B</color>
+    <color name="outline">#73796E</color>
+    <color name="outline_variant">#C3C8BB</color>
     
-    <!-- Legacy colors maintained for backward compatibility -->
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#1F6E8C</color>
-    <color name="purple_700">#0A4B66</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <!-- Card and text colors -->
+    <color name="card_background">#FFFFFF</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="alert_background">#FDF3E5</color>
+    
+    <!-- Sensor-specific colors -->
+    <color name="dust_color">#FF8800</color>
+    <color name="noise_color">#4A8CAD</color>
+    <color name="gas_color">#FF2222</color>
+    
+    <!-- Chart colors -->
+    <color name="chart_grid">#DDDDDD</color>
+    <color name="chart_label">#266D8D</color>
+    
+    <!-- Transparent colors -->
+    <color name="transparent">#00000000</color>
+    <color name="semi_transparent">#80000000</color>
+    
+    <!-- Status colors -->
+    <color name="success">#4CAF50</color>
+    <color name="warning">#FFC107</color>
+    <color name="danger">#F44336</color>
+    <color name="info">#266D8D</color>
+    
+    <!-- Legacy colors needed for backward compatibility -->
+    <color name="purple_500">#266D8D</color>
+    <color name="purple_700">#16506A</color>
+    <color name="purple_200">#4A8CAD</color>
+    <color name="teal_200">#266D8D</color>
+    <color name="teal_700">#16506A</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     
-    <!-- Connection status colors - optimized for Android 12 -->
-    <color name="connected">#4CAF50</color>
-    <color name="connecting">#FFC107</color>
-    <color name="disconnected">#F44336</color>
-    
-    <!-- Sensor colors - enhanced for visibility on Pixel 4a -->
-    <color name="sensor_normal">#4CAF50</color>
-    <color name="sensor_alert">#F44336</color>
-    
-    <!-- UI colors optimized for Android 12 on Pixel 4a -->
-    <color name="test_mode_background">#1F6E8C</color>
+    <!-- UI colors for main activity -->
+    <color name="test_mode_background">#266D8D</color>
     <color name="test_mode_text">#FFFFFF</color>
     <color name="status_text_color">#191C1E</color>
     <color name="disconnected_text">#F44336</color>
     <color name="helper_text">#5D6569</color>
-    <color name="dust_icon_tint">#574F7D</color>
-    <color name="noise_icon_tint">#E3B323</color>
+    <color name="dust_icon_tint">#16506A</color>
+    <color name="noise_icon_tint">#266D8D</color>
     <color name="sensor_label">#455A64</color>
     <color name="sensor_value">#212121</color>
     <color name="connect_button_bg">@color/primary</color>
     <color name="connect_button_text">@color/on_primary</color>
     <color name="footer_text">#78909C</color>
     
-    <!-- Elevation overlay colors for Android 12 Material Design -->
-    <color name="elevation_overlay_1">#0F000000</color>
-    <color name="elevation_overlay_2">#14000000</color>
-    <color name="elevation_overlay_3">#1A000000</color>
+    <!-- Connection status colors -->
+    <color name="connected">#4CAF50</color>
+    <color name="connecting">#FFC107</color>
+    <color name="disconnected">#F44336</color>
+    <color name="sensor_normal">#4CAF50</color>
+    <color name="sensor_alert">#F44336</color>
 </resources>

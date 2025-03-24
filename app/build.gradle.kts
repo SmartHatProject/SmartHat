@@ -91,7 +91,10 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.viewmodel.android)
-
+    
+    // Preferences support
+    implementation("androidx.preference:preference:1.2.1")
+    
     // Room Database
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")

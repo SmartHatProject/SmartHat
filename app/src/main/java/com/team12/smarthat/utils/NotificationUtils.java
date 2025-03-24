@@ -33,7 +33,7 @@ public class NotificationUtils {
     private final Map<String, Long> lastAlertTimes = new HashMap<>();
     
     //alert cooldown periods
-    private static final long ALERT_COOLDOWN = 30000; // 30s sametype
+    private static final long ALERT_COOLDOWN = Constants.NOTIFICATION_COOLDOWN_TYPE; // 20sec sametype
     private static final long GENERAL_COOLDOWN = 10000; // 10s
 
     public NotificationUtils(Context context) {
@@ -188,6 +188,33 @@ public class NotificationUtils {
     }
 
     /**
+     * Get custom dust threshold
+     * @return The user-defined dust threshold or default from Constants
+     */
+    private float getCustomDustThreshold() {
+        return context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
+                .getFloat(Constants.PREF_DUST_THRESHOLD, Constants.DUST_THRESHOLD);
+    }
+    
+    /**
+     * Get custom noise threshold
+     * @return The user-defined noise threshold or default from Constants
+     */
+    private float getCustomNoiseThreshold() {
+        return context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
+                .getFloat(Constants.PREF_NOISE_THRESHOLD, Constants.NOISE_THRESHOLD);
+    }
+    
+    /**
+     * Get custom gas threshold
+     * @return The user-defined gas threshold or default from Constants
+     */
+    private float getCustomGasThreshold() {
+        return context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
+                .getFloat(Constants.PREF_GAS_THRESHOLD, Constants.GAS_THRESHOLD);
+    }
+
+    /**
      * Show an alert for dust sensor threshold breach
      * @param data the dust sensor data that triggered the alert
      */
@@ -198,8 +225,7 @@ public class NotificationUtils {
         float value = data.getValue();
         
         // Get custom threshold if available
-        float threshold = context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
-                .getFloat(Constants.PREF_DUST_THRESHOLD, Constants.DUST_THRESHOLD);
+        float threshold = getCustomDustThreshold();
         
         String title = isTestData ? "Test Dust Alert" : "Dust Alert";
         String message = String.format("Dust level of %.1f µg/m³ exceeds safe limit (%.1f µg/m³)%s", 
@@ -220,8 +246,7 @@ public class NotificationUtils {
         float value = data.getValue();
         
         // Get custom threshold if available
-        float threshold = context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
-                .getFloat(Constants.PREF_NOISE_THRESHOLD, Constants.NOISE_THRESHOLD);
+        float threshold = getCustomNoiseThreshold();
         
         String title = isTestData ? "Test Noise Alert" : "Noise Alert";
         String message = String.format("Noise level of %.1f dB exceeds safe limit (%.1f dB)%s", 
@@ -242,8 +267,7 @@ public class NotificationUtils {
         float value = data.getValue();
         
         // Get custom threshold if available
-        float threshold = context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
-                .getFloat(Constants.PREF_GAS_THRESHOLD, Constants.GAS_THRESHOLD);
+        float threshold = getCustomGasThreshold();
         
         String title = isTestData ? "Test Gas Alert" : "Gas Alert";
         String message = String.format("Gas level of %.1f ppm exceeds safe limit (%.1f ppm)%s", 

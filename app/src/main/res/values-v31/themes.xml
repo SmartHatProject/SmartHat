@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme for Android 12+ (API 31+) -->
+    <style name="Theme.SmartHat" parent="Theme.Material3.DayNight">
+        <!-- Enable dynamic colors on Android 12+ -->
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
+        
+        <!-- Make status and navigation bars transparent -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
+        
+        <!-- Shape customization -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.SmartHat.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.SmartHat.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.SmartHat.LargeComponent</item>
+        
+        <!-- Enable elevation overlays for Pixel 4a -->
+        <item name="elevationOverlayEnabled">true</item>
+    </style>
+    
+    <!-- No action bar theme for Android 12+ -->
+    <style name="Theme.SmartHat.NoActionBar" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Enable dynamic colors on Android 12+ -->
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
+        
+        <!-- Make status and navigation bars transparent -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
+        
+        <!-- Shape customization -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.SmartHat.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.SmartHat.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.SmartHat.LargeComponent</item>
+        
+        <!-- Enable elevation overlays for Pixel 4a -->
+        <item name="elevationOverlayEnabled">true</item>
+    </style>
+    
+    <!-- Shape appearance styles -->
+    <style name="ShapeAppearance.SmartHat.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <style name="ShapeAppearance.SmartHat.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="ShapeAppearance.SmartHat.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+    
+    <!-- Theme overlay for dynamic colors optimized for Pixel 4a OLED -->
+    <style name="ThemeOverlay.SmartHat.DynamicColors" parent="">
+        <!-- Optimize dark surfaces for OLED displays on Pixel 4a -->
+        <item name="colorSurface">@android:color/system_neutral1_900</item>
+        <item name="colorOnSurface">@android:color/system_neutral1_50</item>
+        <item name="android:colorBackground">@android:color/system_neutral1_900</item>
+        <item name="colorOnBackground">@android:color/system_neutral1_50</item>
+    </style>
+</resources> 

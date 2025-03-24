@@ -7,7 +7,8 @@
     android:layout_marginBottom="12dp"
     android:layout_marginHorizontal="4dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/card_background">
     
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +24,7 @@
             android:background="@android:drawable/dialog_holo_light_frame"
             android:padding="4dp"
             android:src="@android:drawable/ic_menu_compass"
-            android:tint="#73757F" />
+            android:tint="@color/primary" />
             
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,7 +44,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
                     android:text="Dust Sensor"
-                    android:textColor="#071353"
+                    android:textColor="@color/primary"
                     android:textSize="18sp" />
 
                 <TextView
@@ -53,7 +54,7 @@
                     android:fontFamily="monospace"
                     android:gravity="end"
                     android:text="75.0 µg/m³"
-                    android:textColor="#F44336"
+                    android:textColor="@color/secondary"
                     android:textSize="18sp" />
             </LinearLayout>
             
@@ -64,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:fontFamily="sans-serif"
-                android:textColor="#757575"
+                android:textColor="@color/text_secondary"
                 android:layout_marginTop="6dp"
                 android:text="March 15, 2023 - 14:30"/>
                 
@@ -73,12 +74,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:background="#FDF3E5"
+                android:background="@color/alert_background"
                 android:fontFamily="sans-serif-medium"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="2dp"
                 android:text="Exceeded threshold"
-                android:textColor="#EF553A"
+                android:textColor="@color/primary"
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>

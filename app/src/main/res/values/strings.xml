@@ -25,6 +25,7 @@
     <!-- Initial Values -->
     <string name="dust_initial">Dust: 10.0 µg/m³</string>
     <string name="noise_initial">Noise: 40.0 dB</string>
+    <string name="gas_initial">Gas: 0.0 ppm</string>
     
     <!-- Connection Helper Messages -->
     <string name="helper_text_connected">Connected to SmartHat. Receiving data...</string>
@@ -69,4 +70,12 @@
     <string name="read_rssi">Read RSSI</string>
     <string name="start_rssi_monitoring">Start RSSI Monitoring</string>
     <string name="test_log_initial">Test Log:\n</string>
+    
+    <!-- Preferences Strings -->
+    <string name="appearance">Appearance</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="use_dynamic_colors">Material You Colors</string>
+    <string name="use_dynamic_colors_summary">Use dynamic colors from your wallpaper (Android 12+ only)</string>
+    <string name="use_oled_dark_mode">OLED Dark Mode</string>
+    <string name="use_oled_dark_mode_summary">Use true black for dark mode on OLED screens to save battery</string>
 </resources>

@@ -25,6 +25,7 @@ public class SettingsActivity extends AppCompatActivity {
     // Default thresholds from Constants
     private float dustThreshold = Constants.DUST_THRESHOLD;
     private float noiseThreshold = Constants.NOISE_THRESHOLD;
+    private float gasThreshold = Constants.GAS_THRESHOLD;
     
     // Track if values have changed
     private boolean thresholdsChanged = false;
@@ -57,6 +58,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             dustThreshold = savedInstanceState.getFloat("dust_threshold", Constants.DUST_THRESHOLD);
             noiseThreshold = savedInstanceState.getFloat("noise_threshold", Constants.NOISE_THRESHOLD);
+            gasThreshold = savedInstanceState.getFloat("gas_threshold", Constants.GAS_THRESHOLD);
             thresholdsChanged = savedInstanceState.getBoolean("thresholds_changed", false);
         } else {
             // Load saved thresholds
@@ -74,6 +76,7 @@ public class SettingsActivity extends AppCompatActivity {
         // Save current slider values for configuration changes
         outState.putFloat("dust_threshold", dustThreshold);
         outState.putFloat("noise_threshold", noiseThreshold);
+        outState.putFloat("gas_threshold", gasThreshold);
         outState.putBoolean("thresholds_changed", thresholdsChanged);
         super.onSaveInstanceState(outState);
     }
@@ -93,6 +96,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (thresholdsChanged) {
             saveDustThreshold();
             saveNoiseThreshold();
+            saveGasThreshold();
             thresholdsChanged = false;
             Log.d(Constants.TAG_MAIN, "Thresholds saved on activity pause");
         }
@@ -102,10 +106,12 @@ public class SettingsActivity extends AppCompatActivity {
         // Load saved values or use defaults from Constants
         dustThreshold = preferences.getFloat(Constants.PREF_DUST_THRESHOLD, Constants.DUST_THRESHOLD);
         noiseThreshold = preferences.getFloat(Constants.PREF_NOISE_THRESHOLD, Constants.NOISE_THRESHOLD);
+        gasThreshold = preferences.getFloat(Constants.PREF_GAS_THRESHOLD, Constants.GAS_THRESHOLD);
         
         // Update UI with current values immediately
         updateDustThresholdText(dustThreshold);
         updateNoiseThresholdText(noiseThreshold);
+        updateGasThresholdText(gasThreshold);
     }
     
     private void updateNotificationToggleState() {
@@ -126,6 +132,9 @@ public class SettingsActivity extends AppCompatActivity {
         
         // Setup noise notifications toggle
         setupNoiseNotificationsToggle();
+
+        // Setup gas notifications toggle
+        setupGasNotificationsToggle();
     }
     
     private void setupMainNotificationsToggle() {
@@ -195,6 +204,23 @@ public class SettingsActivity extends AppCompatActivity {
             Log.d(Constants.TAG_MAIN, "Noise notifications " + (isChecked ? "enabled" : "disabled") + " in Settings");
         });
     }
+
+    private void setupGasNotificationsToggle() {
+        // Get current gas notification state
+        boolean gasNotificationsEnabled = preferences.getBoolean(
+                Constants.PREF_GAS_NOTIFICATIONS_ENABLED, true);
+        binding.switchGasNotifications.setChecked(gasNotificationsEnabled);
+        
+        // Set initial enabled state based on master switch
+        binding.switchGasNotifications.setEnabled(binding.switchNotifications.isChecked());
+        
+        // Set listener
+        binding.switchGasNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            // Set gas notifications enabled/disabled
+            notificationUtils.setNotificationsEnabledForType("gas", isChecked);
+            Log.d(Constants.TAG_MAIN, "Gas notifications " + (isChecked ? "enabled" : "disabled") + " in Settings");
+        });
+    }
     
     /**
      * Updates the sensor-specific notification switches based on the master switch state
@@ -204,6 +230,7 @@ public class SettingsActivity extends AppCompatActivity {
         // Disable/enable the sensor-specific switches based on master switch
         binding.switchDustNotifications.setEnabled(masterEnabled);
         binding.switchNoiseNotifications.setEnabled(masterEnabled);
+        binding.switchGasNotifications.setEnabled(masterEnabled);
     }
     
     private void setupThresholdSliders() {
@@ -212,6 +239,9 @@ public class SettingsActivity extends AppCompatActivity {
         
         // Setup noise threshold slider
         setupNoiseThresholdSlider();
+
+        // Setup gas threshold slider
+        setupGasThresholdSlider();
     }
     
     private void setupDustThresholdSlider() {
@@ -285,24 +315,64 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void setupGasThresholdSlider() {
+        // Set initial value based on current threshold
+        binding.sliderGasThreshold.setValue(gasThreshold);
+        
+        // Update value text and risk level
+        updateGasThresholdText(gasThreshold);
+        
+        // Set listener for continuous updates
+        binding.sliderGasThreshold.addOnChangeListener((slider, value, fromUser) -> {
+            // Update display
+            updateGasThresholdText(value);
+            
+            // Save new threshold
+            if (fromUser) {
+                gasThreshold = value;
+                thresholdsChanged = true;
+                Log.d(Constants.TAG_MAIN, "Gas threshold updated to: " + gasThreshold);
+            }
+        });
+        
+        // Set listener for when user stops interacting
+        binding.sliderGasThreshold.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
+            @Override
+            public void onStartTrackingTouch(Slider slider) {
+                // Not needed but required by interface
+            }
+            
+            @Override
+            public void onStopTrackingTouch(Slider slider) {
+                // Save when user stops interacting with slider
+                saveGasThreshold();
+                Log.d(Constants.TAG_MAIN, "Gas threshold saved: " + gasThreshold);
+            }
+        });
+    }
     
     private void setupResetButton() {
         binding.btnResetThresholds.setOnClickListener(v -> {
             // Reset to default values from Constants
             dustThreshold = Constants.DUST_THRESHOLD;
             noiseThreshold = Constants.NOISE_THRESHOLD;
+            gasThreshold = Constants.GAS_THRESHOLD;
             
             // Update UI
             binding.sliderDustThreshold.setValue(dustThreshold);
             binding.sliderNoiseThreshold.setValue(noiseThreshold);
+            binding.sliderGasThreshold.setValue(gasThreshold);
             
             // Update display texts
             updateDustThresholdText(dustThreshold);
             updateNoiseThresholdText(noiseThreshold);
+            updateGasThresholdText(gasThreshold);
             
             // Save default values
             saveDustThreshold();
             saveNoiseThreshold();
+            saveGasThreshold();
             
             Log.d(Constants.TAG_MAIN, "Thresholds reset to defaults");
         });
@@ -362,6 +432,32 @@ public class SettingsActivity extends AppCompatActivity {
             riskText.setTextColor(getResources().getColor(android.R.color.holo_red_dark, null));
         }
     }
+
+    private void updateGasThresholdText(float threshold) {
+        binding.txtGasThresholdValue.setText(String.format("%.1f ppm", threshold));
+        
+        // Update risk level indicator
+        TextView riskText = binding.txtGasThresholdRisk;
+        if (threshold <= 50.0f) {
+            riskText.setText("Good");
+            riskText.setTextColor(getResources().getColor(android.R.color.holo_green_dark, null));
+        } else if (threshold <= 100.0f) {
+            riskText.setText("Moderate");
+            riskText.setTextColor(getResources().getColor(android.R.color.holo_blue_dark, null));
+        } else if (threshold <= 150.0f) {
+            riskText.setText("Unhealthy for Sensitive");
+            riskText.setTextColor(getResources().getColor(android.R.color.holo_orange_light, null));
+        } else if (threshold <= 200.0f) {
+            riskText.setText("Unhealthy");
+            riskText.setTextColor(getResources().getColor(android.R.color.holo_orange_dark, null));
+        } else if (threshold <= 300.0f) {
+            riskText.setText("Very Unhealthy");
+            riskText.setTextColor(getResources().getColor(android.R.color.holo_red_light, null));
+        } else {
+            riskText.setText("Hazardous");
+            riskText.setTextColor(getResources().getColor(android.R.color.holo_red_dark, null));
+        }
+    }
     
     private void saveDustThreshold() {
         SharedPreferences.Editor editor = preferences.edit();
@@ -376,6 +472,14 @@ public class SettingsActivity extends AppCompatActivity {
         editor.putFloat(Constants.PREF_NOISE_THRESHOLD, noiseThreshold);
         editor.commit(); // Use commit() instead of apply() to ensure synchronous update
         Log.d(Constants.TAG_MAIN, "Noise threshold set to: " + noiseThreshold);
+        thresholdsChanged = false;
+    }
+
+    private void saveGasThreshold() {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putFloat(Constants.PREF_GAS_THRESHOLD, gasThreshold);
+        editor.commit(); // Use commit() instead of apply() to ensure synchronous update
+        Log.d(Constants.TAG_MAIN, "Gas threshold set to: " + gasThreshold);
         thresholdsChanged = false;
     }
     

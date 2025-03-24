@@ -32,13 +32,19 @@ public class TestDataGenerator {
     private static final float MIN_NOISE_VALUE = 40.0f;
     private static final float MAX_NOISE_VALUE = 120.0f;
     private static final float HIGH_NOISE_VALUE = Constants.NOISE_THRESHOLD + 20.0f;
+
+    // Gas value ranges
+    private static final float MIN_GAS_VALUE = 5.0f;
+    private static final float MAX_GAS_VALUE = 300.0f;
+    private static final float HIGH_GAS_VALUE = 180.0f;
     //NOTE FOR FUTURE: WE WILL INVENTUALLY GET RID OF SOME PARTS OF THIS (UNLESS...)
     // Test mode states
     public enum TestMode {
         OFF,            
         NORMAL,        
         HIGH_DUST,      
-        HIGH_NOISE,     
+        HIGH_NOISE,
+        HIGH_GAS,      
         RANDOM          
     }
     
@@ -53,6 +59,7 @@ public class TestDataGenerator {
     // Simulated characteristic objects for test data
     private BluetoothGattCharacteristic dustCharacteristic;
     private BluetoothGattCharacteristic noiseCharacteristic;
+    private BluetoothGattCharacteristic gasCharacteristic;
     
     // Legacy data callback interface (for backward compatibility)
     public interface TestDataListener {
@@ -127,6 +134,13 @@ public class TestDataGenerator {
                     BluetoothGattCharacteristic.PERMISSION_READ
             );
             
+            // Create mock characteristic for gas data
+            gasCharacteristic = new BluetoothGattCharacteristic(
+                    ESP32BluetoothSpec.GAS_CHARACTERISTIC_UUID,
+                    BluetoothGattCharacteristic.PROPERTY_READ | BluetoothGattCharacteristic.PROPERTY_NOTIFY,
+                    BluetoothGattCharacteristic.PERMISSION_READ
+            );
+            
             Log.d(TAG, "Mock characteristics created");
         } catch (Exception e) {
             Log.e(TAG, "Error creating mock characteristics: " + e.getMessage(), e);
@@ -142,47 +156,73 @@ public class TestDataGenerator {
             }
             
             try {
-                // Generate both dust and noise data (alternating)
-                boolean generateDust = System.currentTimeMillis() % 2 == 0;
+                // Generate sensor data (alternating between all three sensors)
+                long timestamp = System.currentTimeMillis();
+                int sensorType = (int)(timestamp % 3); // 0 = dust, 1 = noise, 2 = gas
                 
-                if (generateDust) {
-                    // Generate dust data
-                    SensorData dustData = generateDustData();
-                    
-                    // Send data through mock BLE manager if available
-                    if (mockBleManager != null && dustCharacteristic != null) {
-                        // Set the value on the characteristic
-                        String jsonStr = dustData.getMetadata();
-                        dustCharacteristic.setValue(jsonStr.getBytes());
+                switch (sensorType) {
+                    case 0: // Dust
+                        // Generate dust data
+                        SensorData dustData = generateDustData();
                         
-                        // Simulate characteristic change event
-                        mockBleManager.simulateCharacteristicChange(dustCharacteristic);
-                        Log.d(TAG, "Simulated dust characteristic change");
-                    }
-                    
-                    // Also send through legacy direct callback if set
-                    if (legacyListener != null) {
-                        legacyListener.onTestDataGenerated(dustData);
-                    }
-                } else {
-                    // Generate noise data
-                    SensorData noiseData = generateNoiseData();
-                    
-                    // Send data through mock BLE manager if available
-                    if (mockBleManager != null && noiseCharacteristic != null) {
-                        // Set the value on the characteristic
-                        String jsonStr = noiseData.getMetadata();
-                        noiseCharacteristic.setValue(jsonStr.getBytes());
+                        // Send data through mock BLE manager if available
+                        if (mockBleManager != null && dustCharacteristic != null) {
+                            // Set the value on the characteristic
+                            String jsonStr = dustData.getMetadata();
+                            dustCharacteristic.setValue(jsonStr.getBytes());
+                            
+                            // Simulate characteristic change event
+                            mockBleManager.simulateCharacteristicChange(dustCharacteristic);
+                            Log.d(TAG, "Simulated dust characteristic change");
+                        }
                         
-                        // Simulate characteristic change event
-                        mockBleManager.simulateCharacteristicChange(noiseCharacteristic);
-                        Log.d(TAG, "Simulated noise characteristic change");
-                    }
-                    
-                    // Also send through legacy direct callback if set
-                    if (legacyListener != null) {
-                        legacyListener.onTestDataGenerated(noiseData);
-                    }
+                        // Also send through legacy direct callback if set
+                        if (legacyListener != null) {
+                            legacyListener.onTestDataGenerated(dustData);
+                        }
+                        break;
+                        
+                    case 1: // Noise
+                        // Generate noise data
+                        SensorData noiseData = generateNoiseData();
+                        
+                        // Send data through mock BLE manager if available
+                        if (mockBleManager != null && noiseCharacteristic != null) {
+                            // Set the value on the characteristic
+                            String jsonStr = noiseData.getMetadata();
+                            noiseCharacteristic.setValue(jsonStr.getBytes());
+                            
+                            // Simulate characteristic change event
+                            mockBleManager.simulateCharacteristicChange(noiseCharacteristic);
+                            Log.d(TAG, "Simulated noise characteristic change");
+                        }
+                        
+                        // Also send through legacy direct callback if set
+                        if (legacyListener != null) {
+                            legacyListener.onTestDataGenerated(noiseData);
+                        }
+                        break;
+                        
+                    case 2: // Gas
+                        // Generate gas data
+                        SensorData gasData = generateGasData();
+                        
+                        // Send data through mock BLE manager if available
+                        if (mockBleManager != null && gasCharacteristic != null) {
+                            // Set the value on the characteristic
+                            String jsonStr = gasData.getMetadata();
+                            gasCharacteristic.setValue(jsonStr.getBytes());
+                            
+                            // Simulate characteristic change event
+                            mockBleManager.simulateCharacteristicChange(gasCharacteristic);
+                            Log.d(TAG, "Simulated gas characteristic change");
+                        }
+                        
+                        // Also send through legacy direct callback if set
+                        if (legacyListener != null) {
+                            legacyListener.onTestDataGenerated(gasData);
+                        }
+                        break;
                 }
                 
                 // Schedule next generation based on mode
@@ -192,7 +232,7 @@ public class TestDataGenerator {
             } catch (Exception e) {
                 Log.e(TAG, "Error generating test data: " + e.getMessage(), e);
                 
-                
+                // Reschedule despite error
                 handler.postDelayed(this, NORMAL_INTERVAL_MS);
             }
         }
@@ -278,6 +318,44 @@ public class TestDataGenerator {
         return data;
     }
     
+    private SensorData generateGasData() {
+        float value;
+        
+        switch (currentMode) {
+            case HIGH_GAS:
+                // High gas values
+                value = HIGH_GAS_VALUE + (random.nextFloat() * 50.0f);
+                break;
+                
+            case RANDOM:
+                // Random values across entire range
+                value = MIN_GAS_VALUE + (random.nextFloat() * (MAX_GAS_VALUE - MIN_GAS_VALUE));
+                break;
+                
+            case NORMAL:
+            default:
+                // Normal values - below dangerous levels
+                value = MIN_GAS_VALUE + (random.nextFloat() * 80.0f);
+                break;
+        }
+        
+        // Create metadata JSON
+        JSONObject json = new JSONObject();
+        try {
+            json.put("type", SensorData.TYPE_GAS);
+            json.put("value", value);
+            json.put("timestamp", System.currentTimeMillis());
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating JSON for gas test data", e);
+        }
+        
+        // Create sensor data object
+        SensorData data = new SensorData(SensorData.TYPE_GAS, value, System.currentTimeMillis());
+        data.setSource(SensorData.SOURCE_TEST);
+        data.setMetadata(json.toString());
+        
+        return data;
+    }
     
     public void cleanup() {
         stopTestMode();
@@ -286,6 +364,7 @@ public class TestDataGenerator {
         mockBleManager = null;
         dustCharacteristic = null;
         noiseCharacteristic = null;
+        gasCharacteristic = null;
     }
     
    

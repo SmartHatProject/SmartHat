@@ -36,7 +36,7 @@ public class Constants {
     
     // cooldown times
     public static final long NOTIFICATION_COOLDOWN_GENERAL = 5000; // 5sec might bump this up later
-    public static final long NOTIFICATION_COOLDOWN_TYPE = 30000; // 30sec between same type of alert
+    public static final long NOTIFICATION_COOLDOWN_TYPE = 20000; // 20sec between same type of alert
 
     // when to alert the user 
     public static final float DUST_PM25_THRESHOLD = 50.0f; // microg/m^3

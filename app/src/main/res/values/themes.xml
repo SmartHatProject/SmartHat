@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme using Material3 for Android 12 compatibility -->
-    <style name="Theme.SmartHat" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.SmartHat" parent="Theme.Material3.DayNight">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary</item>
@@ -29,10 +29,10 @@
         <item name="colorSurfaceVariant">@color/surface_variant</item>
         <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
         
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/primary</item>
+        <!-- Status bar color - using white for consistency with toolbar -->
+        <item name="android:statusBarColor">@color/white</item>
         <item name="android:navigationBarColor">@color/surface</item>
-        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
         
         <!-- Shape customization -->
@@ -40,14 +40,20 @@
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.SmartHat.MediumComponent</item>
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.SmartHat.LargeComponent</item>
         
-        <!-- Enable dynamic colors on Android 12+ (if available) -->
+        <!-- Enable edge-to-edge UI -->
         <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
         <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
         <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
+        
+        <!-- Menu and popup styles -->
+        <item name="popupMenuStyle">@style/PopupMenu.SmartHat</item>
+        <item name="actionOverflowMenuStyle">@style/PopupMenuOverflow.SmartHat</item>
+        <item name="android:actionMenuTextColor">@color/on_primary</item>
+        <item name="actionMenuTextColor">@color/on_primary</item>
     </style>
     
     <!-- Theme without ActionBar for SettingsActivity -->
-    <style name="Theme.SmartHat.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.SmartHat.NoActionBar" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary</item>
@@ -76,10 +82,10 @@
         <item name="colorSurfaceVariant">@color/surface_variant</item>
         <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
         
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/primary</item>
+        <!-- Status bar color - using white for consistency with toolbar -->
+        <item name="android:statusBarColor">@color/white</item>
         <item name="android:navigationBarColor">@color/surface</item>
-        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
         
         <!-- Shape customization -->
@@ -87,24 +93,30 @@
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.SmartHat.MediumComponent</item>
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.SmartHat.LargeComponent</item>
         
-        <!-- Enable dynamic colors on Android 12+ (if available) -->
+        <!-- Enable edge-to-edge UI -->
         <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
         <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
         <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
+        
+        <!-- Menu and popup styles -->
+        <item name="popupMenuStyle">@style/PopupMenu.SmartHat</item>
+        <item name="actionOverflowMenuStyle">@style/PopupMenuOverflow.SmartHat</item>
+        <item name="android:actionMenuTextColor">@color/on_primary</item>
+        <item name="actionMenuTextColor">@color/on_primary</item>
     </style>
     
     <!-- Shape appearances for components -->
-    <style name="ShapeAppearance.SmartHat.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+    <style name="ShapeAppearance.SmartHat.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>
     </style>
     
-    <style name="ShapeAppearance.SmartHat.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+    <style name="ShapeAppearance.SmartHat.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">12dp</item>
     </style>
     
-    <style name="ShapeAppearance.SmartHat.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+    <style name="ShapeAppearance.SmartHat.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">16dp</item>
     </style>

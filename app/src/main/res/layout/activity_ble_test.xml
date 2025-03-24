@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
+    android:background="@color/background"
     tools:context=".bluetooth.test.BleTestActivity">
 
     <TextView
@@ -14,6 +15,7 @@
         android:text="@string/ble_test_title"
         android:textSize="24sp"
         android:textStyle="bold"
+        android:textColor="@color/primary"
         android:layout_marginBottom="16dp"/>
 
     <TextView
@@ -22,6 +24,7 @@
         android:layout_height="wrap_content"
         android:text="@string/connection_state_placeholder"
         android:textSize="16sp"
+        android:textColor="@color/text_primary"
         android:layout_marginBottom="8dp"/>
 
     <TextView
@@ -30,6 +33,7 @@
         android:layout_height="wrap_content"
         android:text="@string/rssi_placeholder"
         android:textSize="16sp"
+        android:textColor="@color/text_primary"
         android:layout_marginBottom="8dp"/>
 
     <TextView
@@ -38,6 +42,7 @@
         android:layout_height="wrap_content"
         android:text="@string/signal_quality_placeholder"
         android:textSize="16sp"
+        android:textColor="@color/text_primary"
         android:layout_marginBottom="8dp"/>
 
     <TextView
@@ -46,6 +51,7 @@
         android:layout_height="wrap_content"
         android:text="@string/connection_metrics_placeholder"
         android:textSize="16sp"
+        android:textColor="@color/text_primary"
         android:layout_marginBottom="16dp"/>
 
     <LinearLayout
@@ -61,6 +67,7 @@
             android:layout_weight="1"
             android:text="@string/connect"
             android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/primary"
             style="?android:attr/buttonBarButtonStyle"/>
 
         <Button
@@ -69,6 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/disconnect"
+            android:backgroundTint="@color/primary"
             style="?android:attr/buttonBarButtonStyle"/>
     </LinearLayout>
 
@@ -76,13 +84,15 @@
         android:id="@+id/btn_read_rssi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/read_rssi"/>
+        android:text="@string/read_rssi"
+        android:backgroundTint="@color/primary"/>
         
     <Button
         android:id="@+id/btn_monitor_rssi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/start_rssi_monitoring"
+        android:backgroundTint="@color/primary"
         android:layout_marginTop="8dp"/>
         
     <ScrollView
@@ -97,6 +107,7 @@
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:fontFamily="monospace"
+            android:textColor="@color/text_secondary"
             android:text="@string/test_log_initial"/>
     </ScrollView>
 
