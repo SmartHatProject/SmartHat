@@ -199,5 +199,41 @@ public class DatabaseHelper {
         float noiseThreshold = getCustomNoiseThreshold(context);
         return getThresholdBreaches(dustThreshold, noiseThreshold);
     }
+    
+    /**
+     * Delete a specific threshold breach by its ID
+     * @param id ID of the record to delete
+     */
+    public void deleteThresholdBreach(int id) {
+        executor.execute(() -> {
+            dao.deleteById(id);
+            Log.d(Constants.TAG_DATABASE, "Deleted threshold breach with ID: " + id);
+        });
+    }
+    
+    /**
+     * Delete multiple threshold breaches by their IDs
+     * @param ids List of IDs to delete
+     */
+    public void deleteThresholdBreaches(List<Integer> ids) {
+        executor.execute(() -> {
+            dao.deleteByIds(ids);
+            Log.d(Constants.TAG_DATABASE, "Deleted " + ids.size() + " threshold breaches");
+        });
+    }
+    
+    /**
+     * Delete all threshold breaches based on custom thresholds
+     * @param context Context for accessing shared preferences
+     */
+    public void deleteAllThresholdBreaches(Context context) {
+        float dustThreshold = getCustomDustThreshold(context);
+        float noiseThreshold = getCustomNoiseThreshold(context);
+        
+        executor.execute(() -> {
+            int count = dao.deleteAllThresholdBreaches(dustThreshold, noiseThreshold);
+            Log.d(Constants.TAG_DATABASE, "Deleted all threshold breaches: " + count + " records");
+        });
+    }
 }
 

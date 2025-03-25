@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base dimensions - optimized for Pixel 4a screen -->
+    <dimen name="app_margin">16dp</dimen>
+    <dimen name="card_margin">8dp</dimen>
+    <dimen name="card_padding">16dp</dimen>
+    <dimen name="card_corner_radius">16dp</dimen>
+    <dimen name="card_elevation">1dp</dimen>
+    <dimen name="card_internal_padding">12dp</dimen>
+    
+    <!-- Standard spacing dimensions for consistent padding and margins -->
+    <dimen name="spacing_small">4dp</dimen>
+    <dimen name="spacing_medium">8dp</dimen>
+    <dimen name="spacing_large">16dp</dimen>
+    <dimen name="spacing_xlarge">24dp</dimen>
+    <dimen name="spacing_xxlarge">32dp</dimen>
+    
+    <!-- Text sizes - adjusted for Pixel 4a's display density -->
+    <dimen name="text_headline">22sp</dimen>
+    <dimen name="text_title">18sp</dimen>
+    <dimen name="text_subtitle">16sp</dimen>
+    <dimen name="text_body">14sp</dimen>
+    <dimen name="text_caption">12sp</dimen>
+    <dimen name="text_small">10sp</dimen>
+    <dimen name="button_text">14sp</dimen>
+    
+    <!-- Sensor card dimensions - optimized for Pixel 4a display -->
+    <dimen name="sensor_icon_size">28dp</dimen>
+    <dimen name="sensor_gauge_height">120dp</dimen>
+    <dimen name="sensor_meter_height">16dp</dimen>
+    
+    <!-- Button dimensions - enhanced for better touch experience -->
+    <dimen name="button_height">52dp</dimen>
+    <dimen name="button_corner_radius">26dp</dimen>
+    
+    <!-- Touch targets - updated for Material You guidelines -->
+    <dimen name="min_touch_target">48dp</dimen>
+</resources> 

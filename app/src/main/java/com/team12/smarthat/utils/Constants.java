@@ -7,12 +7,9 @@ package com.team12.smarthat.utils;
 public class Constants {
     public static final boolean DEV_MODE = true;
     
-    // turn this on to see all available services when you can't find the right uuids
-    // helps figure out what your esp32 is actually using
+   
     public static final boolean ENABLE_SERVICE_DISCOVERY_DEBUG = true;
     
-    // our esp32 mac address - backup when uuid scanning doesn't work
-    // we mostly use uuid scanning now though
     public static final String ESP32_MAC_ADDRESS = "EC:94:CB:4D:91:E2";
     
     // moved all ble uuids to esp32bluetoothspec.java to keep esp32 stuff together
@@ -90,4 +87,9 @@ public class Constants {
     public static final String PREF_DUST_THRESHOLD = "dust_threshold";
     public static final String PREF_NOISE_THRESHOLD = "noise_threshold";
     public static final String PREF_GAS_THRESHOLD = "gas_threshold";
+    
+    // test mode preferences
+    public static final String PREF_TEST_MODE_ACTIVE = "test_mode_active";
+    public static final String PREF_TEST_MODE_TYPE = "test_mode_type";
+    public static final String PREF_CONNECTION_STATE = "connection_state";
 }

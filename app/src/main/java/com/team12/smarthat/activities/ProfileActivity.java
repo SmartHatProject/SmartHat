@@ -10,10 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.team12.smarthat.R;
 import com.team12.smarthat.utils.Constants;
 
-/**
- * ProfileActivity displays user profile information and will handle user authentication
- * in future implementations.
- */
+
 public class ProfileActivity extends AppCompatActivity {
 
     @Override
@@ -27,6 +24,7 @@ public class ProfileActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
     }
     

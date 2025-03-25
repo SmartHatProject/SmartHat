@@ -3,17 +3,23 @@
     <style name="Theme.SmartHat" parent="Theme.Material3.DayNight">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryVariant">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
         <item name="colorOnPrimary">@color/on_primary</item>
         <item name="colorPrimaryContainer">@color/primary_container</item>
         <item name="colorOnPrimaryContainer">@color/on_primary_container</item>
         
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/secondary</item>
-        <item name="colorSecondaryVariant">@color/secondary</item>
+        <item name="colorSecondaryVariant">@color/secondary_dark</item>
         <item name="colorOnSecondary">@color/on_secondary</item>
         <item name="colorSecondaryContainer">@color/secondary_container</item>
         <item name="colorOnSecondaryContainer">@color/on_secondary_container</item>
+        
+        <!-- Tertiary brand color. -->
+        <item name="colorTertiary">@color/tertiary</item>
+        <item name="colorOnTertiary">@color/on_tertiary</item>
+        <item name="colorTertiaryContainer">@color/tertiary_container</item>
+        <item name="colorOnTertiaryContainer">@color/on_tertiary_container</item>
         
         <!-- Error color. -->
         <item name="colorError">@color/error</item>
@@ -28,19 +34,33 @@
         <item name="colorOnSurface">@color/on_surface</item>
         <item name="colorSurfaceVariant">@color/surface_variant</item>
         <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
+        <item name="colorOutline">@color/outline</item>
+        <item name="colorOutlineVariant">@color/outline_variant</item>
         
-        <!-- Status bar color - using white for consistency with toolbar -->
-        <item name="android:statusBarColor">@color/white</item>
+        <!-- Android 12 specific Material You attributes -->
+        <item name="colorPrimaryFixed">@color/primary</item>
+        <item name="colorPrimaryFixedDim">@color/primary_dark</item>
+        <item name="colorOnPrimaryFixed">@color/on_primary</item>
+        <item name="colorOnPrimaryFixedVariant">@color/on_primary_container</item>
+        <item name="colorSurfaceContainerLow">@color/surface</item>
+        <item name="colorSurfaceContainerHigh">@color/surface_variant</item>
+        
+        <!-- Status bar color -->
+        <item name="android:statusBarColor">@color/primary</item>
         <item name="android:navigationBarColor">@color/surface</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
         
-        <!-- Shape customization -->
+        <!-- Remove app title from action bar -->
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">true</item>
+        
+        <!-- Shape customization - improved for cross-device consistency -->
         <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.SmartHat.SmallComponent</item>
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.SmartHat.MediumComponent</item>
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.SmartHat.LargeComponent</item>
         
-        <!-- Enable edge-to-edge UI -->
+        <!-- Enable edge-to-edge UI with better insets -->
         <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
         <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
         <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
@@ -50,74 +70,121 @@
         <item name="actionOverflowMenuStyle">@style/PopupMenuOverflow.SmartHat</item>
         <item name="android:actionMenuTextColor">@color/on_primary</item>
         <item name="actionMenuTextColor">@color/on_primary</item>
+        
+        <!-- Enable elevation overlays for better shadows on surfaces -->
+        <item name="elevationOverlayEnabled">true</item>
+        <item name="elevationOverlayColor">@color/surface</item>
+        
+        <!-- Button styles for better compatibility across iOS and Android -->
+        <item name="materialButtonStyle">@style/Widget.SmartHat.Button</item>
+        
+        <!-- Card style -->
+        <item name="materialCardViewStyle">@style/Widget.SmartHat.CardView</item>
+        
+        <!-- Text appearance -->
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.SmartHat.HeadlineMedium</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.SmartHat.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.SmartHat.BodySmall</item>
+        
+        <!-- Optimization for better rendering on OLED displays (Pixel 4a) -->
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+        
+        <!-- Activity transitions -->
+        <item name="android:windowAnimationStyle">@style/SmartHat.Animation.Activity</item>
     </style>
     
     <!-- Theme without ActionBar for SettingsActivity -->
-    <style name="Theme.SmartHat.NoActionBar" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryVariant">@color/primary</item>
-        <item name="colorOnPrimary">@color/on_primary</item>
-        <item name="colorPrimaryContainer">@color/primary_container</item>
-        <item name="colorOnPrimaryContainer">@color/on_primary_container</item>
-        
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/secondary</item>
-        <item name="colorSecondaryVariant">@color/secondary</item>
-        <item name="colorOnSecondary">@color/on_secondary</item>
-        <item name="colorSecondaryContainer">@color/secondary_container</item>
-        <item name="colorOnSecondaryContainer">@color/on_secondary_container</item>
-        
-        <!-- Error color. -->
-        <item name="colorError">@color/error</item>
-        <item name="colorOnError">@color/on_error</item>
-        <item name="colorErrorContainer">@color/error_container</item>
-        <item name="colorOnErrorContainer">@color/on_error_container</item>
-        
-        <!-- Background colors. -->
-        <item name="android:colorBackground">@color/background</item>
-        <item name="colorOnBackground">@color/on_background</item>
-        <item name="colorSurface">@color/surface</item>
-        <item name="colorOnSurface">@color/on_surface</item>
-        <item name="colorSurfaceVariant">@color/surface_variant</item>
-        <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
-        
-        <!-- Status bar color - using white for consistency with toolbar -->
-        <item name="android:statusBarColor">@color/white</item>
-        <item name="android:navigationBarColor">@color/surface</item>
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
-        
-        <!-- Shape customization -->
-        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.SmartHat.SmallComponent</item>
-        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.SmartHat.MediumComponent</item>
-        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.SmartHat.LargeComponent</item>
-        
-        <!-- Enable edge-to-edge UI -->
-        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
-        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
-        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
-        
-        <!-- Menu and popup styles -->
-        <item name="popupMenuStyle">@style/PopupMenu.SmartHat</item>
-        <item name="actionOverflowMenuStyle">@style/PopupMenuOverflow.SmartHat</item>
-        <item name="android:actionMenuTextColor">@color/on_primary</item>
-        <item name="actionMenuTextColor">@color/on_primary</item>
+    <style name="Theme.SmartHat.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
     
-    <!-- Shape appearances for components -->
+    <!-- Shape appearances for components - optimized for both device types -->
     <style name="ShapeAppearance.SmartHat.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">8dp</item>
-    </style>
-    
-    <style name="ShapeAppearance.SmartHat.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">12dp</item>
     </style>
     
-    <style name="ShapeAppearance.SmartHat.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
+    <style name="ShapeAppearance.SmartHat.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">16dp</item>
+    </style>
+    
+    <style name="ShapeAppearance.SmartHat.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
+
+    <!-- Button styles for better compatibility across devices -->
+    <style name="Widget.SmartHat.Button" parent="Widget.Material3.Button">
+        <item name="android:textColor">@color/on_primary</item>
+        <item name="backgroundTint">@color/primary</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:minHeight">52dp</item>
+        <item name="cornerRadius">26dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="elevation">2dp</item>
+        <item name="rippleColor">@color/primary_light</item>
+        <item name="android:textSize">@dimen/button_text</item>
+    </style>
+    
+    <!-- Card styles for better compatibility across devices -->
+    <style name="Widget.SmartHat.CardView" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardBackgroundColor">@color/card_background</item>
+        <item name="cardCornerRadius">@dimen/card_corner_radius</item>
+        <item name="cardElevation">@dimen/card_elevation</item>
+        <item name="contentPadding">@dimen/card_padding</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="cardPreventCornerOverlap">true</item>
+        <item name="rippleColor">@color/primary_light</item>
+        <item name="strokeWidth">0dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <!-- Text appearances for consistency across platforms -->
+    <style name="TextAppearance.SmartHat.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textSize">22sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.SmartHat.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.SmartHat.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textSize">14sp</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <!-- Activity animations for smoother transitions across platforms -->
+    <style name="SmartHat.Animation.Activity" parent="android:Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:activityOpenExitAnimation">@android:anim/fade_out</item>
+        <item name="android:activityCloseEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:activityCloseExitAnimation">@android:anim/fade_out</item>
+    </style>
+
+    <!-- Popup Menu Style -->
+    <style name="PopupMenu.SmartHat" parent="Widget.Material3.PopupMenu">
+        <item name="android:popupBackground">@color/surface</item>
+    </style>
+
+    <!-- Overflow Menu Style -->
+    <style name="PopupMenuOverflow.SmartHat" parent="Widget.Material3.PopupMenu.Overflow">
+        <item name="android:popupBackground">@color/surface</item>
     </style>
 </resources>

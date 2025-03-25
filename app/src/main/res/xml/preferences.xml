@@ -8,52 +8,12 @@
         android:title="Display"
         app:icon="@drawable/ic_display">
 
-        <ListPreference
-            android:key="dark_mode"
-            android:title="Dark Mode"
-            android:summary="Choose between light, dark, or system default theme"
-            android:entries="@array/dark_mode_entries"
-            android:entryValues="@array/dark_mode_values"
-            android:defaultValue="-1" />
-            
-        <SwitchPreferenceCompat
-            android:key="use_dynamic_colors"
-            android:title="Material You Colors"
-            android:summary="Use dynamic colors from your wallpaper (Android 12+ only)"
-            android:defaultValue="true"
-            android:dependency="dark_mode" />
-
         <!-- Appearance Section -->
         <PreferenceCategory
             app:title="@string/appearance"
             app:iconSpaceReserved="false">
 
-            <!-- Dark Mode Preference -->
-            <ListPreference
-                app:key="dark_mode"
-                app:title="@string/dark_mode"
-                app:entries="@array/dark_mode_entries"
-                app:entryValues="@array/dark_mode_values"
-                app:defaultValue="-1"
-                app:useSimpleSummaryProvider="true"
-                app:iconSpaceReserved="false" />
-
-            <!-- Dynamic Colors Preference -->
-            <SwitchPreferenceCompat
-                app:key="use_dynamic_colors"
-                app:title="@string/use_dynamic_colors"
-                app:summary="@string/use_dynamic_colors_summary"
-                app:defaultValue="true"
-                app:iconSpaceReserved="false" />
-                
-            <!-- OLED Dark Mode Optimization -->
-            <SwitchPreferenceCompat
-                app:key="use_oled_dark_mode"
-                app:title="@string/use_oled_dark_mode"
-                app:summary="@string/use_oled_dark_mode_summary"
-                app:defaultValue="true"
-                app:iconSpaceReserved="false"
-                app:dependency="use_dynamic_colors" />
+            <!-- Other appearance preferences can remain here -->
 
         </PreferenceCategory>
     </PreferenceCategory>

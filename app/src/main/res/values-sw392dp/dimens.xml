@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base dimensions optimized for Pixel 4a (392dp width) -->
+    <dimen name="card_internal_padding">14dp</dimen>
+    
+    <!-- Text sizes - optimized for Pixel 4a display -->
+    <dimen name="text_title">22sp</dimen>
+    <dimen name="text_subtitle">18sp</dimen>
+    
+    <!-- Sensor card dimensions - adjusted for Pixel 4a display -->
+    <dimen name="sensor_icon_size">28dp</dimen>
+    <dimen name="sensor_gauge_height">90dp</dimen>
+    <dimen name="sensor_meter_height">16dp</dimen>
+    
+    <!-- Touch target minimums - minimum touch target size for Android 12 -->
+    <dimen name="min_touch_target">48dp</dimen>
+</resources> 

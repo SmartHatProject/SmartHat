@@ -95,6 +95,13 @@ public class TestDataGenerator {
         this.currentMode = mode;
         Log.d(TAG, "Starting test mode: " + mode.name());
         
+        // Ensure mock characteristics are created if they're null
+        if (mockBleManager != null && (dustCharacteristic == null || 
+                                      noiseCharacteristic == null || 
+                                      gasCharacteristic == null)) {
+            createMockCharacteristics();
+        }
+        
         // Start data generation immediately and then at intervals
         handler.post(dataGenerationRunnable);
     }

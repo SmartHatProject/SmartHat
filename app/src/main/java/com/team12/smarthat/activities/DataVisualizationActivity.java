@@ -6,15 +6,12 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.team12.smarthat.R;
 
-/**
- * Activity for visualizing sensor data with graphs and charts.
- * Optimized for Android 12 on Pixel 4a.
- */
+
 public class DataVisualizationActivity extends AppCompatActivity {
     private static final String TAG = "DataVisualizationActivity";
     
@@ -23,17 +20,18 @@ public class DataVisualizationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_visualization);
         
-        // Setup action bar with back button
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle("Data Visualization");
+       
+        Toolbar toolbar = findViewById(R.id.data_viz_toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
         
         // TODO: Implement data visualization components
         TextView placeholderText = findViewById(R.id.placeholder_text);
         if (placeholderText != null) {
-            placeholderText.setText("Data visualization coming soon");
+            placeholderText.setText(R.string.data_visualization_placeholder);
         }
         
         Log.d(TAG, "onCreate completed");
@@ -72,7 +70,7 @@ public class DataVisualizationActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            // Handle the back button in the action bar
+           //in the action bar
             onBackPressed();
             return true;
         }

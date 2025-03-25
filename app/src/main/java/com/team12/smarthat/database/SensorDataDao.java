@@ -46,4 +46,16 @@ public interface SensorDataDao {
      */
     @RawQuery
     int vacuum(SupportSQLiteQuery query);
+    
+    // delete a specific record by its ID
+    @Query("DELETE FROM sensor_data WHERE id = :id")
+    void deleteById(int id);
+    
+    // delete multiple records by their IDs
+    @Query("DELETE FROM sensor_data WHERE id IN (:ids)")
+    void deleteByIds(List<Integer> ids);
+    
+    // delete all threshold breaches
+    @Query("DELETE FROM sensor_data WHERE (sensorType = 'dust' AND value > :dustThreshold) OR (sensorType = 'noise' AND value > :noiseThreshold)")
+    int deleteAllThresholdBreaches(float dustThreshold, float noiseThreshold);
 }

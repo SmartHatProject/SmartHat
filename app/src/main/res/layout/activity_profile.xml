@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:padding="@dimen/app_margin"
     android:background="@color/background"
     android:importantForAccessibility="yes"
     tools:context=".activities.ProfileActivity">
@@ -20,35 +20,40 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:scrollbars="none"
+        android:fadeScrollbars="true"
+        android:overScrollMode="never">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center_horizontal"
-            android:padding="16dp">
+            android:padding="@dimen/spacing_large">
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/profile_image"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginTop="@dimen/spacing_xlarge"
+                android:layout_marginBottom="@dimen/spacing_xlarge"
                 android:src="@drawable/ic_profile"
                 android:contentDescription="Profile picture"
-                android:background="@color/primary_light"
+                android:background="@color/primary_container"
                 android:scaleType="fitCenter"
-                android:padding="16dp"/>
+                android:padding="@dimen/spacing_large"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.SmartHat.MediumComponent"
+                app:strokeColor="@color/primary"
+                app:strokeWidth="2dp"/>
 
             <TextView
+                style="@style/TextAppearance.SmartHat.HeadlineMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="User Profile"
-                android:textSize="24sp"
-                android:textStyle="bold"
                 android:textColor="@color/primary"
-                android:layout_marginBottom="32dp"
+                android:layout_marginBottom="@dimen/spacing_xlarge"
                 android:gravity="center"/>
 
         </LinearLayout>
