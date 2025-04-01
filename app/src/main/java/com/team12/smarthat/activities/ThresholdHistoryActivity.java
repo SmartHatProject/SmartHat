@@ -9,10 +9,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.core.content.ContextCompat;
@@ -223,12 +225,29 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        
+
         if (id == android.R.id.home) {
             finish();
             return true;
         }
+        else if(id == R.id.action_filter) {
+            Toast.makeText(ThresholdHistoryActivity.this, "Clicked filter button!", Toast.LENGTH_SHORT).show();
+            openDateFilterFragment();
+        }
         
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_threshold_history, menu);
+        return true;
+    }
+
+    private void openDateFilterFragment() {
+        DateFilterFragment dateFilterFragment = new DateFilterFragment();
+
+        dateFilterFragment.show(getSupportFragmentManager(), "dateFilterFragment");
+    }
+
 } 

@@ -1,7 +1,7 @@
 <resources>
     <!-- App Name -->
     <string name="app_name">SmartHat</string>
-    
+
     <!-- Connection Status -->
     <string name="bluetooth_required">Bluetooth is required</string>
     <string name="connecting">Connecting…</string>
@@ -21,18 +21,18 @@
     <string name="permission_required">Permission required</string>
     <string name="disconnecting">Disconnecting...</string>
     <string name="status_format">Status: %s</string>
-    
+
     <!-- Initial Values -->
     <string name="dust_initial">Dust: 10.0 µg/m³</string>
     <string name="noise_initial">Noise: 40.0 dB</string>
     <string name="gas_initial">Gas: 0.0 ppm</string>
-    
+
     <!-- Connection Helper Messages -->
     <string name="helper_text_connected">Connected to SmartHat. Receiving data...</string>
     <string name="helper_text_connecting">Scanning for nearby SmartHat devices...</string>
     <string name="helper_text_disconnecting">Disconnecting from SmartHat...</string>
     <string name="helper_text_disconnected">Press Connect to find and connect to your SmartHat</string>
-    
+
     <!-- Test Mode Connection Helper Messages -->
     <string name="helper_text_test_connected">Test mode active. Simulating sensor data...</string>
     <string name="helper_text_test_connecting">Simulating connection...</string>
@@ -46,12 +46,12 @@
     <string name="dust_display">PM2.5: %.1f µg/m³</string>
     <string name="noise_display">Noise: %.1f dB</string>
     <string name="gas_display">Air Quality: %.1f ppm</string>
-    
+
     <!-- Sensor Format Strings - Optimized for Android 12 -->
     <string name="dust_format">Dust: %.1f µg/m³</string>
     <string name="noise_format">Noise: %.1f dB</string>
     <string name="gas_format">Gas: %.1f ppm</string>
-    
+
     <!-- Main Layout Strings -->
     <string name="app_title">SmartHat</string>
     <string name="test_mode_active">TEST MODE ACTIVE</string>
@@ -66,7 +66,7 @@
     <string name="gas_placeholder">-- ppm</string>
     <string name="footer_text">SmartHat</string>
     <string name="app_version">Version 1.0.0</string>
-    
+
     <!-- BLE Test Activity Strings -->
     <string name="ble_test_title">BLE Test Activity</string>
     <string name="connection_state_placeholder">Connection State: Disconnected</string>
@@ -76,10 +76,10 @@
     <string name="read_rssi">Read RSSI</string>
     <string name="start_rssi_monitoring">Start RSSI Monitoring</string>
     <string name="test_log_initial">Test Log:\n</string>
-    
+
     <!-- Preferences Strings -->
     <string name="appearance">Appearance</string>
-    
+
     <!-- Settings Activity Strings -->
     <string name="notifications">Notifications</string>
     <string name="notifications_section">Notifications section</string>
@@ -105,7 +105,7 @@
     <string name="adjust_gas_threshold">Adjust gas threshold value</string>
     <string name="reset_to_default">Reset to Default</string>
     <string name="thresholds_note">Note: Changing these thresholds affects when you\'ll receive alerts. OSHA recommends keeping noise alerts at 85dB and dust at 50 μg/m³.</string>
-    
+
     <!-- Data Visualization Activity Strings -->
     <string name="data_visualization_title">Data Visualization</string>
     <string name="data_visualization_placeholder">Data Visualization Coming Soon</string>
@@ -116,11 +116,13 @@
     <string name="chart_dust_title">Dust Readings (μg/m³)</string>
     <string name="chart_noise_title">Noise Readings (dB)</string>
     <string name="chart_gas_title">Air Quality Readings (ppm)</string>
-    
+
     <!-- Threshold Breach Item Strings -->
     <string name="sensor_icon_description">Sensor type icon</string>
     <string name="timestamp_placeholder">March 15, 2023 - 14:30</string>
     <string name="threshold_exceeded">Threshold Exceeded</string>
     <string name="mark_as_resolved">Mark alert as resolved</string>
     <string name="select_item">Select this alert</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
