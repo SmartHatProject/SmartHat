@@ -92,4 +92,8 @@ public class Constants {
     public static final String PREF_TEST_MODE_ACTIVE = "test_mode_active";
     public static final String PREF_TEST_MODE_TYPE = "test_mode_type";
     public static final String PREF_CONNECTION_STATE = "connection_state";
+
+    // Threshold history filters preferences
+    public static final String PREF_FILTER_START_DATE = "filter_start_date";
+    public static final String PREF_FILTER_END_DATE = "filter_end_date";
 }

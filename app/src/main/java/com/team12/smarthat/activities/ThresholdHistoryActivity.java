@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +23,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.team12.smarthat.R;
 import com.team12.smarthat.adapters.ThresholdBreachAdapter;
 import com.team12.smarthat.database.DatabaseHelper;
+import com.team12.smarthat.models.DataFilter;
+import com.team12.smarthat.utils.DataFilterHelper;
 
 import java.util.List;
 
@@ -37,6 +40,8 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
     private boolean isInSelectionMode = false;
     private Toolbar toolbar;
 
+    private DataFilterHelper dataFilterHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +51,7 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
         setupToolbar();
         setupListeners();
         loadThresholdBreaches();
+        DataFilterHelper.getInstance().restoreFilterPreferences(this);
     }
     
     private void setupToolbar() {
@@ -90,6 +96,7 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
         
         // Use singleton pattern for database access
         databaseHelper = DatabaseHelper.getInstance();
+        dataFilterHelper = DataFilterHelper.getInstance();
     }
     
     private void setupListeners() {
@@ -242,6 +249,21 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
 
     private void openDataFilterFragment() {
         DataFilterFragment dataFilterFragment = new DataFilterFragment();
+        dataFilterFragment.setFilterListener(new DataFilterFragment.FilterListener() {
+            @Override
+            public void onFilterChanged(DataFilter filter) {
+                if(filter != null) {
+                    dataFilterHelper.setFilter(filter);
+                    dataFilterHelper.saveFilterState(ThresholdHistoryActivity.this);
+                    String msg = "Showing data from " + filter.getStartDate().toString() + " to " + filter.getEndDate().toString();
+                    Toast.makeText(ThresholdHistoryActivity.this, msg, Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    dataFilterHelper.clearFilters();
+                }
+                loadThresholdBreaches();
+            }
+        });
 
         dataFilterFragment.show(getSupportFragmentManager(), "dataFilterFragment");
     }

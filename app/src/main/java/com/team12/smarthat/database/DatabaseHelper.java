@@ -6,8 +6,10 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import com.team12.smarthat.models.DataFilter;
 import com.team12.smarthat.models.SensorData;
 import com.team12.smarthat.utils.Constants;
+import com.team12.smarthat.utils.DataFilterHelper;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -115,9 +117,18 @@ public class DatabaseHelper {
         return dao.getAllData();
     }
     
-    // get all threshold breaches
+    // get all threshold breaches using filters
     public LiveData<List<SensorData>> getThresholdBreaches(float dustThreshold, float noiseThreshold) {
-        return dao.getThresholdBreaches(dustThreshold, noiseThreshold);
+        if(DataFilterHelper.getInstance().getCurrentFilter() != null) {
+            long startTimeStamp = DataFilterHelper.getInstance().getCurrentFilter().getStartTimestamp();
+            long endTimeStamp = DataFilterHelper.getInstance().getCurrentFilter().getEndTimestamp();
+            Log.d(Constants.TAG_DATABASE, "Retrieving filtered data");
+            return dao.getThresholdBreaches(dustThreshold, noiseThreshold, startTimeStamp, endTimeStamp);
+        }
+        else {
+            Log.d(Constants.TAG_DATABASE, "Retrieving unfiltered data");
+            return dao.getThresholdBreaches(dustThreshold, noiseThreshold);
+        }
     }
     
     /**

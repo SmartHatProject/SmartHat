@@ -20,11 +20,17 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DataFilterFragment extends DialogFragment {
-    private EditText et_start_date, et_end_date;
-    private Button btn_apply, btn_clear_filters;
-    private FloatingActionButton btn_close;
 
-    private final String TIMESTAMP_DATE_FORMAT = "MM/dd/yy";
+    public interface FilterListener {
+        void onFilterChanged(DataFilter filter);
+    }
+
+    // ui elements
+    private EditText etStartDate, etEndDate;
+    private Button btnApply, btnClearFilters;
+    private FloatingActionButton btnClose;
+
+    private FilterListener filterListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,30 +51,33 @@ public class DataFilterFragment extends DialogFragment {
     }
 
     private void initializeComponents(View view) {
-        et_start_date = view.findViewById(R.id.et_start_date);
-        et_end_date = view.findViewById(R.id.et_end_date);
-        btn_close = view.findViewById(R.id.btn_close);
-        btn_apply = view.findViewById(R.id.btn_apply);
-        btn_clear_filters = view.findViewById(R.id.btn_clear_filters);
+        etStartDate = view.findViewById(R.id.et_start_date);
+        etEndDate = view.findViewById(R.id.et_end_date);
+        btnClose = view.findViewById(R.id.btn_close);
+        btnApply = view.findViewById(R.id.btn_apply);
+        btnClearFilters = view.findViewById(R.id.btn_clear_filters);
     }
 
     private void setupUI() {
-        btn_close.setOnClickListener(v -> dismiss());
-        btn_apply.setOnClickListener(v -> applyFilter());
-        btn_clear_filters.setOnClickListener(v -> dismiss());
+        btnClose.setOnClickListener(v -> dismiss());
+        btnApply.setOnClickListener(v -> applyFilter());
+        btnClearFilters.setOnClickListener(v -> clearFilters());
     }
+
 
     private void applyFilter() {
         DataFilter dataFilter = createDataFilter();
         if(dataFilter != null) {
-            Toast.makeText(getActivity().getBaseContext(), "Applying filters...", Toast.LENGTH_SHORT).show();
+            if(filterListener != null) {
+                filterListener.onFilterChanged(dataFilter);
+            }
             dismiss();
         }
     }
 
     private DataFilter createDataFilter() {
-        String startDateString = et_start_date.getText().toString();
-        String endDateString = et_end_date.getText().toString();
+        String startDateString = etStartDate.getText().toString() + " 00:00";
+        String endDateString = etEndDate.getText().toString() + " 00:00";
 
         // Check for empty fields
         if(startDateString.isEmpty() || endDateString.isEmpty()) {
@@ -81,7 +90,7 @@ public class DataFilterFragment extends DialogFragment {
             Date endDate = parseDate(endDateString);
 
             if (startDate == null || endDate == null) {
-                Toast.makeText(getActivity().getBaseContext(), "Invalid date format. Please use " + TIMESTAMP_DATE_FORMAT + ".", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getBaseContext(), "Invalid date format. Please use " + DataFilter.TIMESTAMP_DATE_FORMAT + ".", Toast.LENGTH_SHORT).show();
                 return null;
             }
 
@@ -93,16 +102,27 @@ public class DataFilterFragment extends DialogFragment {
 
             return new DataFilter(startDate, endDate);
         } catch(ParseException e) {
-            Toast.makeText(getActivity().getBaseContext(), "Invalid date format. Please use " + TIMESTAMP_DATE_FORMAT + ".", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getBaseContext(), "Invalid date format. Please use " + DataFilter.TIMESTAMP_DATE_FORMAT + ".", Toast.LENGTH_SHORT).show();
             return null;
         }
     }
 
     private Date parseDate(String dateString) throws ParseException {
         // Define valid date format as being MM-dd-yy. Any other format will be rejected.
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(TIMESTAMP_DATE_FORMAT, Locale.getDefault());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DataFilter.TIMESTAMP_DATE_FORMAT, Locale.getDefault());
         simpleDateFormat.setLenient(false);
 
         return simpleDateFormat.parse(dateString);
+    }
+
+    private void clearFilters() {
+        if(filterListener != null) {
+            filterListener.onFilterChanged(null);
+        }
+        dismiss();
+    }
+
+    public void setFilterListener(FilterListener filterListener) {
+        this.filterListener = filterListener;
     }
 }
