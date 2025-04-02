@@ -8,7 +8,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="417dp">
+        android:layout_height="417dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_close"
@@ -16,7 +18,7 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:clickable="true"
             android:contentDescription="Close Filter"
             android:focusable="true"
@@ -34,7 +36,7 @@
             android:layout_height="30dp"
             android:layout_marginTop="100dp"
             android:paddingBottom="8dp"
-            android:text="Start Date"
+            android:text="@string/filter_start_date_label"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -44,10 +46,11 @@
         <EditText
             android:id="@+id/et_start_date"
             android:layout_width="315dp"
-            android:layout_height="30dp"
+            android:layout_height="50dp"
             android:ems="10"
             android:inputType="date"
             android:padding="12dp"
+            android:paddingEnd="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_name_start_date" />
@@ -58,7 +61,7 @@
             android:layout_height="30dp"
             android:layout_marginTop="4dp"
             android:paddingBottom="8dp"
-            android:text="End Date"
+            android:text="@string/filter_end_date_label"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -68,11 +71,12 @@
         <EditText
             android:id="@+id/et_end_date"
             android:layout_width="315dp"
-            android:layout_height="30dp"
+            android:layout_height="50dp"
             android:layout_marginTop="4dp"
             android:ems="10"
             android:inputType="date"
             android:padding="12dp"
+            android:paddingRight="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_name_end_date" />
@@ -85,7 +89,7 @@
             android:layout_marginTop="44dp"
             android:layout_marginEnd="32dp"
             android:backgroundTint="#0F5070"
-            android:text="Apply"
+            android:text="@string/apply_filters"
             android:textColor="@android:color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -99,7 +103,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
             android:backgroundTint="@android:color/darker_gray"
-            android:text="Clear Filters"
+            android:text="@string/clear_filters"
             android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

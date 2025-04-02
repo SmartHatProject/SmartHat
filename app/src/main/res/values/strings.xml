@@ -125,4 +125,10 @@
     <string name="select_item">Select this alert</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Threshold History Filter Fragment Strings -->
+    <string name="filter_start_date_label">Start Date</string>
+    <string name="filter_end_date_label">End Date</string>
+    <string name="apply_filters">Apply</string>
+    <string name="clear_filters">Clear Filters</string>
 </resources>

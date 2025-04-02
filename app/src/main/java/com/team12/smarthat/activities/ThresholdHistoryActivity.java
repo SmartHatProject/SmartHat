@@ -231,7 +231,6 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
             return true;
         }
         else if(id == R.id.action_filter) {
-            Toast.makeText(ThresholdHistoryActivity.this, "Clicked filter button!", Toast.LENGTH_SHORT).show();
             openDateFilterFragment();
         }
         
