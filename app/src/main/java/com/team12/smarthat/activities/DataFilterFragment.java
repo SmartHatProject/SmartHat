@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class DateFilterFragment extends DialogFragment {
+public class DataFilterFragment extends DialogFragment {
     EditText et_start_date, et_end_date;
     Button btn_apply, btn_clear_filters;
     FloatingActionButton btn_close;
@@ -27,7 +27,7 @@ public class DateFilterFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View view = inflater.inflate(R.layout.fragment_date_filter, container, false);
+        View view = inflater.inflate(R.layout.fragment_data_filter, container, false);
 
         initializeComponents(view);
         setupUI();

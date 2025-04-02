@@ -9,12 +9,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.core.content.ContextCompat;
@@ -24,7 +22,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.team12.smarthat.R;
 import com.team12.smarthat.adapters.ThresholdBreachAdapter;
 import com.team12.smarthat.database.DatabaseHelper;
-import com.team12.smarthat.models.SensorData;
 
 import java.util.List;
 
@@ -231,7 +228,7 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
             return true;
         }
         else if(id == R.id.action_filter) {
-            openDateFilterFragment();
+            openDataFilterFragment();
         }
         
         return super.onOptionsItemSelected(item);
@@ -243,10 +240,10 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
         return true;
     }
 
-    private void openDateFilterFragment() {
-        DateFilterFragment dateFilterFragment = new DateFilterFragment();
+    private void openDataFilterFragment() {
+        DataFilterFragment dataFilterFragment = new DataFilterFragment();
 
-        dateFilterFragment.show(getSupportFragmentManager(), "dateFilterFragment");
+        dataFilterFragment.show(getSupportFragmentManager(), "dataFilterFragment");
     }
 
 } 
