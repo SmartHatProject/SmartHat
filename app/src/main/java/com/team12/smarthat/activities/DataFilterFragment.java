@@ -12,6 +12,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.team12.smarthat.R;
+import com.team12.smarthat.models.DataFilter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,9 +20,11 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DataFilterFragment extends DialogFragment {
-    EditText et_start_date, et_end_date;
-    Button btn_apply, btn_clear_filters;
-    FloatingActionButton btn_close;
+    private EditText et_start_date, et_end_date;
+    private Button btn_apply, btn_clear_filters;
+    private FloatingActionButton btn_close;
+
+    private final String TIMESTAMP_DATE_FORMAT = "MM/dd/yy";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,43 +59,50 @@ public class DataFilterFragment extends DialogFragment {
     }
 
     private void applyFilter() {
-        if(validateDates(et_start_date.getText().toString(), et_end_date.getText().toString())) {
+        DataFilter dataFilter = createDataFilter();
+        if(dataFilter != null) {
             Toast.makeText(getActivity().getBaseContext(), "Applying filters...", Toast.LENGTH_SHORT).show();
             dismiss();
         }
     }
 
-    private boolean validateDates(String startDateString, String endDateString) {
+    private DataFilter createDataFilter() {
+        String startDateString = et_start_date.getText().toString();
+        String endDateString = et_end_date.getText().toString();
 
         // Check for empty fields
         if(startDateString.isEmpty() || endDateString.isEmpty()) {
             Toast.makeText(getActivity().getBaseContext(), "Please enter a start and an end date", Toast.LENGTH_SHORT).show();
-            return false;
+            return null;
         }
 
-        // Define valid date format as being dd-MM-yyyy. Any other format will be rejected.
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-        simpleDateFormat.setLenient(false);
-
         try {
-            Date startDate = simpleDateFormat.parse(startDateString);
-            Date endDate = simpleDateFormat.parse(endDateString);
+            Date startDate = parseDate(startDateString);
+            Date endDate = parseDate(endDateString);
 
             if (startDate == null || endDate == null) {
-                Toast.makeText(getActivity().getBaseContext(), "Invalid date format. Please use dd-MM-yyyy.", Toast.LENGTH_SHORT).show();
-                return false;
+                Toast.makeText(getActivity().getBaseContext(), "Invalid date format. Please use " + TIMESTAMP_DATE_FORMAT + ".", Toast.LENGTH_SHORT).show();
+                return null;
             }
 
             // Check that start date is before end date
             if(!startDate.before(endDate)) {
                 Toast.makeText(getActivity().getBaseContext(), "Start date must be before the end date", Toast.LENGTH_SHORT).show();
-                return false;
+                return null;
             }
 
-            return true;
+            return new DataFilter(startDate, endDate);
         } catch(ParseException e) {
-            Toast.makeText(getActivity().getBaseContext(), "Invalid date format. Please use dd-MM-yyyy.", Toast.LENGTH_SHORT).show();
-            return false;
+            Toast.makeText(getActivity().getBaseContext(), "Invalid date format. Please use " + TIMESTAMP_DATE_FORMAT + ".", Toast.LENGTH_SHORT).show();
+            return null;
         }
+    }
+
+    private Date parseDate(String dateString) throws ParseException {
+        // Define valid date format as being MM-dd-yy. Any other format will be rejected.
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(TIMESTAMP_DATE_FORMAT, Locale.getDefault());
+        simpleDateFormat.setLenient(false);
+
+        return simpleDateFormat.parse(dateString);
     }
 }
