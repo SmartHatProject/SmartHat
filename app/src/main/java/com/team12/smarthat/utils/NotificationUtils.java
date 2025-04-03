@@ -370,4 +370,22 @@ public class NotificationUtils {
         
         Log.d(Constants.TAG_MAIN, alertType + " notifications " + (enabled ? "enabled" : "disabled") + " by user");
     }
+
+    /**
+     * Creates a notification for the foreground service
+     * @param title The notification title
+     * @param text The notification text
+     * @return A properly configured foreground service notification
+     */
+    public Notification createForegroundServiceNotification(String title, String text) {
+        return new NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setOngoing(true)
+                .build();
+    }
 }

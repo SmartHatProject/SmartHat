@@ -13,6 +13,7 @@ import com.team12.smarthat.bluetooth.core.BleConnectionManager;
 import com.team12.smarthat.bluetooth.core.BluetoothServiceIntegration;
 import com.team12.smarthat.bluetooth.devices.esp32.ESP32BluetoothSpec;
 import com.team12.smarthat.models.SensorData;
+import com.team12.smarthat.utils.Constants;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -87,7 +88,7 @@ public class NotificationHandlingTest {
         // Create a data listener to receive the processed data
         final AtomicReference<SensorData> capturedData = new AtomicReference<>();
         BluetoothServiceIntegration.SensorDataListener listener = (data, type) -> {
-            if (SensorData.TYPE_NOISE.equals(type)) {
+            if (type.equals(Constants.TYPE_NOISE)) {
                 capturedData.set(data);
                 latch.countDown();
             }
@@ -135,7 +136,7 @@ public class NotificationHandlingTest {
         // Create a data listener to receive the processed data
         final AtomicReference<SensorData> capturedData = new AtomicReference<>();
         BluetoothServiceIntegration.SensorDataListener listener = (data, type) -> {
-            if (SensorData.TYPE_DUST.equals(type)) {
+            if (type.equals(Constants.TYPE_DUST)) {
                 capturedData.set(data);
                 latch.countDown();
             }
@@ -183,7 +184,7 @@ public class NotificationHandlingTest {
         // Create a data listener to receive the processed data
         final AtomicReference<SensorData> capturedData = new AtomicReference<>();
         BluetoothServiceIntegration.SensorDataListener listener = (data, type) -> {
-            if (SensorData.TYPE_NOISE.equals(type)) {
+            if (type.equals(Constants.TYPE_NOISE)) {
                 capturedData.set(data);
                 latch.countDown();
             }
@@ -227,7 +228,7 @@ public class NotificationHandlingTest {
         // Create data listener
         final AtomicReference<SensorData> lastCapturedData = new AtomicReference<>();
         BluetoothServiceIntegration.SensorDataListener listener = (data, type) -> {
-            if (SensorData.TYPE_NOISE.equals(type)) {
+            if (type.equals(Constants.TYPE_NOISE)) {
                 lastCapturedData.set(data);
                 if (latch1.getCount() > 0) {
                     latch1.countDown();

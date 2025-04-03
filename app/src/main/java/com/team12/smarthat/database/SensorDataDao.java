@@ -29,8 +29,8 @@ public interface SensorDataDao {
     void clearAll();
 
     // get all threshold breaches
-    @Query("SELECT * FROM sensor_data WHERE (sensorType = 'dust' AND value > :dustThreshold) OR (sensorType = 'noise' AND value > :noiseThreshold) ORDER BY timestamp DESC")
-    LiveData<List<SensorData>> getThresholdBreaches(float dustThreshold, float noiseThreshold);
+    @Query("SELECT * FROM sensor_data WHERE (sensorType = 'dust' AND value > :dustThreshold) OR (sensorType = 'noise' AND value > :noiseThreshold) OR (sensorType = 'gas' AND value > :gasThreshold) ORDER BY timestamp DESC")
+    LiveData<List<SensorData>> getThresholdBreaches(float dustThreshold, float noiseThreshold, float gasThreshold);
 
     // get total count of records
     @Query("SELECT COUNT(*) FROM sensor_data")
@@ -56,6 +56,6 @@ public interface SensorDataDao {
     void deleteByIds(List<Integer> ids);
     
     // delete all threshold breaches
-    @Query("DELETE FROM sensor_data WHERE (sensorType = 'dust' AND value > :dustThreshold) OR (sensorType = 'noise' AND value > :noiseThreshold)")
-    int deleteAllThresholdBreaches(float dustThreshold, float noiseThreshold);
+    @Query("DELETE FROM sensor_data WHERE (sensorType = 'dust' AND value > :dustThreshold) OR (sensorType = 'noise' AND value > :noiseThreshold) OR (sensorType = 'gas' AND value > :gasThreshold)")
+    int deleteAllThresholdBreaches(float dustThreshold, float noiseThreshold, float gasThreshold);
 }

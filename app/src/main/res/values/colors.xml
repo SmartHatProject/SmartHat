@@ -45,6 +45,8 @@
     <color name="dust_color">#E65100</color>
     <color name="noise_color">#0F5070</color>
     <color name="gas_color">#D32F2F</color>
+    <color name="safe_level">#388E3C</color>
+    <color name="warning_level">#FFA000</color>
     
     <!-- Chart colors -->
     <color name="chart_grid">#DADCE0</color>

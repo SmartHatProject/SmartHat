@@ -44,10 +44,12 @@ public class BluetoothServiceIntegration implements
     // constants for sensor types - use sensordata constants for consistency
     public static final String SENSOR_TYPE_DUST = SensorData.TYPE_DUST;
     public static final String SENSOR_TYPE_NOISE = SensorData.TYPE_NOISE;
+    public static final String SENSOR_TYPE_GAS = SensorData.TYPE_GAS;
     
     //sensor value bounds for validation
     private static final float MAX_DUST_VALUE = 1000.0f;
     private static final float MAX_NOISE_VALUE = 150.0f;
+    private static final float MAX_GAS_VALUE = 400.0f;
     
     // Notification timeout constants - using values from ESP32BluetoothSpec
     private static final long NOTIFICATION_TIMEOUT_MS = ESP32BluetoothSpec.NotificationParams.NOTIFICATION_TIMEOUT_MS;
@@ -65,9 +67,16 @@ public class BluetoothServiceIntegration implements
     // listeners for sensor data
     private final List<SensorDataListener> dataListeners = new CopyOnWriteArrayList<>();
     
+    // listeners for sensor errors
+    private final List<SensorErrorListener> errorListeners = new CopyOnWriteArrayList<>();
+    
+    // Enhanced gas data handler
+    private final GasDataHandler gasDataHandler = new GasDataHandler();
+    
     // uuids of characteristics we're monitoring 
     private final UUID dustCharacteristicUuid;
     private final UUID soundCharacteristicUuid;
+    private final UUID gasCharacteristicUuid;
     
     // prevent multiple initialization attempts
     private final AtomicBoolean notificationsSetup = new AtomicBoolean(false);
@@ -98,6 +107,7 @@ public class BluetoothServiceIntegration implements
     // Last valid readings for each sensor type to use as fallbacks
     private float lastValidDustReading = ESP32BluetoothSpec.NotificationParams.INITIAL_DUST_VALUE; // Default to clean air value
     private float lastValidNoiseReading = ESP32BluetoothSpec.NotificationParams.INITIAL_SOUND_VALUE; // Default to quiet room value
+    private float lastValidGasReading = 0.0f; // Default to clean air value for gas
     
     // Class to store notification data
     private static class NotificationData {
@@ -123,6 +133,18 @@ public class BluetoothServiceIntegration implements
     }
     
     /**
+     * interface for sensor error listener simplified
+     */
+    public interface SensorErrorListener {
+        /**
+         * called when sensor error is detected
+         * @param sensorType the type of sensor (use sensor_type_* constants)
+         * @param errorMessage the error message
+         */
+        void onSensorError(String sensorType, String errorMessage);
+    }
+    
+    /**
      * constructor that takes just the connection manager
      */
     public BluetoothServiceIntegration(BleConnectionManager connectionManager) {
@@ -134,6 +156,7 @@ public class BluetoothServiceIntegration implements
         // initialize uuids from esp32 spec
         this.dustCharacteristicUuid = ESP32BluetoothSpec.DUST_CHARACTERISTIC_UUID;
         this.soundCharacteristicUuid = ESP32BluetoothSpec.SOUND_CHARACTERISTIC_UUID;
+        this.gasCharacteristicUuid = ESP32BluetoothSpec.GAS_CHARACTERISTIC_UUID;
         
         // Initialize background handler with a dedicated thread
         HandlerThread handlerThread = new HandlerThread("NotificationProcessingThread");
@@ -159,24 +182,42 @@ public class BluetoothServiceIntegration implements
             return;
         }
         
-        // remove any existing observer first to prevent leaks
+        // Remove existing observer if any to prevent leaks
         if (connectionStateObserver != null) {
             connectionManager.getConnectionState().removeObserver(connectionStateObserver);
-            connectionStateObserver = null;
         }
         
-        // create and register a new observer
-        connectionStateObserver = state -> {
-            if (state == BleConnectionManager.ConnectionState.CONNECTED) {
-                // set up notifications when connected
-                setupNotifications();
-            } else if (state == BleConnectionManager.ConnectionState.DISCONNECTED) {
-                // reset notification setup flag when disconnected so we'll set up again on reconnect
-                notificationsSetup.set(false);
+        // Create and set up a new observer that cleans up after itself
+        connectionStateObserver = new Observer<BleConnectionManager.ConnectionState>() {
+            @Override
+            public void onChanged(BleConnectionManager.ConnectionState newState) {
+                Log.d(TAG, "Connection state changed: " + newState);
+                
+                if (newState == BleConnectionManager.ConnectionState.CONNECTED) {
+                    // Start verification of notifications when connected
+                    verificationAttempts = 0;
+                    lastNotificationTimestamp = System.currentTimeMillis();
+                    mainHandler.postDelayed(timeoutCheckRunnable, NOTIFICATION_CHECK_INTERVAL_MS);
+                    
+                    // Setup notifications if not already set up
+                    if (!notificationsSetup.get()) {
+                        mainHandler.postDelayed(() -> {
+                            setupNotifications();
+                        }, 1000); // Delay to ensure GATT is stable
+                    }
+                    
+                    // Reset the gas data handler for a fresh start
+                    gasDataHandler.resetAllCounters();
+                    
+                } else if (newState == BleConnectionManager.ConnectionState.DISCONNECTED) {
+                    // Stop verification when disconnected to avoid unnecessary work
+                    mainHandler.removeCallbacks(timeoutCheckRunnable);
+                    notificationsSetup.set(false);
+                }
             }
         };
         
-        // observe connection state changes with lifecycle awareness
+        // Observe connection state changes during lifecycle of the provided LifecycleOwner
         connectionManager.getConnectionState().observe(lifecycleOwner, connectionStateObserver);
         
         Log.d(TAG, "Connection state observer registered with lifecycle");
@@ -209,6 +250,33 @@ public class BluetoothServiceIntegration implements
         
         if (dataListeners.remove(listener)) {
             Log.d(TAG, "Sensor data listener removed, total: " + dataListeners.size());
+        }
+    }
+    
+    /**
+     * add a sensor error listener
+     * thread safe 
+     */
+    public void addSensorErrorListener(SensorErrorListener listener) {
+        if (listener == null) {
+            Log.w(TAG, "Attempted to add null sensor error listener");
+            return;
+        }
+        
+        if (!errorListeners.contains(listener)) {
+            errorListeners.add(listener);
+            Log.d(TAG, "Added sensor error listener: " + listener);
+        }
+    }
+    
+    /**
+     * remove a sensor error listener
+     * thread safe 
+     */
+    public void removeSensorErrorListener(SensorErrorListener listener) {
+        if (listener != null && errorListeners.contains(listener)) {
+            errorListeners.remove(listener);
+            Log.d(TAG, "Removed sensor error listener: " + listener);
         }
     }
     
@@ -271,6 +339,14 @@ public class BluetoothServiceIntegration implements
                     // Only update last valid reading if the value is valid
                     lastValidNoiseReading = (float)value;
                 }
+            } else if (SENSOR_TYPE_GAS.equals(sensorType)) {
+                if (value < 0 || value > MAX_GAS_VALUE) {
+                    Log.w(TAG, "Gas sensor value out of range: " + value);
+                    // we'll still create and dispatch the data 
+                } else {
+                    // Only update last valid reading if the value is valid
+                    lastValidGasReading = (float)value;
+                }
             }
             
             // create sensor data object
@@ -284,7 +360,9 @@ public class BluetoothServiceIntegration implements
             Log.e(TAG, "Invalid JSON: " + jsonData);
             
           
-            float fallbackValue = SENSOR_TYPE_DUST.equals(sensorType) ? lastValidDustReading : lastValidNoiseReading;
+            float fallbackValue = SENSOR_TYPE_DUST.equals(sensorType) ? lastValidDustReading :
+                                SENSOR_TYPE_NOISE.equals(sensorType) ? lastValidNoiseReading :
+                                lastValidGasReading;
             Log.w(TAG, "Using last valid reading as fallback: " + fallbackValue + " for " + sensorType);
             
             // Create sensor data with fallback value and current timestamp
@@ -434,6 +512,8 @@ public class BluetoothServiceIntegration implements
             sensorType = SENSOR_TYPE_DUST;
         } else if (uuid.equals(soundCharacteristicUuid)) {
             sensorType = SENSOR_TYPE_NOISE;
+        } else if (uuid.equals(gasCharacteristicUuid)) {
+            sensorType = SENSOR_TYPE_GAS;
         } else {
             Log.w(TAG, "Unknown characteristic UUID: " + uuid);
             return;
@@ -469,6 +549,12 @@ public class BluetoothServiceIntegration implements
                 return;
             }
             
+            // Special processing for gas sensor data
+            if (sensorType.equals(SENSOR_TYPE_GAS)) {
+                processGasCharacteristic(characteristic, data);
+                return;
+            }
+            
             String stringData = new String(data, java.nio.charset.StandardCharsets.UTF_8);
             Log.d(TAG, "Characteristic data (" + sensorType + "): " + stringData);
             
@@ -494,6 +580,104 @@ public class BluetoothServiceIntegration implements
                 lastProcessedTimestamps.put(sensorType, timestamp);
             }
         }
+    }
+    
+    /**
+     * Process gas sensor characteristic data using enhanced handler
+     */
+    private void processGasCharacteristic(BluetoothGattCharacteristic characteristic, byte[] data) {
+        // Use the enhanced gas data handler
+        GasDataHandler.ProcessResult result = gasDataHandler.processGasData(data);
+        
+        if (result.success && result.data != null) {
+            // If successful and we have valid data, notify listeners
+            notifyListeners(result.data, SENSOR_TYPE_GAS);
+            
+            // Update timestamp record
+            lastProcessedTimestamps.put(SENSOR_TYPE_GAS, result.data.getTimestamp());
+            
+            // Check for anomalies
+            if (result.data.isAnomalous()) {
+                // Log with specific anomaly type information
+                String anomalyInfo = "";
+                switch (result.anomalyType) {
+                    case GasDataHandler.ProcessResult.ANOMALY_SUDDEN_CHANGE:
+                        anomalyInfo = "sudden change detected";
+                        break;
+                    case GasDataHandler.ProcessResult.ANOMALY_UNREALISTIC_RATE:
+                        anomalyInfo = "unrealistic rate of change";
+                        break;
+                    case GasDataHandler.ProcessResult.ANOMALY_STUCK_READINGS:
+                        anomalyInfo = "sensor may be stuck";
+                        break;
+                    case GasDataHandler.ProcessResult.ANOMALY_OUT_OF_RANGE:
+                        anomalyInfo = "reading out of valid range";
+                        break;
+                    default:
+                        anomalyInfo = "unknown anomaly";
+                }
+                
+                Log.w(TAG, "Anomalous gas reading: " + result.data.getValue() + " - " + anomalyInfo);
+                
+                // For stuck readings, notify as a sensor error
+                if (result.anomalyType == GasDataHandler.ProcessResult.ANOMALY_STUCK_READINGS) {
+                    notifySensorError(SENSOR_TYPE_GAS, "Gas sensor may be stuck - sending identical values");
+                    gasDataHandler.resetIdenticalReadingsCounter();
+                }
+            }
+        } else if (result.data != null) {
+            // We have fallback data even though there was an error
+            notifyListeners(result.data, SENSOR_TYPE_GAS);
+            
+            // If we have out-of-range readings, report as sensor error
+            if (result.anomalyType == GasDataHandler.ProcessResult.ANOMALY_OUT_OF_RANGE) {
+                notifySensorError(SENSOR_TYPE_GAS, "Gas sensor reporting invalid readings: " + result.message);
+            }
+        }
+        
+        // Check if we should notify about sensor errors
+        if (gasDataHandler.hasPotentialSensorError()) {
+            notifySensorError(SENSOR_TYPE_GAS, "Multiple gas sensor errors detected, sensor may be malfunctioning");
+            // Reset the error counter to avoid spamming errors
+            gasDataHandler.resetErrorCounter();
+        }
+        
+        // Check for additional specific error conditions
+        checkForStuckGasValues();
+    }
+    
+    /**
+     * Check for stuck gas values that might indicate sensor issues
+     * This is an additive method that doesn't modify existing behavior
+     */
+    private void checkForStuckGasValues() {
+        // Only check if we have collected enough readings
+        if (gasDataHandler.getConsecutiveIdenticalReadings() >= 10) {
+            // Report potential sensor issue - 10 identical readings in a row is suspicious
+            notifySensorError(SENSOR_TYPE_GAS, "Gas sensor may be stuck - reporting identical values");
+            // Reset counter to avoid repeated notifications
+            gasDataHandler.resetIdenticalReadingsCounter();
+        }
+    }
+    
+    /**
+     * Notify listeners about sensor errors
+     */
+    private void notifySensorError(final String sensorType, final String errorMessage) {
+        if (errorListeners.isEmpty()) {
+            return;
+        }
+        
+        // Notify on main thread for UI safety
+        mainHandler.post(() -> {
+            for (SensorErrorListener listener : errorListeners) {
+                try {
+                    listener.onSensorError(sensorType, errorMessage);
+                } catch (Exception e) {
+                    Log.e(TAG, "Error notifying error listener: " + e.getMessage(), e);
+                }
+            }
+        });
     }
     
     /**
@@ -561,14 +745,16 @@ public class BluetoothServiceIntegration implements
             try {
                 Log.d(TAG, "Setting up notifications for ESP32 sensors");
                 
-                // find characteristics for both sensors
+                // find characteristics for all sensors
                 BluetoothGattCharacteristic dustChar = 
                     service.getCharacteristic(dustCharacteristicUuid);
                 BluetoothGattCharacteristic soundChar = 
                     service.getCharacteristic(soundCharacteristicUuid);
+                BluetoothGattCharacteristic gasChar = 
+                    service.getCharacteristic(gasCharacteristicUuid);
                 
-                // check if both characteristics exist before proceeding
-                if (dustChar == null && soundChar == null) {
+                // check if all characteristics exist before proceeding
+                if (dustChar == null && soundChar == null && gasChar == null) {
                     Log.e(TAG, "No sensor characteristics found in ESP32 service");
                     notificationsSetup.set(false);
                     return;
@@ -595,7 +781,16 @@ public class BluetoothServiceIntegration implements
                     overallSuccess &= soundSuccess;
                 }
                 
-                // if both failed, reset the notification setup flag so we can try again
+                // enable gas sensor notifications if available
+                if (gasChar != null) {
+                    boolean gasSuccess = executeGattOperationSafely(gatt, () -> {
+                        return enableNotification(gatt, gasChar);
+                    });
+                    Log.d(TAG, "Gas sensor notification setup: " + (gasSuccess ? "success" : "failed"));
+                    overallSuccess &= gasSuccess;
+                }
+                
+                // if all failed, reset the notification setup flag so we can try again
                 if (!overallSuccess) {
                     Log.w(TAG, "Failed to set up all notifications, will try again on next connection");
                     notificationsSetup.set(false);
@@ -806,6 +1001,9 @@ public class BluetoothServiceIntegration implements
         
         // Remove listeners
         dataListeners.clear();
+        
+        // Remove error listeners
+        errorListeners.clear();
         
         // Clear notification queue
         notificationQueue.clear();

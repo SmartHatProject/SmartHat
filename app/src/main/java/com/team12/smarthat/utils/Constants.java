@@ -23,6 +23,11 @@ public class Constants {
     public static final String MESSAGE_TYPE_SOUND = "SOUND_SENSOR_DATA";
     public static final String MESSAGE_TYPE_GAS = "GAS_SENSOR_DATA";
 
+    // Sensor types for consistency
+    public static final String TYPE_DUST = "dust";
+    public static final String TYPE_NOISE = "noise";
+    public static final String TYPE_GAS = "gas";
+
     // notification stuff
     public static final String NOTIFICATION_CHANNEL_ID = "sensor_alerts";
     public static final int NOTIFICATION_ID = 1001;
@@ -92,4 +97,7 @@ public class Constants {
     public static final String PREF_TEST_MODE_ACTIVE = "test_mode_active";
     public static final String PREF_TEST_MODE_TYPE = "test_mode_type";
     public static final String PREF_CONNECTION_STATE = "connection_state";
+    
+    // background operation preference
+    public static final String PREF_BACKGROUND_OPERATION_ENABLED = "background_operation_enabled";
 }

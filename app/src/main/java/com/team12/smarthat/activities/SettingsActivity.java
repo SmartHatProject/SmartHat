@@ -1,9 +1,14 @@
 package com.team12.smarthat.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -136,6 +141,12 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Setup gas notifications toggle
         setupGasNotificationsToggle();
+        
+        // Setup background operation toggle
+        setupBackgroundOperationToggle();
+        
+        // Setup battery optimization request button
+        setupBatteryOptimizationButton();
     }
     
     private void setupMainNotificationsToggle() {
@@ -220,6 +231,57 @@ public class SettingsActivity extends AppCompatActivity {
             // Set gas notifications enabled/disabled
             notificationUtils.setNotificationsEnabledForType("gas", isChecked);
             Log.d(Constants.TAG_MAIN, "Gas notifications " + (isChecked ? "enabled" : "disabled") + " in Settings");
+        });
+    }
+    
+    private void setupBackgroundOperationToggle() {
+        // Get current background operation state
+        boolean backgroundEnabled = preferences.getBoolean(
+                Constants.PREF_BACKGROUND_OPERATION_ENABLED, true); // Default to enabled
+        binding.switchBackgroundOperation.setChecked(backgroundEnabled);
+        
+        // Set listener
+        binding.switchBackgroundOperation.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            // Save the setting
+            preferences.edit()
+                .putBoolean(Constants.PREF_BACKGROUND_OPERATION_ENABLED, isChecked)
+                .apply();
+            
+            Log.d(Constants.TAG_MAIN, "Background operation " + (isChecked ? "enabled" : "disabled") + " in Settings");
+        });
+    }
+    
+    /**
+     * Setup the battery optimization button to request exemption when needed
+     */
+    private void setupBatteryOptimizationButton() {
+        // Check current battery optimization status
+        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        boolean isIgnoringBatteryOptimizations = false;
+        
+        if (powerManager != null) {
+            isIgnoringBatteryOptimizations = powerManager.isIgnoringBatteryOptimizations(getPackageName());
+        }
+        
+        // Update button state based on current status
+        if (isIgnoringBatteryOptimizations) {
+            binding.btnBatteryOptimization.setText(R.string.already_optimized);
+            binding.btnBatteryOptimization.setEnabled(false);
+        }
+        
+        // Set click listener
+        binding.btnBatteryOptimization.setOnClickListener(v -> {
+            // Request battery optimization exemption
+            Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+            intent.setData(Uri.parse("package:" + getPackageName()));
+            
+            try {
+                startActivity(intent);
+                Log.d(Constants.TAG_MAIN, "Requested battery optimization exemption");
+            } catch (Exception e) {
+                Log.e(Constants.TAG_MAIN, "Error requesting battery optimization exemption: " + e.getMessage());
+                Toast.makeText(this, "Unable to open battery settings", Toast.LENGTH_SHORT).show();
+            }
         });
     }
     

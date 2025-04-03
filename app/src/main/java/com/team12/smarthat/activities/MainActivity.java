@@ -44,6 +44,7 @@ import com.team12.smarthat.bluetooth.devices.esp32.ESP32BluetoothSpec;
 import com.team12.smarthat.database.DatabaseHelper;
 import com.team12.smarthat.models.SensorData;
 import com.team12.smarthat.permissions.BluetoothPermissionManager;
+import com.team12.smarthat.services.BleForegroundService;
 import com.team12.smarthat.utils.Constants;
 import com.team12.smarthat.utils.NotificationUtils;
 import com.team12.smarthat.utils.TestDataGenerator;
@@ -59,7 +60,8 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity implements 
         BluetoothServiceIntegration.SensorDataListener,
         BluetoothPermissionManager.PermissionCallback,
-        TestDataGenerator.TestDataListener {
+        TestDataGenerator.TestDataListener,
+        BluetoothServiceIntegration.SensorErrorListener {
 
 
     private BluetoothManager systemBluetoothManager;
@@ -92,6 +94,10 @@ public class MainActivity extends AppCompatActivity implements
     private long highNoiseStartTime = 0;
     private boolean isHighNoiseTracking = false;
     private static final long SUSTAINED_NOISE_THRESHOLD_MS = 4000; // 4 seconds
+    
+    // Track gas sensor error state
+    private boolean gasErrorState = false;
+    private static final int GAS_ERROR_INDICATOR_DURATION_MS = 3000; // Show error indicator for 3 seconds
     
     // region activation system
     private ActivityResultLauncher<Intent> bluetoothEnableLauncher = registerForActivityResult(
@@ -308,6 +314,7 @@ public class MainActivity extends AppCompatActivity implements
             // remove listeners to prevent callbacks during cleanup
             if (btIntegration != null) {
                 btIntegration.removeSensorDataListener(this);
+                btIntegration.removeSensorErrorListener(this);
             }
             //cleanup BLE integration
             if (btIntegration != null) {
@@ -507,6 +514,22 @@ public class MainActivity extends AppCompatActivity implements
             if (!testModeActive) {
                 Log.d(Constants.TAG_MAIN, "Real connection state changed: " + state);
                 updateConnectionUI(state);
+                
+                // Start foreground service when connected
+                if (state == BleConnectionManager.ConnectionState.CONNECTED) {
+                    Log.d(Constants.TAG_MAIN, "Connection established, starting BleForegroundService");
+                    
+                    // Check if background operation is enabled in preferences
+                    boolean backgroundEnabled = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE)
+                        .getBoolean(Constants.PREF_BACKGROUND_OPERATION_ENABLED, true); // Default to enabled
+                    
+                    if (backgroundEnabled) {
+                        Intent serviceIntent = new Intent(this, BleForegroundService.class);
+                        androidx.core.content.ContextCompat.startForegroundService(this, serviceIntent);
+                    } else {
+                        Log.d(Constants.TAG_MAIN, "Background operation disabled in settings, foreground service not started");
+                    }
+                }
             }
         });
         
@@ -557,6 +580,11 @@ public class MainActivity extends AppCompatActivity implements
             btIntegration.observeConnectionState(this);
         }
         
+        // Also register for error notifications if bt integration exists
+        if (btIntegration != null) {
+            btIntegration.addSensorErrorListener(this);
+        }
+        
         Log.d(Constants.TAG_MAIN, "Observers setup complete for " + 
               (testModeActive ? "TEST" : "REAL") + " mode");
     }
@@ -602,11 +630,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     // region connection management
-    /**
-     * toggle connection state
-     * for both real and test mode connections
-     * optimized for Android 12 on Pixel 4a
-     */
+   
     private void toggleConnection() {
         // determine which manager to use
         BleConnectionManager activeManager = testModeActive ? mockConnectionManager : connectionManager;
@@ -630,6 +654,13 @@ public class MainActivity extends AppCompatActivity implements
                     Log.d(Constants.TAG_MAIN, "User requested disconnect from connected state");
                     activeManager.disconnect();
                     
+                    // Stop the foreground service when disconnecting
+                    if (!testModeActive) {
+                        Log.d(Constants.TAG_MAIN, "Stopping BleForegroundService");
+                        Intent serviceIntent = new Intent(this, BleForegroundService.class);
+                        stopService(serviceIntent);
+                    }
+                    
                     // For test mode, ensure test data generation is stopped
                     if (testModeActive && testDataGenerator != null && testDataGenerator.isTestModeActive()) {
                         testDataGenerator.stopTestMode();
@@ -642,6 +673,13 @@ public class MainActivity extends AppCompatActivity implements
                     
                     // Call disconnect on the active manager to cancel the connection attempt
                     activeManager.disconnect();
+                    
+                    // Stop the foreground service when canceling connection
+                    if (!testModeActive) {
+                        Log.d(Constants.TAG_MAIN, "Stopping BleForegroundService");
+                        Intent serviceIntent = new Intent(this, BleForegroundService.class);
+                        stopService(serviceIntent);
+                    }
                     
                     // For test mode, we need to ensure any test data generation is also stopped
                     if (testModeActive && testDataGenerator != null && testDataGenerator.isTestModeActive()) {
@@ -1426,23 +1464,131 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
     
-    private void handleGasSensorData(SensorData data) {
-        // Get custom threshold
-        float gasThreshold = getCustomGasThreshold();
+    /**
+     * Handle sensor errors from the BLE integration
+     */
+    @Override
+    public void onSensorError(String sensorType, String errorMessage) {
+        // Run on UI thread since this could be called from a background thread
+        runOnUiThread(() -> {
+            Log.e(Constants.TAG_MAIN, "Sensor error detected: " + sensorType + " - " + errorMessage);
+            
+            // For gas sensor errors, update UI accordingly
+            if (sensorType.equals(BluetoothServiceIntegration.SENSOR_TYPE_GAS)) {
+                handleGasSensorError(errorMessage);
+            }
+        });
+    }
+    
+    /**
+     * Handle gas sensor errors reported from the BLE integration
+     * This method is additive and doesn't modify existing behavior
+     */
+    private void handleGasSensorError(String errorMessage) {
+        // Mark the gas sensor as in error state
+        gasErrorState = true;
         
-        // Check if value exceeds threshold
-        if (data.getValue() > gasThreshold) {
-            // Show alert
-            if (notificationUtils != null) {
-                notificationUtils.showGasAlert(data);
+        // Update UI to show error state
+        if (tvGasValue != null) {
+            tvGasValue.setText(R.string.gas_sensor_error);
+            tvGasValue.setTextColor(Color.GRAY);
+        }
+        
+        // Update gas gauge to show error
+        if (gasGauge != null) {
+            // Reset to zero and use gray color to indicate error
+            gasGauge.speedTo(0, 500);
+            gasGauge.setSpeedometerColor(Color.LTGRAY);
+        }
+        
+        // Show a toast with the error message
+        Toast.makeText(this, 
+            getString(R.string.gas_sensor_error_message, errorMessage), 
+            Toast.LENGTH_LONG).show();
+        
+        // Schedule automatic recovery attempt after 30 seconds
+        mainHandler.postDelayed(() -> {
+            Log.d(Constants.TAG_MAIN, "Attempting gas sensor recovery");
+            gasErrorState = false;
+            // Request fresh readings
+            if (btIntegration != null) {
+                // Request service rediscovery which will reconnect to the gas characteristic
+                BleConnectionManager activeManager = testModeActive ? mockConnectionManager : connectionManager;
+                if (activeManager.getCurrentState() == BleConnectionManager.ConnectionState.CONNECTED) {
+                    Toast.makeText(this, R.string.gas_sensor_recovery_attempt, Toast.LENGTH_SHORT).show();
+                    
+                    // This will request rediscovery of services including gas characteristic
+                    activeManager.refreshServices();
+                }
+            }
+        }, 30000); // 30 seconds
+    }
+    
+    /**
+     * Handle gas sensor data with enhanced error detection
+     */
+    private void handleGasSensorData(SensorData data) {
+        // Skip UI updates if in error state
+        if (gasErrorState) {
+            return;
+        }
+        
+        // Check if this reading was flagged as anomalous
+        boolean isAnomalous = data.isAnomalous();
+        if (isAnomalous) {
+            Log.w(Constants.TAG_MAIN, "Anomalous gas reading: " + data.getValue());
+        }
+        
+        // Update gas value text
+        if (tvGasValue != null) {
+            String gasText = getString(R.string.gas_format, data.getValue());
+            tvGasValue.setText(gasText);
+            
+            // Get custom threshold for gas
+            float gasThreshold = getCustomGasThreshold();
+            
+            // Use different display for anomalous readings
+            if (isAnomalous) {
+                // Show in orange to indicate questionable reading
+                tvGasValue.setTextColor(ContextCompat.getColor(this, R.color.warning_level));
+            } else if (data.getValue() > gasThreshold) {
+                // Normal threshold breach - red
+                tvGasValue.setTextColor(Color.RED);
+            } else {
+                // Normal reading - default color
+                tvGasValue.setTextColor(ContextCompat.getColor(this, R.color.sensor_value));
+            }
+        }
+        
+        // Update gas gauge visualization
+        if (gasGauge != null) {
+            float gasValue = data.getValue();
+            
+            // Get threshold
+            float gasThreshold = getCustomGasThreshold();
+            
+            // Anomalous readings shown differently
+            if (isAnomalous) {
+                // Orange for questionable readings
+                gasGauge.setSpeedometerColor(ContextCompat.getColor(this, R.color.warning_level));
+            } else if (gasValue > gasThreshold) {
+                // Red for threshold breach
+                gasGauge.setSpeedometerColor(Color.RED);
+            } else if (gasValue > gasThreshold * 0.75f) {
+                // Yellow for approaching threshold
+                gasGauge.setSpeedometerColor(Color.YELLOW);
+            } else {
+                // Green/blue for safe
+                gasGauge.setSpeedometerColor(ContextCompat.getColor(this, R.color.safe_level));
             }
             
-            // Log for test data
-            if (data.isTestData()) {
-                Log.d(Constants.TAG_MAIN, "Test gas data triggered notification: " + data.getValue() + " ppm (threshold: " + gasThreshold + " ppm)");
-            } else {
-                Log.d(Constants.TAG_MAIN, "Gas threshold exceeded: " + data.getValue() + " ppm (threshold: " + gasThreshold + " ppm)");
-            }
+            // Animate to the value
+            gasGauge.speedTo(gasValue, 300);
+        }
+        
+        // Alert for threshold breach (if not anomalous)
+        if (!isAnomalous) {
+            checkAndAlertForGasThreshold(data);
         }
     }
 
@@ -1539,5 +1685,30 @@ public class MainActivity extends AppCompatActivity implements
         Log.d(Constants.TAG_MAIN, "Restored test mode state: active=" + testModeActive + 
               ", expected connection=" + savedState + 
               ", actual connection=" + activeManager.getCurrentState());
+    }
+
+    /**
+     * Check gas levels against threshold and show alerts if needed
+     */
+    private void checkAndAlertForGasThreshold(SensorData data) {
+        // Get custom threshold
+        float gasThreshold = getCustomGasThreshold();
+        
+        // Check if value exceeds threshold
+        if (data.getValue() > gasThreshold) {
+            // Show alert
+            if (notificationUtils != null) {
+                notificationUtils.showGasAlert(data);
+            }
+            
+            // Log for test data
+            if (data.isTestData()) {
+                Log.d(Constants.TAG_MAIN, "Test gas data triggered notification: " + 
+                      data.getValue() + " ppm (threshold: " + gasThreshold + " ppm)");
+            } else {
+                Log.d(Constants.TAG_MAIN, "Gas threshold exceeded: " + 
+                      data.getValue() + " ppm (threshold: " + gasThreshold + " ppm)");
+            }
+        }
     }
 }

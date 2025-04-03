@@ -33,10 +33,21 @@
   > BleHandler.cpp: `Message initialDustMessage = Message(Message::DUST_SENSOR_DATA, 10.0f);  // Default to 10 µg/m³ (clean air)`
 - example: `{"messageType":"DUST_SENSOR_DATA","data":25.5,"timeStamp":1234567890}`
 
+### Gas Sensor
+- uuid: 6E400004-B5A3-F393-E0A9-E50E24DCCA9E
+  > ESP32BluetoothSpec.java: `public static final UUID GAS_CHARACTERISTIC_UUID = UUID.fromString("6E400004-B5A3-F393-E0A9-E50E24DCCA9E");`
+- properties: read, notify
+  > Similar to other sensors: `BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY`
+- format: json string
+- range: 0-400 ppm (parts per million)
+  > Constants.java: `public static final float GAS_MAX_VALUE = 400.0f;`
+- example: `{"messageType":"GAS_SENSOR_DATA","data":42.5,"timeStamp":1680456789}`
+
 ## JSON Format
-- messageType: "SOUND_SENSOR_DATA" or "DUST_SENSOR_DATA" (exact strings required)
+- messageType: "SOUND_SENSOR_DATA", "DUST_SENSOR_DATA", or "GAS_SENSOR_DATA" (exact strings required)
   > Message.cpp: `const char* Message::DUST_SENSOR_DATA = "DUST_SENSOR_DATA"; const char* Message::SOUND_SENSOR_DATA = "SOUND_SENSOR_DATA";`
-- data: float value in db or micrograms/m³
+  > Constants.java: `public static final String MESSAGE_TYPE_GAS = "GAS_SENSOR_DATA";`
+- data: float value in db, micrograms/m³, or ppm
   > Message.cpp: `jsonDoc["data"] = this->data;`
 - timeStamp: milliseconds since device boot (note camelCase with capital 'S')
   > Message.cpp: `jsonDoc["timeStamp"] = currentTimestamp;`
@@ -50,6 +61,8 @@
   > smarthat-driver.ino: `#define DUST_ALERT_THRESHOLD 50.0`
 - sound: >85.0 db sustained for 4 seconds
   > NoiseSensor.cpp: `const float SOUND_ALERT_THRESHOLD = 85.0; if (elapsedTime >= 4) { triggerAlert(); }`
+- gas: >100.0 ppm (immediate alert)
+  > Constants.java: `public static final float GAS_THRESHOLD = 100.0f;`
 
 ## Update Frequency
 - readings update every ~1 second
@@ -102,9 +115,12 @@
   > Message.cpp: `jsonDoc["messageType"] = this->messageType;` and `jsonDoc["timeStamp"] = currentTimestamp;`
 - validate messageType against expected constants before processing
 - type-check data field as float/double
-- implement range validation (30-130 db, 0-1000 micrograms/m³)
+- implement range validation (30-130 db, 0-1000 micrograms/m³, 0-400 ppm)
+  > Constants.java: `public static final float DUST_MAX_VALUE = 1000.0f; public static final float NOISE_MAX_VALUE = 140.0f; public static final float GAS_MAX_VALUE = 400.0f;`
 - handle timeStamps for ordering (can be reset if device reboots)
 - json errors should not crash app - maintain last valid reading
+- implement gas sensor anomaly detection for better reliability
+  > GasDataHandler.java: `private boolean isRealisticGasChange(float newValue, float oldValue, long timeDiffMs)`
 
 ## Initial Value Behavior
 - during first connection, initial values are:
@@ -112,12 +128,37 @@
     > BleHandler.cpp: `Message initialSoundMessage = Message(Message::SOUND_SENSOR_DATA, 40.0f);`
   - dust: 10.0 micrograms/m³
     > BleHandler.cpp: `Message initialDustMessage = Message(Message::DUST_SENSOR_DATA, 10.0f);`
+  - gas: 0.0 ppm (clean air)
+    > GasDataHandler.java: `private final AtomicReference<Float> lastGasValue = new AtomicReference<>(0.0f);`
 - app should display these immediately rather than "0.0" or empty values
 - actual sensor readings will arrive within ~1 second after connection
 - values never default to 0.0 (addresses previous "zero values" issue)
   > Message.cpp: `if (strcmp(msgType, DUST_SENSOR_DATA) == 0) { defaultValue = 10.0f; } else { defaultValue = 40.0f; }`
 
 ## Sensor Details
+
+### Gas Sensor (MQ135)
+- hardware: MQ135 gas sensor connected to ESP32
+- pin: analog input 32
+  > ESP32 Gas Code: `const int mq135Pin = 32;`
+- load resistance (RL): 10.0 ohms
+  > ESP32 Gas Code: `const float RL = 10.0;`
+- calibration: dynamic baseline resistance (R0) calculation on startup
+  > ESP32 Gas Code: `R0 = calibrateR0();`
+- warm-up time: 10 seconds minimum recommended
+  > ESP32 Gas Code: `delay(10000);  // Allow warm-up (10s minimum)`
+- sampling: 100 readings averaged for stability
+  > ESP32 Gas Code: `const int NUM_SAMPLES = 100;`
+- adc: 12-bit resolution (0-4095), 3.3v reference
+  > ESP32 Gas Code: `float voltage = analogValue * (3.3 / 4095.0);`
+- conversion formula: log(ppm) = -2.769 * log10(Rs/R0) + 2.602
+  > ESP32 Gas Code: `float a = -2.769; float b = 2.602; float log_ppm = a * log10(ratio) + b;`
+- Rs calculation: Rs = (3.3 - voltage) * RL / voltage
+  > ESP32 Gas Code: `float rs = (3.3 - voltage) * RL / voltage;`
+- calibrated for CO2-like gases
+  > ESP32 Gas Code: `// Curve for CO2-like behavior (adjust as needed dependent on specific gas)`
+- update rate: readings every 10ms
+  > ESP32 Gas Code: `delay(10);`
 
 ### Dust Sensor
 - ir led control: active-low
@@ -156,8 +197,10 @@
   > NoiseSensor.cpp: `if (_samples[i] >= 30.0 && _samples[i] <= 130.0) { sum += _samples[i]; validSamples++; }`
 - voltage range filter: 0.001-3.3v
   > NoiseSensor.cpp: `if (voltage > 0.001 && voltage < 3.3) { sum += voltage; validReadings++; }`
-- default values: 30.0 db (sound), 0.0 micrograms/m³ (dust)
+- default values: 30.0 db (sound), 0.0 micrograms/m³ (dust), 0.0 ppm (gas)
   > NoiseSensor.cpp: `return 30.0; // Minimum valid value in dB range` and DustSensor.cpp: `float finalDensity = max(density, 0.0f);`
+- gas sensor anomaly detection: stuck readings, unrealistic rates of change
+  > GasDataHandler.java: `if (consecutiveIdenticalReadings >= MAX_IDENTICAL_READINGS) { anomalyType = ProcessResult.ANOMALY_STUCK_READINGS; }`
 
 ## Fallback Behavior
 - json creation failure → valid json with defaults
@@ -168,21 +211,17 @@
   > DustSensor.cpp: `float finalDensity = max(density, 0.0f);`
 - non-zero initial values prevent "zero value" display
   > BleHandler.cpp: `Message initialSoundMessage = Message(Message::SOUND_SENSOR_DATA, 40.0f);`
+- gas sensor requires 10 second minimum warm-up time
+  > ESP32 Gas Code: `delay(10000);  // Allow warm-up (10s minimum)`
 
 ## Compatibility
 - exact device name and uuid matching
 - consistent json structure
 - notify property for realtime updates
 - matching alert thresholds
-- valid value ranges
+- valid value ranges (30-130 db, 0-1000 micrograms/m³, 0-400 ppm)
 - robust connection handling
-
-
-
-- 4second tracking for sound alerts to match esp32 for app
-  > NoiseSensor.cpp: `if (elapsedTime >= 4) { triggerAlert(); }`
-- request high priority connection parameters on android
-- implement background service for continuous monitoring
+- gas sensor requires calibration period after startup
 
 ## Code Structure
 - main loop: connection detection, sensor reading, threshold checking, ble updates

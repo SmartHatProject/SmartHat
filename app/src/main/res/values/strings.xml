@@ -106,6 +106,17 @@
     <string name="reset_to_default">Reset to Default</string>
     <string name="thresholds_note">Note: Changing these thresholds affects when you\'ll receive alerts. OSHA recommends keeping noise alerts at 85dB and dust at 50 μg/m³.</string>
     
+    <!-- Background Operation Strings -->
+    <string name="background_operation">Background Operation</string>
+    <string name="background_operation_description">Keep monitoring when app is closed</string>
+    <string name="toggle_background_operation">Toggle background operation</string>
+    
+    <!-- Battery Optimization Strings -->
+    <string name="battery_optimization">Battery Optimization</string>
+    <string name="battery_optimization_description">Improve background reliability on some devices</string>
+    <string name="battery_optimization_request">Request</string>
+    <string name="already_optimized">Applied</string>
+    
     <!-- Data Visualization Activity Strings -->
     <string name="data_visualization_title">Data Visualization</string>
     <string name="data_visualization_placeholder">Data Visualization Coming Soon</string>
@@ -116,6 +127,11 @@
     <string name="chart_dust_title">Dust Readings (μg/m³)</string>
     <string name="chart_noise_title">Noise Readings (dB)</string>
     <string name="chart_gas_title">Air Quality Readings (ppm)</string>
+    
+    <!-- Gas Sensor Error Strings -->
+    <string name="gas_sensor_error">ERROR</string>
+    <string name="gas_sensor_error_message">Gas sensor issue detected: %1$s</string>
+    <string name="gas_sensor_recovery_attempt">Attempting to recover gas sensor</string>
     
     <!-- Threshold Breach Item Strings -->
     <string name="sensor_icon_description">Sensor type icon</string>

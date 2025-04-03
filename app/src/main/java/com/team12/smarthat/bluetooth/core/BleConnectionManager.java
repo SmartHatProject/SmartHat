@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.lang.reflect.Method;
 
 @SuppressLint("MissingPermission")
 public class BleConnectionManager {
@@ -1206,5 +1207,49 @@ public class BleConnectionManager {
      */
     protected CharacteristicChangeListener getCharacteristicChangeListener() {
         return characteristicChangeListener;
+    }
+    
+    /**
+     * Refreshes GATT services discovery
+     * Used to recover from sensor errors without disconnecting
+     * Additive method - doesn't modify existing behavior
+     */
+    public void refreshServices() {
+        Log.d(TAG, "Refreshing GATT services discovery");
+        
+        executeWithPermissionCheck(() -> {
+            if (bluetoothGatt != null && getConnectionState().getValue() == ConnectionState.CONNECTED) {
+                try {
+                    // Use reflection to execute refresh method
+                    Method refreshMethod = bluetoothGatt.getClass().getMethod("refresh");
+                    boolean success = (boolean) refreshMethod.invoke(bluetoothGatt);
+                    
+                    if (success) {
+                        Log.d(TAG, "GATT refresh succeeded");
+                        // Delay before rediscovering services for reliability
+                        mainHandler.postDelayed(() -> {
+                            if (bluetoothGatt != null) {
+                                Log.d(TAG, "Rediscovering services");
+                                bluetoothGatt.discoverServices();
+                            }
+                        }, 500);
+                    } else {
+                        Log.w(TAG, "GATT refresh failed, rediscovering services directly");
+                        if (bluetoothGatt != null) {
+                            bluetoothGatt.discoverServices();
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.w(TAG, "Could not refresh GATT services: " + e.getMessage());
+                    // Fall back to direct service discovery
+                    if (bluetoothGatt != null) {
+                        Log.d(TAG, "Falling back to direct service discovery");
+                        bluetoothGatt.discoverServices();
+                    }
+                }
+            } else {
+                Log.w(TAG, "Cannot refresh services - not connected or GATT is null");
+            }
+        }, "refresh services");
     }
 }  

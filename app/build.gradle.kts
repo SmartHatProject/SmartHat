@@ -103,6 +103,7 @@ dependencies {
     // Lifecycle components
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-service:2.6.2")
 
     // Java 8+ desugaring
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")

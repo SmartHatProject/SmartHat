@@ -151,6 +151,81 @@
                             android:contentDescription="@string/toggle_gas_notifications" />
                     </LinearLayout>
 
+                    <!-- Background Operation Toggle -->
+                    <LinearLayout
+                        style="@style/SmartHat.SettingRow"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp"
+                        android:focusable="true">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/SmartHat.SettingLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/background_operation" />
+                                
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/background_operation_description"
+                                style="@style/TextAppearance.SmartHat.Caption" />
+                        </LinearLayout>
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/switch_background_operation"
+                            style="@style/SmartHat.SwitchCompat"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:contentDescription="@string/toggle_background_operation"
+                            android:minWidth="@dimen/min_touch_target"
+                            android:minHeight="@dimen/min_touch_target" />
+                    </LinearLayout>
+
+                    <!-- Battery Optimization Link -->
+                    <LinearLayout
+                        style="@style/SmartHat.SettingRow"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="4dp"
+                        android:focusable="true">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/SmartHat.SettingLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/battery_optimization" />
+                                
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/battery_optimization_description"
+                                style="@style/TextAppearance.SmartHat.Caption" />
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_battery_optimization"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="@string/battery_optimization_request"
+                            android:textSize="12sp"
+                            style="@style/Widget.MaterialComponents.Button.TextButton" />
+                    </LinearLayout>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

@@ -6,6 +6,9 @@ import androidx.room.PrimaryKey;
 
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 @Entity(tableName = "sensor_data")
 public class SensorData {
     private static final String TAG = "SensorData";
@@ -33,6 +36,11 @@ public class SensorData {
     private long timestamp;
     private String metadata; // json string
     private String source = SOURCE_REAL; // default to real data
+
+    // Default constructor for Room
+    public SensorData() {
+        this.timestamp = System.currentTimeMillis();
+    }
 
     public SensorData(String sensorType, float value) {
         this.sensorType = normalizeSensorType(sensorType);
@@ -168,6 +176,70 @@ public class SensorData {
     
     public void setMetadata(String metadata) {
         this.metadata = metadata;
+    }
+    
+    /**
+     * Add extended data to the metadata JSON
+     * @param key The key for the data
+     * @param value The value to store
+     */
+    public void addExtendedData(String key, String value) {
+        try {
+            JSONObject json;
+            if (metadata != null && !metadata.isEmpty()) {
+                json = new JSONObject(metadata);
+            } else {
+                json = new JSONObject();
+            }
+            
+            json.put(key, value);
+            this.metadata = json.toString();
+        } catch (JSONException e) {
+            Log.e(TAG, "Error adding extended data: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Get extended data from metadata
+     * @param key The key to retrieve
+     * @return The value or null if not found
+     */
+    public String getExtendedData(String key) {
+        if (metadata == null || metadata.isEmpty()) {
+            return null;
+        }
+        
+        try {
+            JSONObject json = new JSONObject(metadata);
+            if (json.has(key)) {
+                return json.getString(key);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Error retrieving extended data: " + e.getMessage());
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Check if this reading is anomalous
+     * @return true if anomalous, false otherwise
+     */
+    public boolean isAnomalous() {
+        return "true".equals(getExtendedData("anomalous"));
+    }
+    
+    /**
+     * Set whether this reading is anomalous
+     * @param anomalous true if anomalous, false otherwise
+     */
+    public void setAnomalous(boolean anomalous) {
+        if (anomalous) {
+            addExtendedData("anomalous", "true");
+        } else {
+            // No need to add 'false' since isAnomalous checks for 'true'
+            // This saves storage space
+        }
     }
     
     /**
