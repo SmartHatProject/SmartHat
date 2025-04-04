@@ -139,4 +139,12 @@
     <string name="threshold_exceeded">Threshold Exceeded</string>
     <string name="mark_as_resolved">Mark alert as resolved</string>
     <string name="select_item">Select this alert</string>
+    
+    <!-- Filter Strings -->
+    <string name="filter_history_label">Filter History</string>
+    <string name="filter_start_date_label">Start Date</string>
+    <string name="filter_end_date_label">End Date</string>
+    <string name="timestamp_date_format">MM/dd/yy</string>
+    <string name="apply_filters">Apply Filters</string>
+    <string name="clear_filters">Clear Filters</string>
 </resources>

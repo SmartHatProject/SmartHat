@@ -100,4 +100,8 @@ public class Constants {
     
     // background operation preference
     public static final String PREF_BACKGROUND_OPERATION_ENABLED = "background_operation_enabled";
+    
+    // data filtering preferences
+    public static final String PREF_FILTER_START_DATE = "filter_start_date";
+    public static final String PREF_FILTER_END_DATE = "filter_end_date";
 }

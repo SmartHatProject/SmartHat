@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 
 import com.team12.smarthat.models.SensorData;
 import com.team12.smarthat.utils.Constants;
+import com.team12.smarthat.utils.DataFilterHelper;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -120,6 +121,20 @@ public class DatabaseHelper {
         return dao.getThresholdBreaches(dustThreshold, noiseThreshold, gasThreshold);
     }
     
+    // get all threshold breaches using filters
+    public LiveData<List<SensorData>> getThresholdBreaches(float dustThreshold, float noiseThreshold) {
+        if(DataFilterHelper.getInstance().getCurrentFilter() != null) {
+            long startTimeStamp = DataFilterHelper.getInstance().getCurrentFilter().getStartTimestamp();
+            long endTimeStamp = DataFilterHelper.getInstance().getCurrentFilter().getEndTimestamp();
+            Log.d(Constants.TAG_DATABASE, "Retrieving filtered data");
+            return dao.getThresholdBreaches(dustThreshold, noiseThreshold, startTimeStamp, endTimeStamp);
+        }
+        else {
+            Log.d(Constants.TAG_DATABASE, "Retrieving unfiltered data");
+            return dao.getThresholdBreaches(dustThreshold, noiseThreshold);
+        }
+    }
+    
     /**
      * periodic database cleanup
      */
@@ -207,6 +222,13 @@ public class DatabaseHelper {
     public LiveData<List<SensorData>> getThresholdBreachesWithCustomThresholds(Context context) {
         float dustThreshold = getCustomDustThreshold(context);
         float noiseThreshold = getCustomNoiseThreshold(context);
+        
+        // Use the version that supports filtering
+        if(DataFilterHelper.getInstance().getCurrentFilter() != null) {
+            return getThresholdBreaches(dustThreshold, noiseThreshold);
+        }
+        
+        // If no filtering needed, use original version with gas threshold
         float gasThreshold = getCustomGasThreshold(context);
         return getThresholdBreaches(dustThreshold, noiseThreshold, gasThreshold);
     }
