@@ -92,6 +92,9 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.viewmodel.android)
     
+    // SplashScreen API backward compatibility
+    implementation("androidx.core:core-splashscreen:1.0.1")
+    
     // Preferences support
     implementation("androidx.preference:preference:1.2.1")
     

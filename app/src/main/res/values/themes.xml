@@ -91,12 +91,30 @@
         
         <!-- Activity transitions -->
         <item name="android:windowAnimationStyle">@style/SmartHat.Animation.Activity</item>
+        
+        <!-- Enable splash screen API for Android 12+ -->
+        <item name="android:windowSplashScreenBackground" tools:targetApi="31">@color/background</item>
+        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="31">@drawable/logo_smarthat</item>
+        <item name="android:windowSplashScreenIconBackgroundColor" tools:targetApi="31">@color/background</item>
+        <item name="android:windowSplashScreenBrandingImage" tools:targetApi="31">@null</item>
+        <item name="android:windowSplashScreenAnimationDuration" tools:targetApi="31">1000</item>
     </style>
     
     <!-- Theme without ActionBar for SettingsActivity -->
     <style name="Theme.SmartHat.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+    
+    <!-- Splash Screen Theme (For pre-Android 12) -->
+    <style name="Theme.SmartHat.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_smarthat</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/Theme.SmartHat</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
     
     <!-- Shape appearances for components - optimized for both device types -->
