@@ -14,6 +14,7 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import android.util.Log;
 
@@ -24,6 +25,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
+@Config(sdk = 29)
 public class GasDataHandlerTest {
 
     private GasDataHandler gasDataHandler;
@@ -294,16 +296,19 @@ public class GasDataHandlerTest {
             "Incomplete JSON, waiting for more fragments", result.message);
     }
     
-    // Helper method to make createGasData accessible for testing
-    private SensorData callCreateGasData(float value, long timestamp, boolean isAnomalous) {
-        try {
-            java.lang.reflect.Method method = GasDataHandler.class.getDeclaredMethod(
-                "createGasData", float.class, long.class, boolean.class);
-            method.setAccessible(true);
-            return (SensorData) method.invoke(gasDataHandler, value, timestamp, isAnomalous);
-        } catch (Exception e) {
-            fail("Failed to call createGasData: " + e.getMessage());
-            return null;
-        }
+    @Test
+    public void callCreateGasData() {
+        // Call the private createGasData method via our spy
+        float value = 45.0f;
+        long timestamp = System.currentTimeMillis();
+        boolean isAnomalous = false;
+        
+        SensorData data = gasDataHandler.createGasData(value, timestamp, isAnomalous);
+        
+        // Verify the result
+        assertNotNull("Created gas data should not be null", data);
+        assertEquals("Gas data should have correct type", "gas", data.getSensorType());
+        assertEquals("Gas data should have correct value", value, data.getValue(), 0.001f);
+        assertEquals("Gas data should have correct anomalous state", isAnomalous, data.isAnomalous());
     }
 } 

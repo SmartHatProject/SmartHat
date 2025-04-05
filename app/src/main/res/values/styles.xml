@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 
-    SmartHat Style Guide
-    
-    Text Appearance Patterns:
-    - For primary headlines, use: TextAppearance.SmartHat.HeadlineMedium
-    - For body text, use: TextAppearance.SmartHat.BodyMedium
-    - For smaller text, use: TextAppearance.SmartHat.BodySmall
-    - For caption text, use: TextAppearance.SmartHat.Caption
-    
-    Color Usage:
-    - Primary actions: @color/primary
-    - Backgrounds: @color/background or @color/surface
-    - Text: @color/text_primary or @color/text_secondary
-    - Alerts: @color/error, @color/warning, @color/success
-    
-    Spacing:
-    - Use @dimen/spacing_* values for consistent margins and padding
-    - Buttons should have at least @dimen/min_touch_target size for accessibility
-    -->
+   
     
     <!-- Base application theme for SmartHat -->
     <style name="SmartHat" parent="Theme.Material3.DayNight.NoActionBar">

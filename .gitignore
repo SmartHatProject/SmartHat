@@ -1,6 +1,9 @@
 # Android Studio & Gradle
 *.iml
 .gradle/
+.gradle/**/*
+gradle-app.setting
+!gradle-wrapper.jar
 .idea/
 build/
 captures/
@@ -14,10 +17,17 @@ local.properties
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 .externalNativeBuild
-.cxx
+.cxx/
+.navigation/
 
 # OS-Specific
 .DS_Store
+
+# Build artifacts
+*.apk
+*.aab
+*.ap_
+*.dex
 
 # Logs
 *.log
@@ -25,3 +35,28 @@ local.properties
 # Auto-generated files
 app/lint-results.html
 **/lint-results.*
+*.log
+*.txt
+.vscode/
+
+# Generated files
+/app/src/main/java/com/team12/smarthat/BuildConfig.java
+app/build/generated/
+
+# Navigation component generated
+/app/src/main/java/com/team12/smarthat/navigation/
+
+# Room database generated
+/app/schemas/
+
+# Specific Android Studio files
+*.hprof
+
+# Temp files
+*.bak
+*~
+*.swp
+*.old
+*.orig
+*.tmp
+temp*

@@ -42,7 +42,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * - Using initial values as specified in the hardware documentation
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 30)
+@Config(sdk = 29)
 public class NotificationHandlingTest {
     
     @Mock
@@ -56,6 +56,7 @@ public class NotificationHandlingTest {
     // Test UUIDs matching ESP32 specification
     private final UUID DUST_UUID = ESP32BluetoothSpec.DUST_CHARACTERISTIC_UUID;
     private final UUID SOUND_UUID = ESP32BluetoothSpec.SOUND_CHARACTERISTIC_UUID;
+    private final UUID GAS_UUID = ESP32BluetoothSpec.GAS_CHARACTERISTIC_UUID;
     
     @Before
     public void setUp() {
@@ -65,6 +66,9 @@ public class NotificationHandlingTest {
         
         // Create the service integration with mocked connection manager
         serviceIntegration = new BluetoothServiceIntegration(mockConnectionManager);
+        
+        // Ensure the main thread is active for the handler callbacks
+        ShadowLooper.shadowMainLooper().idle();
     }
     
     /**
@@ -87,8 +91,8 @@ public class NotificationHandlingTest {
         
         // Create a data listener to receive the processed data
         final AtomicReference<SensorData> capturedData = new AtomicReference<>();
-        BluetoothServiceIntegration.SensorDataListener listener = (data, type) -> {
-            if (type.equals(Constants.TYPE_NOISE)) {
+        BluetoothServiceIntegration.SensorDataListener listener = (data, sensorType) -> {
+            if (sensorType.equals(Constants.TYPE_NOISE)) {
                 capturedData.set(data);
                 latch.countDown();
             }
@@ -100,17 +104,18 @@ public class NotificationHandlingTest {
         // Trigger the notification
         serviceIntegration.onCharacteristicChanged(characteristic);
         
-        // Process all pending messages on both the main looper and background looper
-        ShadowLooper.shadowMainLooper().idle();
+        // Process background thread messages
+        ShadowLooper.runUiThreadTasksIncludingDelayedTasks();
         
-        // Wait for the notification to be processed (with timeout)
-        latch.await(1, TimeUnit.SECONDS);
+        // Give time for processing to complete
+        Thread.sleep(100);
         
-        // Run the main thread again to process any callbacks
+        // Process all pending messages on main thread again
         ShadowLooper.shadowMainLooper().idle();
         
         // Verify the data was processed correctly
         SensorData data = capturedData.get();
+        assertNotNull("Sensor data should not be null", data);
         assertEquals(75.5f, data.getValue(), 0.01f);
         assertEquals(1234567890L, data.getTimestamp());
     }
@@ -135,8 +140,8 @@ public class NotificationHandlingTest {
         
         // Create a data listener to receive the processed data
         final AtomicReference<SensorData> capturedData = new AtomicReference<>();
-        BluetoothServiceIntegration.SensorDataListener listener = (data, type) -> {
-            if (type.equals(Constants.TYPE_DUST)) {
+        BluetoothServiceIntegration.SensorDataListener listener = (data, sensorType) -> {
+            if (sensorType.equals(Constants.TYPE_DUST)) {
                 capturedData.set(data);
                 latch.countDown();
             }
@@ -148,17 +153,18 @@ public class NotificationHandlingTest {
         // Trigger the notification
         serviceIntegration.onCharacteristicChanged(characteristic);
         
-        // Process all pending messages on both the main looper and background looper
-        ShadowLooper.shadowMainLooper().idle();
+        // Process background thread messages
+        ShadowLooper.runUiThreadTasksIncludingDelayedTasks();
         
-        // Wait for the notification to be processed (with timeout)
-        latch.await(1, TimeUnit.SECONDS);
+        // Give time for processing to complete
+        Thread.sleep(100);
         
-        // Run the main thread again to process any callbacks
+        // Process all pending messages on main thread again
         ShadowLooper.shadowMainLooper().idle();
         
         // Verify the data was processed correctly
         SensorData data = capturedData.get();
+        assertNotNull("Sensor data should not be null", data);
         assertEquals(25.5f, data.getValue(), 0.01f);
         assertEquals(1234567890L, data.getTimestamp());
     }
@@ -183,8 +189,8 @@ public class NotificationHandlingTest {
         
         // Create a data listener to receive the processed data
         final AtomicReference<SensorData> capturedData = new AtomicReference<>();
-        BluetoothServiceIntegration.SensorDataListener listener = (data, type) -> {
-            if (type.equals(Constants.TYPE_NOISE)) {
+        BluetoothServiceIntegration.SensorDataListener listener = (data, sensorType) -> {
+            if (sensorType.equals(Constants.TYPE_NOISE)) {
                 capturedData.set(data);
                 latch.countDown();
             }
@@ -196,17 +202,18 @@ public class NotificationHandlingTest {
         // Trigger the notification
         serviceIntegration.onCharacteristicChanged(characteristic);
         
-        // Process all pending messages on both the main looper and background looper
-        ShadowLooper.shadowMainLooper().idle();
+        // Process background thread messages
+        ShadowLooper.runUiThreadTasksIncludingDelayedTasks();
         
-        // Wait for the notification to be processed (with timeout)
-        latch.await(1, TimeUnit.SECONDS);
+        // Give time for processing to complete
+        Thread.sleep(100);
         
-        // Run the main thread again to process any callbacks
+        // Process all pending messages on main thread again
         ShadowLooper.shadowMainLooper().idle();
         
         // Verify fallback value was used (initial sound value from ESP32BluetoothSpec)
         SensorData data = capturedData.get();
+        assertNotNull("Sensor data should not be null", data);
         assertEquals(ESP32BluetoothSpec.NotificationParams.INITIAL_SOUND_VALUE, data.getValue(), 0.01f);
     }
     
@@ -227,8 +234,8 @@ public class NotificationHandlingTest {
         
         // Create data listener
         final AtomicReference<SensorData> lastCapturedData = new AtomicReference<>();
-        BluetoothServiceIntegration.SensorDataListener listener = (data, type) -> {
-            if (type.equals(Constants.TYPE_NOISE)) {
+        BluetoothServiceIntegration.SensorDataListener listener = (data, sensorType) -> {
+            if (sensorType.equals(Constants.TYPE_NOISE)) {
                 lastCapturedData.set(data);
                 if (latch1.getCount() > 0) {
                     latch1.countDown();
@@ -244,20 +251,17 @@ public class NotificationHandlingTest {
         characteristic.setValue(json1.getBytes(StandardCharsets.UTF_8));
         serviceIntegration.onCharacteristicChanged(characteristic);
         
-        // Process all pending messages on main thread
-        ShadowLooper.shadowMainLooper().idle();
-        
         // Process background thread messages
-        ShadowLooper.idleMainLooper();
+        ShadowLooper.runUiThreadTasksIncludingDelayedTasks();
         
-        // Wait for the first notification to be processed
-        latch1.await(1, TimeUnit.SECONDS);
+        // Give time for processing to complete
+        Thread.sleep(100);
         
-        // Run main thread again to ensure any callbacks are processed
+        // Process all pending messages on main thread again
         ShadowLooper.shadowMainLooper().idle();
         
         // Verify first notification processed
-        assertNotNull(lastCapturedData.get());
+        assertNotNull("First notification data should not be null", lastCapturedData.get());
         assertEquals(70.0f, lastCapturedData.get().getValue(), 0.01f);
         
         // Send second notification with timestamp 1000 (out of order, earlier)
@@ -265,16 +269,17 @@ public class NotificationHandlingTest {
         characteristic.setValue(json2.getBytes(StandardCharsets.UTF_8));
         serviceIntegration.onCharacteristicChanged(characteristic);
         
-        // Process all pending messages on main thread
+        // Process background thread messages
+        ShadowLooper.runUiThreadTasksIncludingDelayedTasks();
+        
+        // Give time for processing to complete
+        Thread.sleep(100);
+        
+        // Process all pending messages on main thread again
         ShadowLooper.shadowMainLooper().idle();
         
-        // Process background thread messages
-        ShadowLooper.idleMainLooper();
-        
-        // Wait for the second notification to be processed
-        boolean processed = latch2.await(2, TimeUnit.SECONDS);
-        
-        // Run the main thread again to process any callbacks
+        // Wait a bit more for processing
+        Thread.sleep(100);
         ShadowLooper.shadowMainLooper().idle();
         
         // Verify the out-of-order notification was still processed

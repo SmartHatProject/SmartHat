@@ -323,7 +323,7 @@ public class GasDataHandler {
     /**
      * Create a SensorData object for gas data
      */
-    protected SensorData createGasData(float value, long timestamp, boolean isAnomalous) {
+    public SensorData createGasData(float value, long timestamp, boolean isAnomalous) {
         // Check for identical consecutive readings
         if (value == lastReading && value > 0) {
             consecutiveIdenticalReadings++;
@@ -396,8 +396,6 @@ public class GasDataHandler {
     }
     
     /**
-     * Check if a gas reading is within realistic limits for rate of change
-     * Normal gas concentration usually doesn't change more than 20% per second in ambient conditions
      * 
      * @param newValue The new gas value
      * @param oldValue The previous gas value
@@ -419,9 +417,7 @@ public class GasDataHandler {
         float absoluteChange = Math.abs(newValue - oldValue);
         float percentChange = (absoluteChange / Math.max(0.1f, oldValue)) * 100f;
         float changePerSecond = percentChange / (timeDiffMs / 1000f);
-        
-        // Realistic gas concentrations don't usually change more than 30% per second
-        // unless there's a major event (gas leak, explosion, etc.)
+    
         boolean isRealistic = changePerSecond <= 30f;
         
         if (!isRealistic) {

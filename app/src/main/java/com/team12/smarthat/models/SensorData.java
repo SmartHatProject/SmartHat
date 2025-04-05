@@ -42,6 +42,7 @@ public class SensorData {
         this.timestamp = System.currentTimeMillis();
     }
 
+    @Ignore
     public SensorData(String sensorType, float value) {
         this.sensorType = normalizeSensorType(sensorType);
         this.value = validateValue(this.sensorType, value);

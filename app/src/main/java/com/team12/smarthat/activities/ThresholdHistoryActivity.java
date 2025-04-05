@@ -74,40 +74,31 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
         btnDeleteAll = findViewById(R.id.btn_delete_all);
         fabSelect = findViewById(R.id.fab_select);
         
-        // Optimize recyclerview for Pixel 4a on Android 12
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         
-        // Disable expensive animations for better performance
         recyclerView.setItemAnimator(null);
         
-        // Set up adapter with optimized configuration
         adapter = new ThresholdBreachAdapter(this);
         recyclerView.setAdapter(adapter);
         
-        // Optimize scroll performance for Android 12
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-            // Enable prefetch for smoother scrolling
             if (layoutManager instanceof LinearLayoutManager) {
                 ((LinearLayoutManager) layoutManager).setInitialPrefetchItemCount(4);
             }
         }
         
-        // Use singleton pattern for database access
         databaseHelper = DatabaseHelper.getInstance();
         dataFilterHelper = DataFilterHelper.getInstance();
     }
     
     private void setupListeners() {
-        // FAB click listener
         fabSelect.setOnClickListener(v -> toggleSelectionMode());
         
-        // Cancel button click listener
         btnCancelSelection.setOnClickListener(v -> toggleSelectionMode());
         
-        // Delete button click listener
         btnDeleteSelected.setOnClickListener(v -> {
             if (adapter.hasSelections()) {
                 showDeleteConfirmationDialog();
@@ -116,18 +107,15 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
             }
         });
         
-        // Delete All button click listener
         btnDeleteAll.setOnClickListener(v -> showDeleteAllConfirmationDialog());
     }
     
     private void toggleSelectionMode() {
         isInSelectionMode = !isInSelectionMode;
         
-        // Update UI
         actionButtonsLayout.setVisibility(isInSelectionMode ? View.VISIBLE : View.GONE);
         btnDeleteAll.setVisibility(isInSelectionMode ? View.GONE : View.VISIBLE);
         
-        // Change FAB icon with animation for Android 12 style
         fabSelect.animate().scaleX(0.5f).scaleY(0.5f).setDuration(100).withEndAction(() -> {
             fabSelect.setImageResource(isInSelectionMode 
                     ? R.drawable.ic_close
@@ -135,10 +123,8 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
             fabSelect.animate().scaleX(1f).scaleY(1f).setDuration(100).start();
         }).start();
         
-        // Update adapter
         adapter.setSelectionMode(isInSelectionMode);
         
-        // Clear selections when exiting selection mode
         if (!isInSelectionMode) {
             adapter.clearSelections();
         }
@@ -153,7 +139,6 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
         
         AlertDialog dialog = builder.create();
         dialog.setOnShowListener(dialogInterface -> {
-            // Style the buttons with Material You colors for Android 12
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.error));
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.primary));
         });
@@ -173,7 +158,6 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
         
         AlertDialog dialog = builder.create();
         dialog.setOnShowListener(dialogInterface -> {
-            // Style the buttons with Material You colors for Android 12
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.error));
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.primary));
         });
@@ -186,9 +170,8 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
         
         if (!selectedIds.isEmpty()) {
             databaseHelper.deleteThresholdBreaches(selectedIds);
-            toggleSelectionMode(); // Exit selection mode
+            toggleSelectionMode();
             
-            // Use Snackbar for Material Design 3 style feedback
             Snackbar.make(recyclerView, 
                     selectedIds.size() + " items deleted", 
                     Snackbar.LENGTH_SHORT).show();
@@ -196,7 +179,6 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
     }
     
     private void loadThresholdBreaches() {
-        // Optimize data loading for Android 12
         databaseHelper.getThresholdBreachesWithCustomThresholds(this)
             .observe(this, sensorDataList -> {
                 if (sensorDataList != null && !sensorDataList.isEmpty()) {
@@ -206,7 +188,6 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
                     btnDeleteAll.setVisibility(View.VISIBLE);
                     fabSelect.show();
                     
-                    // Add optimization for redraw
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                         recyclerView.post(() -> recyclerView.invalidateItemDecorations());
                     }
@@ -216,13 +197,11 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
                     btnDeleteAll.setVisibility(View.GONE);
                     fabSelect.hide();
                     
-                    // Exit selection mode if active
                     if (isInSelectionMode) {
                         toggleSelectionMode();
                     }
                 }
                 
-                // Invalidate options menu to update action items
                 invalidateOptionsMenu();
             });
     }
