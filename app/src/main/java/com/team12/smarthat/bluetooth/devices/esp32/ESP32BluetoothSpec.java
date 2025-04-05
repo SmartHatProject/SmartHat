@@ -18,7 +18,7 @@ public class ESP32BluetoothSpec {
     public static final UUID CLIENT_CONFIG_DESCRIPTOR_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
     
     /** Gas sensor characteristic UUID */
-    public static final UUID GAS_CHARACTERISTIC_UUID = UUID.fromString("6E400004-B5A3-F393-E0A9-E50E24DCCA9E");
+    public static final UUID GAS_CHARACTERISTIC_UUID = UUID.fromString("b6fc48af-6b61-4f96-afdf-a359a8b2b1b1");
 
     
     public static class ConnectionParams {

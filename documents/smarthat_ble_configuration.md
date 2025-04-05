@@ -34,8 +34,8 @@
 - example: `{"messageType":"DUST_SENSOR_DATA","data":25.5,"timeStamp":1234567890}`
 
 ### Gas Sensor
-- uuid: 6E400004-B5A3-F393-E0A9-E50E24DCCA9E
-  > ESP32BluetoothSpec.java: `public static final UUID GAS_CHARACTERISTIC_UUID = UUID.fromString("6E400004-B5A3-F393-E0A9-E50E24DCCA9E");`
+- uuid: b6fc48af-6b61-4f96-afdf-a359a8b2b1b1
+  > ESP32BluetoothSpec.java: `public static final UUID GAS_CHARACTERISTIC_UUID = UUID.fromString("b6fc48af-6b61-4f96-afdf-a359a8b2b1b1");`
 - properties: read, notify
   > Similar to other sensors: `BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY`
 - format: json string

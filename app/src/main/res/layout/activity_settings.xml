@@ -207,13 +207,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/battery_optimization" />
-                                
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text="@string/battery_optimization_description"
-                                style="@style/TextAppearance.SmartHat.Caption" />
                         </LinearLayout>
 
                         <com.google.android.material.button.MaterialButton
@@ -415,13 +408,6 @@
                         android:layout_marginTop="8dp"
                         android:text="@string/reset_to_default"
                         android:textColor="?attr/colorPrimary" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/thresholds_note"
-                        style="@style/TextAppearance.SmartHat.Caption" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
