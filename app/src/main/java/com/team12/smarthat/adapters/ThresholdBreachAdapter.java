@@ -54,7 +54,10 @@ public class ThresholdBreachAdapter extends RecyclerView.Adapter<ThresholdBreach
         }
         
         SensorData data = breaches.get(position);
-        boolean isDustSensor = data.getSensorType().equals("dust");
+        String sensorType = data.getSensorType();
+        boolean isDustSensor = sensorType.equals("dust");
+        boolean isNoiseSensor = sensorType.equals("noise");
+        boolean isGasSensor = sensorType.equals("gas");
         
         // Selection checkbox visibility and state
         holder.cbSelectItem.setVisibility(selectionMode ? View.VISIBLE : View.GONE);
@@ -70,17 +73,30 @@ public class ThresholdBreachAdapter extends RecyclerView.Adapter<ThresholdBreach
         // Set up click listeners - optimized for Android 12
         setupClickListeners(holder, data, position);
         
-        // Set sensor icon
-        int iconResource = isDustSensor ? android.R.drawable.ic_menu_compass : android.R.drawable.ic_lock_silent_mode_off;
+        // Set sensor icon based on sensor type
+        int iconResource;
+        if (isDustSensor) {
+            iconResource = android.R.drawable.ic_menu_compass;
+        } else if (isNoiseSensor) {
+            iconResource = android.R.drawable.ic_lock_silent_mode_off;
+        } else { // Gas sensor
+            iconResource = android.R.drawable.ic_dialog_alert;
+        }
         holder.ivSensorIcon.setImageResource(iconResource);
         
-        // Set icon color
-        int iconColor = ContextCompat.getColor(context, 
-            isDustSensor ? R.color.primary : R.color.secondary);
+        // Set icon color based on sensor type
+        int iconColor;
+        if (isDustSensor) {
+            iconColor = ContextCompat.getColor(context, R.color.primary);
+        } else if (isNoiseSensor) {
+            iconColor = ContextCompat.getColor(context, R.color.secondary);
+        } else { // Gas sensor
+            iconColor = ContextCompat.getColor(context, R.color.error);
+        }
         holder.ivSensorIcon.setColorFilter(iconColor);
         
         // Set texts
-        holder.tvSensorType.setText(isDustSensor ? "Dust" : "Noise");
+        holder.tvSensorType.setText(isDustSensor ? "Dust" : isNoiseSensor ? "Noise" : "Gas");
         
         // Format value
         String valueWithUnit = formatSensorValue(data);
@@ -116,7 +132,18 @@ public class ThresholdBreachAdapter extends RecyclerView.Adapter<ThresholdBreach
     
     private String formatSensorValue(SensorData data) {
         boolean isDustSensor = data.getSensorType().equals("dust");
-        String unit = isDustSensor ? " µg/m³" : " dB";
+        boolean isNoiseSensor = data.getSensorType().equals("noise");
+        boolean isGasSensor = data.getSensorType().equals("gas");
+        
+        String unit;
+        if (isDustSensor) {
+            unit = " µg/m³";
+        } else if (isNoiseSensor) {
+            unit = " dB";
+        } else { // Gas sensor
+            unit = " ppm";
+        }
+        
         return String.format(Locale.US, "%.1f%s", data.getValue(), unit);
     }
     
