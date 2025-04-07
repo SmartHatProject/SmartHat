@@ -450,7 +450,7 @@ public class MainActivity extends AppCompatActivity implements
         
         // Configure gas gauge
         if (gasGauge != null) {
-            gasGauge.setMaxSpeed(500);
+            gasGauge.setMaxSpeed(5000);
             gasGauge.setUnit("PPM");
             gasGauge.setSpeedTextColor(Color.BLACK);
             gasGauge.setCenterCircleColor(Color.WHITE);

@@ -85,5 +85,6 @@ public class ESP32BluetoothSpec {
         // Default initial values matching hardware
         public static final float INITIAL_SOUND_VALUE = 40.0f; // Default quiet room value
         public static final float INITIAL_DUST_VALUE = 10.0f;  // Default clean air value
+        public static final float INITIAL_GAS_VALUE = -1.1f;   // Default initial value for gas sensor
     }
 } 
