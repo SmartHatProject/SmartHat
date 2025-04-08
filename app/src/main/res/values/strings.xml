@@ -65,7 +65,7 @@
     <string name="gas_level">Air Quality</string>
     <string name="gas_placeholder">-- ppm</string>
     <string name="footer_text">SmartHat</string>
-    <string name="app_version">Version 1.0.0</string>
+    <string name="app_version">Welcome</string>
     
     <!-- BLE Test Activity Strings -->
     <string name="ble_test_title">BLE Test Activity</string>

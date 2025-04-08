@@ -8,7 +8,6 @@ import android.os.Looper;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -24,7 +23,7 @@ import com.team12.smarthat.R;
 @SuppressLint("CustomSplashScreen") // We explicitly want our own implementation
 public class SplashActivity extends AppCompatActivity {
 
-    private static final int SPLASH_DURATION = 2000; // 2 seconds to properly display logo
+    private static final int SPLASH_DURATION = 2000; // 2 seconds to properly display welcome screen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +31,15 @@ public class SplashActivity extends AppCompatActivity {
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         
         super.onCreate(savedInstanceState);
+        
+        // Hide the action bar
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+        
         setContentView(R.layout.activity_splash);
 
         // Get views
-        ImageView logoImage = findViewById(R.id.splash_logo);
         TextView appNameText = findViewById(R.id.splash_app_name);
         TextView versionText = findViewById(R.id.version_text);
         ProgressBar loadingIndicator = findViewById(R.id.loading_indicator);
@@ -49,24 +53,20 @@ public class SplashActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
         // Apply animations
-        Animation logoAnimation = AnimationUtils.loadAnimation(this, R.anim.scale_in);
-        logoImage.startAnimation(logoAnimation);
-        
         Animation textAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-        textAnimation.setStartOffset(300); // Delay text animation
         appNameText.startAnimation(textAnimation);
         
-        // Animate version text if it exists
+        // Animate welcome text
         if (versionText != null) {
             Animation versionAnim = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-            versionAnim.setStartOffset(500); // Further delay
+            versionAnim.setStartOffset(300); // Slight delay
             versionText.startAnimation(versionAnim);
         }
         
         // Animate loading indicator if it exists
         if (loadingIndicator != null) {
             Animation loadingAnim = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-            loadingAnim.setStartOffset(700); // Even further delay
+            loadingAnim.setStartOffset(500); // Further delay
             loadingIndicator.startAnimation(loadingAnim);
         }
 
