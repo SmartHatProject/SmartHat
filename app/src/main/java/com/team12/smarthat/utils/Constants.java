@@ -7,6 +7,9 @@ package com.team12.smarthat.utils;
 public class Constants {
     public static final boolean DEV_MODE = true;
     
+    // Control verbose debug logging across the app
+    public static final boolean ENABLE_DEBUG_LOGGING = false;
+    
    
     public static final boolean ENABLE_SERVICE_DISCOVERY_DEBUG = true;
     

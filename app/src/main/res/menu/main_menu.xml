@@ -9,21 +9,9 @@
         app:showAsAction="ifRoom" />
     
     <item
-        android:id="@+id/action_profile"
-        android:title="Profile"
-        android:icon="@drawable/ic_profile"
-        app:showAsAction="never" />
-    
-    <item
         android:id="@+id/action_settings"
         android:title="Settings"
         android:icon="@drawable/ic_settings"
-        app:showAsAction="ifRoom" />
-    
-    <item
-        android:id="@+id/action_visualization"
-        android:title="Data Visualization"
-        android:icon="@drawable/ic_visualization"
         app:showAsAction="ifRoom" />
     
     <item

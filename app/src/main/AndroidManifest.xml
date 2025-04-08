@@ -10,9 +10,6 @@
     <!-- Notification permission for Android 13+ -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     
-    <!-- Vibration for alerts -->
-    <uses-permission android:name="android.permission.VIBRATE" />
-    
     <!-- BLE feature required -->
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
 
@@ -47,23 +44,9 @@
             android:theme="@style/Theme.SmartHat.NoActionBar"
             android:parentActivityName=".activities.MainActivity" />
             
-        <!-- Profile Activity -->
-        <activity
-            android:name=".activities.ProfileActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SmartHat.NoActionBar"
-            android:parentActivityName=".activities.MainActivity" />
-            
         <!-- Settings Activity -->
         <activity
             android:name=".activities.SettingsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SmartHat.NoActionBar"
-            android:parentActivityName=".activities.MainActivity" />
-            
-        <!-- Data Visualization Activity -->
-        <activity
-            android:name=".activities.DataVisualizationActivity"
             android:exported="false"
             android:theme="@style/Theme.SmartHat.NoActionBar"
             android:parentActivityName=".activities.MainActivity" />

@@ -180,19 +180,9 @@ public class MainActivity extends AppCompatActivity implements
             Intent intent = new Intent(this, ThresholdHistoryActivity.class);
             startActivity(intent);
             return true;
-        } else if (id == R.id.action_profile) {
-            // Open profile activity
-            Intent intent = new Intent(this, ProfileActivity.class);
-            startActivity(intent);
-            return true;
         } else if (id == R.id.action_settings) {
             // Open settings activity
             Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        } else if (id == R.id.action_visualization) {
-            // Open data visualization activity
-            Intent intent = new Intent(this, DataVisualizationActivity.class);
             startActivity(intent);
             return true;
         } else if (id == R.id.action_test_mode_off) {
@@ -450,7 +440,7 @@ public class MainActivity extends AppCompatActivity implements
         
         // Configure gas gauge
         if (gasGauge != null) {
-            gasGauge.setMaxSpeed(5000);
+            gasGauge.setMaxSpeed(500);
             gasGauge.setUnit("PPM");
             gasGauge.setSpeedTextColor(Color.BLACK);
             gasGauge.setCenterCircleColor(Color.WHITE);

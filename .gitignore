@@ -29,18 +29,29 @@ output.json
 
 # VS Code
 .vscode/
+.vscode/*
 .settings/
+.project
+.classpath
+*.code-workspace
 
 # Mac OS
 .DS_Store
 .AppleDouble
 .LSOverride
 ._*
+.Spotlight-V100
+.Trashes
 
 # Windows
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
 
 # Built application files
 *.apk
@@ -74,6 +85,7 @@ captures/
 # External native build folder generated in Android Studio
 .externalNativeBuild
 .cxx/
+*.so
 
 # Google Services (e.g. APIs or Firebase)
 google-services.json
@@ -100,6 +112,7 @@ lint-results.html
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+com_crashlytics_export_strings.xml
 
 # Android Profiling
 *.hprof
@@ -110,3 +123,28 @@ fabric.properties
 .factorypath
 .apt_generated/
 .apt_generated_tests/
+
+# Test-related
+coverage/
+jacoco.exec
+
+# Flutter/Dart specific
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+
+# Node.js (if using React Native)
+node_modules/
+npm-debug.log
+yarn-error.log
+.pnp/
+.pnp.js
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~.nib

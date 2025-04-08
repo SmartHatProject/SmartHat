@@ -138,4 +138,7 @@ dependencies {
 
     //SpeedView
     implementation("com.github.anastr:SpeedView:1.5.2")
+
+    // ANR-Watchdog
+    implementation("com.github.anrwatchdog:anrwatchdog:1.4.0")
 }

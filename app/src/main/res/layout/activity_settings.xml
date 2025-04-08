@@ -58,13 +58,19 @@
                     <LinearLayout
                         style="@style/SmartHat.SettingRow"
                         android:orientation="horizontal"
-                        android:focusable="true">
+                        android:focusable="false"
+                        android:clickable="false"
+                        android:background="@android:color/transparent"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp">
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:focusable="false"
+                            android:clickable="false">
 
                             <TextView
                                 style="@style/SmartHat.SettingLabel"
@@ -96,11 +102,15 @@
                         style="@style/SmartHat.SettingRow"
                         android:orientation="horizontal"
                         android:layout_marginTop="8dp"
-                        android:focusable="true">
+                        android:focusable="false"
+                        android:clickable="false"
+                        android:background="@android:color/transparent">
 
                         <TextView
                             style="@style/SmartHat.SettingLabel"
-                            android:text="@string/dust_notifications" />
+                            android:text="@string/dust_notifications"
+                            android:focusable="false"
+                            android:clickable="false" />
 
                         <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/switch_dust_notifications"
@@ -108,7 +118,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:contentDescription="@string/toggle_dust_notifications" />
+                            android:contentDescription="@string/toggle_dust_notifications"
+                            android:minWidth="@dimen/min_touch_target"
+                            android:minHeight="@dimen/min_touch_target" />
                     </LinearLayout>
 
                     <!-- Noise Notifications Toggle -->
@@ -116,11 +128,15 @@
                         style="@style/SmartHat.SettingRow"
                         android:orientation="horizontal"
                         android:layout_marginTop="4dp"
-                        android:focusable="true">
+                        android:focusable="false"
+                        android:clickable="false"
+                        android:background="@android:color/transparent">
 
                         <TextView
                             style="@style/SmartHat.SettingLabel"
-                            android:text="@string/noise_notifications" />
+                            android:text="@string/noise_notifications"
+                            android:focusable="false"
+                            android:clickable="false" />
 
                         <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/switch_noise_notifications"
@@ -128,7 +144,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:contentDescription="@string/toggle_noise_notifications" />
+                            android:contentDescription="@string/toggle_noise_notifications"
+                            android:minWidth="@dimen/min_touch_target"
+                            android:minHeight="@dimen/min_touch_target" />
                     </LinearLayout>
 
                     <!-- Gas Notifications Toggle -->
@@ -136,11 +154,15 @@
                         style="@style/SmartHat.SettingRow"
                         android:orientation="horizontal"
                         android:layout_marginTop="4dp"
-                        android:focusable="true">
+                        android:focusable="false"
+                        android:clickable="false"
+                        android:background="@android:color/transparent">
 
                         <TextView
                             style="@style/SmartHat.SettingLabel"
-                            android:text="@string/gas_notifications" />
+                            android:text="@string/gas_notifications"
+                            android:focusable="false"
+                            android:clickable="false" />
 
                         <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/switch_gas_notifications"
@@ -148,7 +170,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:contentDescription="@string/toggle_gas_notifications" />
+                            android:contentDescription="@string/toggle_gas_notifications"
+                            android:minWidth="@dimen/min_touch_target"
+                            android:minHeight="@dimen/min_touch_target" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -329,7 +353,7 @@
                         android:contentDescription="@string/adjust_gas_threshold"
                         android:stepSize="5.0"
                         android:valueFrom="50"
-                        android:valueTo="300" />
+                        android:valueTo="1200" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_reset_thresholds"
