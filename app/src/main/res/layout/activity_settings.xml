@@ -395,9 +395,9 @@
                         android:layout_marginBottom="16dp"
                         style="@style/SmartHat.Slider"
                         android:contentDescription="@string/adjust_gas_threshold"
-                        android:stepSize="5.0"
+                        android:stepSize="50.0"
                         android:valueFrom="50"
-                        android:valueTo="300" />
+                        android:valueTo="5000" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_reset_thresholds"

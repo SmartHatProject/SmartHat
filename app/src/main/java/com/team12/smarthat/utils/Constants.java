@@ -43,7 +43,7 @@ public class Constants {
     // when to alert the user 
     public static final float DUST_PM25_THRESHOLD = 50.0f; // microg/m^3
     public static final float NOISE_THRESHOLD = 85.0f; // dB
-    public static final float GAS_THRESHOLD = 100.0f; // ppm
+    public static final float GAS_THRESHOLD = 1000.0f; // ppm
     public static final float DUST_THRESHOLD = DUST_PM25_THRESHOLD;
     
     // osha says these noise levels are bad for these durations
@@ -66,7 +66,7 @@ public class Constants {
     public static final float NOISE_MIN_VALUE = 0.0f;
     public static final float NOISE_MAX_VALUE = 140.0f;
     public static final float GAS_MIN_VALUE = 0.0f;
-    public static final float GAS_MAX_VALUE = 400.0f;
+    public static final float GAS_MAX_VALUE = 5000.0f;
 
     // connection states moved to bleconnectionmanager.connectionstate enum
     

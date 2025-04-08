@@ -49,7 +49,6 @@ public class NotificationUtils {
                     "SmartHat Alerts",
                     NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription("Alerts for dust and noise levels");
-            channel.enableVibration(true);
             channel.enableLights(true);
             
             manager.createNotificationChannel(channel);
@@ -85,7 +84,7 @@ public class NotificationUtils {
                     .setCategory(NotificationCompat.CATEGORY_ALARM)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setAutoCancel(true)
-                    .setDefaults(NotificationCompat.DEFAULT_ALL)
+                    .setDefaults(NotificationCompat.DEFAULT_LIGHTS | NotificationCompat.DEFAULT_SOUND)
                     .build();
                 
                 try {

@@ -10,9 +10,6 @@
     <!-- Notification permission for Android 13+ -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     
-    <!-- Vibration for alerts -->
-    <uses-permission android:name="android.permission.VIBRATE" />
-    
     <!-- Foreground service permission for Android 12+ -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />

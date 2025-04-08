@@ -380,18 +380,22 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void setupGasThresholdSlider() {
-        // Set initial value based on current threshold
-        binding.sliderGasThreshold.setValue(gasThreshold);
+        // Ensure gas threshold is a valid multiple of stepSize and within valid range
+        float adjustedGasThreshold = Math.round(gasThreshold / 50.0f) * 50.0f;
+        adjustedGasThreshold = Math.max(50.0f, Math.min(adjustedGasThreshold, 5000.0f));
         
-        // Update value text and risk level
-        updateGasThresholdText(gasThreshold);
+        // set initial value
+        binding.sliderGasThreshold.setValue(adjustedGasThreshold);
         
-        // Set listener for continuous updates
+        // update text
+        updateGasThresholdText(adjustedGasThreshold);
+        
+        // set change listener
         binding.sliderGasThreshold.addOnChangeListener((slider, value, fromUser) -> {
-            // Update display
+            // update display
             updateGasThresholdText(value);
             
-            // Save new threshold
+            // save new value
             if (fromUser) {
                 gasThreshold = value;
                 thresholdsChanged = true;
@@ -399,16 +403,16 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
         
-        // Set listener for when user stops interacting
+        // set touch listener
         binding.sliderGasThreshold.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
             @Override
             public void onStartTrackingTouch(Slider slider) {
-                // Not needed but required by interface
+                // required by interface
             }
             
             @Override
             public void onStopTrackingTouch(Slider slider) {
-                // Save when user stops interacting with slider
+                // save on touch end
                 saveGasThreshold();
                 Log.d(Constants.TAG_MAIN, "Gas threshold saved: " + gasThreshold);
             }
@@ -499,7 +503,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void updateGasThresholdText(float threshold) {
         binding.txtGasThresholdValue.setText(String.format("%.1f ppm", threshold));
         
-        // Update risk level indicator
+        // update risk level
         TextView riskText = binding.txtGasThresholdRisk;
         if (threshold <= 50.0f) {
             riskText.setText("Good");
@@ -507,13 +511,13 @@ public class SettingsActivity extends AppCompatActivity {
         } else if (threshold <= 100.0f) {
             riskText.setText("Moderate");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_blue_dark, null));
-        } else if (threshold <= 150.0f) {
+        } else if (threshold <= 500.0f) {
             riskText.setText("Unhealthy for Sensitive");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_orange_light, null));
-        } else if (threshold <= 200.0f) {
+        } else if (threshold <= 1000.0f) {
             riskText.setText("Unhealthy");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_orange_dark, null));
-        } else if (threshold <= 300.0f) {
+        } else if (threshold <= 2500.0f) {
             riskText.setText("Very Unhealthy");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_red_light, null));
         } else {
