@@ -61,7 +61,8 @@ public class BleForegroundService extends LifecycleService
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, 
                                            "SmartHat:BLEServiceWakeLock");
-        wakeLock.acquire();
+        // Set a timeout of 1 hour to prevent excessive battery drain
+        wakeLock.acquire(3600000); // 1 hour = 3600000 milliseconds
         
         // Start as foreground service with notification
         Notification notification = notificationUtils.createForegroundServiceNotification(

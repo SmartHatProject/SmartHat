@@ -71,6 +71,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     
+    <!-- Custom colors -->
+    <color name="cream">#FFF8DC</color>
+    <color name="dreamy_blue_bg">#F5F9FC</color>
+    
     <!-- UI colors for main activity -->
     <color name="test_mode_background">#1A5A78</color>
     <color name="test_mode_text">#FFFFFF</color>

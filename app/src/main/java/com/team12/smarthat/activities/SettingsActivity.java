@@ -40,34 +40,34 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         
         // Use ViewBinding instead of findViewById
-        binding = ActivitySettingsBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        
+            binding = ActivitySettingsBinding.inflate(getLayoutInflater());
+            setContentView(binding.getRoot());
+            
         // Initialize toolbar
-        setSupportActionBar(binding.settingsToolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-        
-        // Initialize permission manager
-        permissionManager = new PermissionManager(this);
-        
-        // Initialize notification utils (reusing existing class)
+            setSupportActionBar(binding.settingsToolbar);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setDisplayShowHomeEnabled(true);
+                getSupportActionBar().setDisplayShowTitleEnabled(false);
+            }
+            
+            // Initialize permission manager
+            permissionManager = new PermissionManager(this);
+            
+            // Initialize notification utils (reusing existing class)
         notificationUtils = new NotificationUtils(this);
         
         // Get preferences
         preferences = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
-        
-        // Restore state if available
-        if (savedInstanceState != null) {
+                    
+                    // Restore state if available
+                    if (savedInstanceState != null) {
             dustThreshold = savedInstanceState.getFloat("dust_threshold", Constants.DUST_THRESHOLD);
             noiseThreshold = savedInstanceState.getFloat("noise_threshold", Constants.NOISE_THRESHOLD);
             gasThreshold = savedInstanceState.getFloat("gas_threshold", Constants.GAS_THRESHOLD);
             thresholdsChanged = savedInstanceState.getBoolean("thresholds_changed", false);
-        } else {
-            // Load saved thresholds
+                    } else {
+                        // Load saved thresholds
             loadSavedThresholds();
         }
         
@@ -446,108 +446,108 @@ public class SettingsActivity extends AppCompatActivity {
     }
     
     private void updateDustThresholdText(float threshold) {
-        binding.txtDustThresholdValue.setText(String.format("%.1f μg/m³", threshold));
-        
-        // Update risk level indicator
-        TextView riskText = binding.txtDustThresholdRisk;
-        if (threshold <= 12.0f) {
-            riskText.setText("Good");
+            binding.txtDustThresholdValue.setText(String.format("%.1f μg/m³", threshold));
+            
+            // Update risk level indicator
+            TextView riskText = binding.txtDustThresholdRisk;
+            if (threshold <= 12.0f) {
+                riskText.setText("Good");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_green_dark, null));
-        } else if (threshold <= 35.4f) {
-            riskText.setText("Moderate");
+            } else if (threshold <= 35.4f) {
+                riskText.setText("Moderate");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_blue_dark, null));
-        } else if (threshold <= 55.4f) {
-            riskText.setText("Unhealthy for Sensitive");
+            } else if (threshold <= 55.4f) {
+                riskText.setText("Unhealthy for Sensitive");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_orange_light, null));
-        } else if (threshold <= 150.4f) {
-            riskText.setText("Unhealthy");
+            } else if (threshold <= 150.4f) {
+                riskText.setText("Unhealthy");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_orange_dark, null));
-        } else if (threshold <= 250.4f) {
-            riskText.setText("Very Unhealthy");
+            } else if (threshold <= 250.4f) {
+                riskText.setText("Very Unhealthy");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_red_light, null));
-        } else {
-            riskText.setText("Hazardous");
+            } else {
+                riskText.setText("Hazardous");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_red_dark, null));
         }
     }
     
     private void updateNoiseThresholdText(float threshold) {
-        binding.txtNoiseThresholdValue.setText(String.format("%.1f dB", threshold));
-        
-        // Update risk level indicator based on OSHA standards
-        TextView riskText = binding.txtNoiseThresholdRisk;
-        if (threshold < 85.0f) {
-            riskText.setText("Safe");
+            binding.txtNoiseThresholdValue.setText(String.format("%.1f dB", threshold));
+            
+            // Update risk level indicator based on OSHA standards
+            TextView riskText = binding.txtNoiseThresholdRisk;
+            if (threshold < 85.0f) {
+                riskText.setText("Safe");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_green_dark, null));
-        } else if (threshold == 85.0f) {
-            riskText.setText("OSHA Standard");
+            } else if (threshold == 85.0f) {
+                riskText.setText("OSHA Standard");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_green_light, null));
-        } else if (threshold <= 90.0f) {
-            riskText.setText("8hr Limit");
+            } else if (threshold <= 90.0f) {
+                riskText.setText("8hr Limit");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_blue_dark, null));
-        } else if (threshold <= 95.0f) {
-            riskText.setText("4hr Limit");
+            } else if (threshold <= 95.0f) {
+                riskText.setText("4hr Limit");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_orange_light, null));
-        } else if (threshold <= 100.0f) {
-            riskText.setText("2hr Limit");
+            } else if (threshold <= 100.0f) {
+                riskText.setText("2hr Limit");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_orange_dark, null));
-        } else if (threshold <= 110.0f) {
-            riskText.setText("30min Limit");
+            } else if (threshold <= 110.0f) {
+                riskText.setText("30min Limit");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_red_light, null));
-        } else {
-            riskText.setText("Immediate Risk");
+            } else {
+                riskText.setText("Immediate Risk");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_red_dark, null));
         }
     }
 
     private void updateGasThresholdText(float threshold) {
-        binding.txtGasThresholdValue.setText(String.format("%.1f ppm", threshold));
-        
+            binding.txtGasThresholdValue.setText(String.format("%.1f ppm", threshold));
+            
         // update risk level
-        TextView riskText = binding.txtGasThresholdRisk;
-        if (threshold <= 50.0f) {
-            riskText.setText("Good");
+            TextView riskText = binding.txtGasThresholdRisk;
+            if (threshold <= 50.0f) {
+                riskText.setText("Good");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_green_dark, null));
-        } else if (threshold <= 100.0f) {
-            riskText.setText("Moderate");
+            } else if (threshold <= 100.0f) {
+                riskText.setText("Moderate");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_blue_dark, null));
         } else if (threshold <= 500.0f) {
-            riskText.setText("Unhealthy for Sensitive");
+                riskText.setText("Unhealthy for Sensitive");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_orange_light, null));
         } else if (threshold <= 1000.0f) {
-            riskText.setText("Unhealthy");
+                riskText.setText("Unhealthy");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_orange_dark, null));
         } else if (threshold <= 2500.0f) {
-            riskText.setText("Very Unhealthy");
+                riskText.setText("Very Unhealthy");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_red_light, null));
-        } else {
-            riskText.setText("Hazardous");
+            } else {
+                riskText.setText("Hazardous");
             riskText.setTextColor(getResources().getColor(android.R.color.holo_red_dark, null));
         }
     }
     
     private void saveDustThreshold() {
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putFloat(Constants.PREF_DUST_THRESHOLD, dustThreshold);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putFloat(Constants.PREF_DUST_THRESHOLD, dustThreshold);
         editor.commit(); // Use commit() instead of apply() to ensure synchronous update
-        Log.d(Constants.TAG_MAIN, "Dust threshold set to: " + dustThreshold);
-        thresholdsChanged = false;
+                Log.d(Constants.TAG_MAIN, "Dust threshold set to: " + dustThreshold);
+                thresholdsChanged = false;
     }
     
     private void saveNoiseThreshold() {
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putFloat(Constants.PREF_NOISE_THRESHOLD, noiseThreshold);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putFloat(Constants.PREF_NOISE_THRESHOLD, noiseThreshold);
         editor.commit(); // Use commit() instead of apply() to ensure synchronous update
-        Log.d(Constants.TAG_MAIN, "Noise threshold set to: " + noiseThreshold);
-        thresholdsChanged = false;
+                Log.d(Constants.TAG_MAIN, "Noise threshold set to: " + noiseThreshold);
+                thresholdsChanged = false;
     }
 
     private void saveGasThreshold() {
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putFloat(Constants.PREF_GAS_THRESHOLD, gasThreshold);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putFloat(Constants.PREF_GAS_THRESHOLD, gasThreshold);
         editor.commit(); // Use commit() instead of apply() to ensure synchronous update
-        Log.d(Constants.TAG_MAIN, "Gas threshold set to: " + gasThreshold);
-        thresholdsChanged = false;
+                Log.d(Constants.TAG_MAIN, "Gas threshold set to: " + gasThreshold);
+                thresholdsChanged = false;
     }
     
     @Override

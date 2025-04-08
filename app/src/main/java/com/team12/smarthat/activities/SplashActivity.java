@@ -12,24 +12,19 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.splashscreen.SplashScreen;
 
 import com.team12.smarthat.R;
 
 /**
  * Splash Activity to show app branding and transition to the main app.
- * Optimized for Android 12 on Pixel 4a using the SplashScreen API.
  */
-@SuppressLint("CustomSplashScreen") // We explicitly want our own implementation
+@SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
 
     private static final int SPLASH_DURATION = 2000; // 2 seconds to properly display welcome screen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Handle the SplashScreen API for Android 12+
-        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
-        
         super.onCreate(savedInstanceState);
         
         // Hide the action bar
