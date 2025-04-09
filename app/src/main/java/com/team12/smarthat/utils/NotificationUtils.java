@@ -49,7 +49,6 @@ public class NotificationUtils {
                     "SmartHat Alerts",
                     NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription("Alerts for dust and noise levels");
-            channel.enableVibration(true);
             channel.enableLights(true);
             
             manager.createNotificationChannel(channel);
@@ -301,6 +300,13 @@ public class NotificationUtils {
         boolean appEnabled = context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
                 .getBoolean(Constants.PREF_NOTIFICATIONS_ENABLED, true); // Default to enabled
         
+        // Log all states for debugging
+        if (Constants.ENABLE_DEBUG_LOGGING) {
+            Log.d(Constants.TAG_MAIN, "Notification states - System: " + systemEnabled 
+                + ", Permission: " + permissionGranted 
+                + ", App setting: " + appEnabled);
+        }
+        
         return systemEnabled && appEnabled && permissionGranted;
     }
     
@@ -312,6 +318,7 @@ public class NotificationUtils {
     public boolean areNotificationsEnabledForType(String alertType) {
         // First check if notifications are enabled globally
         if (!areNotificationsEnabled()) {
+            // If master toggle is off, all notifications are disabled
             return false;
         }
         
@@ -328,8 +335,14 @@ public class NotificationUtils {
             return true;
         }
         
-        return context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
+        boolean typeEnabled = context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
                 .getBoolean(prefKey, true); // Default to enabled
+                
+        if (Constants.ENABLE_DEBUG_LOGGING) {
+            Log.d(Constants.TAG_MAIN, alertType + " notifications enabled: " + typeEnabled);
+        }
+        
+        return typeEnabled;
     }
     
     /**

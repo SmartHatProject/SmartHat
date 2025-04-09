@@ -7,12 +7,12 @@ package com.team12.smarthat.utils;
 public class Constants {
     public static final boolean DEV_MODE = true;
     
-    // turn this on to see all available services when you can't find the right uuids
-    // helps figure out what your esp32 is actually using
+    // Control verbose debug logging across the app
+    public static final boolean ENABLE_DEBUG_LOGGING = false;
+    
+   
     public static final boolean ENABLE_SERVICE_DISCOVERY_DEBUG = true;
     
-    // our esp32 mac address - backup when uuid scanning doesn't work
-    // we mostly use uuid scanning now though
     public static final String ESP32_MAC_ADDRESS = "EC:94:CB:4D:91:E2";
     
     // moved all ble uuids to esp32bluetoothspec.java to keep esp32 stuff together
@@ -41,7 +41,7 @@ public class Constants {
     // when to alert the user 
     public static final float DUST_PM25_THRESHOLD = 50.0f; // microg/m^3
     public static final float NOISE_THRESHOLD = 85.0f; // dB
-    public static final float GAS_THRESHOLD = 100.0f; // ppm
+    public static final float GAS_THRESHOLD = 1000.0f; // ppm
     public static final float DUST_THRESHOLD = DUST_PM25_THRESHOLD;
     
     // osha says these noise levels are bad for these durations
@@ -64,7 +64,7 @@ public class Constants {
     public static final float NOISE_MIN_VALUE = 0.0f;
     public static final float NOISE_MAX_VALUE = 140.0f;
     public static final float GAS_MIN_VALUE = 0.0f;
-    public static final float GAS_MAX_VALUE = 400.0f;
+    public static final float GAS_MAX_VALUE = 5000.0f;
 
     // connection states moved to bleconnectionmanager.connectionstate enum
     
@@ -90,4 +90,9 @@ public class Constants {
     public static final String PREF_DUST_THRESHOLD = "dust_threshold";
     public static final String PREF_NOISE_THRESHOLD = "noise_threshold";
     public static final String PREF_GAS_THRESHOLD = "gas_threshold";
+    
+    // test mode preferences
+    public static final String PREF_TEST_MODE_ACTIVE = "test_mode_active";
+    public static final String PREF_TEST_MODE_TYPE = "test_mode_type";
+    public static final String PREF_CONNECTION_STATE = "connection_state";
 }

@@ -1,86 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Material3 Dark Theme Colors based on #266D8D -->
-    <color name="primary_dark">#90C2E0</color>
-    <color name="on_primary_dark">#0A2635</color>
-    <color name="primary_container_dark">#266D8D</color>
-    <color name="on_primary_container_dark">#D0E4F0</color>
+    <color name="primary">#81C0DF</color>
+    <color name="primary_light">#A9D5EB</color>
+    <color name="primary_dark">#266D8D</color>
+    <color name="on_primary">#003549</color>
+    <color name="primary_container">#004D67</color>
+    <color name="on_primary_container">#C2E8FF</color>
     
-    <color name="secondary_dark">#90C2E0</color>
-    <color name="on_secondary_dark">#0A2635</color>
-    <color name="secondary_container_dark">#266D8D</color>
-    <color name="on_secondary_container_dark">#D0E4F0</color>
+    <color name="secondary">#81C0DF</color>
+    <color name="secondary_light">#A9D5EB</color>
+    <color name="secondary_dark">#266D8D</color>
+    <color name="on_secondary">#003549</color>
+    <color name="secondary_container">#004D67</color>
+    <color name="on_secondary_container">#C2E8FF</color>
     
-    <color name="tertiary_dark">#90C2E0</color>
-    <color name="on_tertiary_dark">#0A2635</color>
-    <color name="tertiary_container_dark">#16506A</color>
-    <color name="on_tertiary_container_dark">#D0E4F0</color>
+    <color name="tertiary">#6BD0FF</color>
+    <color name="on_tertiary">#003549</color>
+    <color name="tertiary_container">#004D67</color>
+    <color name="on_tertiary_container">#C2E8FF</color>
     
-    <color name="error_dark">#FFB4AB</color>
-    <color name="on_error_dark">#690005</color>
-    <color name="error_container_dark">#93000A</color>
-    <color name="on_error_container_dark">#FFDAD6</color>
+    <color name="error">#FFB4AB</color>
+    <color name="on_error">#690005</color>
+    <color name="error_container">#93000A</color>
+    <color name="on_error_container">#FFB4AB</color>
     
-    <color name="background_dark">#000000</color> <!-- True black for OLED -->
-    <color name="on_background_dark">#E2E3DD</color>
-    <color name="surface_dark">#000000</color> <!-- True black for OLED -->
-    <color name="on_surface_dark">#E2E3DD</color>
-    <color name="surface_variant_dark">#26313C</color>
-    <color name="on_surface_variant_dark">#C3C8BB</color>
+    <color name="background">#1A1C1E</color>
+    <color name="on_background">#E2E2E5</color>
+    <color name="surface">#1A1C1E</color>
+    <color name="on_surface">#E2E2E5</color>
+    <color name="surface_variant">#42474E</color>
+    <color name="on_surface_variant">#C2C7CE</color>
     
-    <color name="outline_dark">#8D9387</color>
-    <color name="outline_variant_dark">#26313C</color>
+    <color name="outline">#8C9198</color>
+    <color name="outline_variant">#42474E</color>
     
-    <!-- Card and text colors for dark mode -->
-    <color name="card_background">#121212</color>
-    <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#CFD8DC</color>
-    <color name="alert_background">#3D3224</color>
-    <color name="primary">#90C2E0</color>
-    <color name="primary_light">#B3D4E6</color>
-    <color name="secondary">#90C2E0</color>
+    <!-- Card and text colors -->
+    <color name="card_background">#242629</color>
+    <color name="text_primary">#E2E2E5</color>
+    <color name="text_secondary">#C2C7CE</color>
+    <color name="alert_background">#3D2E00</color>
     
-    <!-- Sensor-specific colors for dark mode -->
-    <color name="dust_color_dark">#FFB74D</color>
-    <color name="noise_color_dark">#90C2E0</color>
-    <color name="gas_color_dark">#FF5252</color>
+    <!-- Sensor-specific colors -->
+    <color name="dust_color">#FFB74D</color>
+    <color name="noise_color">#81C0DF</color>
+    <color name="gas_color">#FF6E6E</color>
     
-    <!-- Chart colors for dark mode -->
-    <color name="chart_grid_dark">#424242</color>
-    <color name="chart_label_dark">#90C2E0</color>
+    <!-- Chart colors -->
+    <color name="chart_grid">#42474E</color>
+    <color name="chart_label">#81C0DF</color>
     
-    <!-- Status colors for dark mode -->
-    <color name="success_dark">#66BB6A</color>
-    <color name="warning_dark">#FFCA28</color>
-    <color name="danger_dark">#EF5350</color>
-    <color name="info_dark">#90C2E0</color>
+    <!-- Status colors are brighter for dark theme -->
+    <color name="success">#80C683</color>
+    <color name="warning">#FFD54F</color>
+    <color name="danger">#FF5252</color>
+    <color name="info">#81C0DF</color>
     
-    <!-- Overrides for UI elements in dark mode - improved contrast for Pixel 4a -->
-    <color name="status_text_color">#FFFFFF</color>
-    <color name="helper_text">#CFD8DC</color>
-    <color name="sensor_label">#CFD8DC</color>
-    <color name="sensor_value">#FFFFFF</color>
+    <!-- UI colors for main activity in dark mode -->
+    <color name="test_mode_background">#004D67</color>
+    <color name="test_mode_text">#C2E8FF</color>
+    <color name="status_text_color">#E2E2E5</color>
+    <color name="disconnected_text">#FF5252</color>
+    <color name="helper_text">#A1A6AD</color>
+    <color name="dust_icon_tint">#FFB74D</color>
+    <color name="noise_icon_tint">#81C0DF</color>
+    <color name="sensor_label">#A1A6AD</color>
+    <color name="sensor_value">#E2E2E5</color>
     <color name="connect_button_bg">@color/primary</color>
-    <color name="connect_button_text">@color/on_primary_dark</color>
-    <color name="footer_text">#B0BEC5</color>
-    <color name="dust_icon_tint">#4A8CAD</color>
-    <color name="noise_icon_tint">#90C2E0</color>
+    <color name="connect_button_text">@color/on_primary</color>
+    <color name="footer_text">#8C9198</color>
     
-    <!-- Distinct colors for alerts and indicators in dark mode -->
-    <color name="connected">#66BB6A</color>
-    <color name="connecting">#FFCA28</color>
-    <color name="disconnected">#EF5350</color>
-    <color name="sensor_normal">#66BB6A</color>
-    <color name="sensor_alert">#EF5350</color>
-    
-    <!-- Elevation overlay colors for proper surface elevation in dark mode -->
-    <color name="elevation_overlay_1">#1AFFFFFF</color>
-    <color name="elevation_overlay_2">#26FFFFFF</color>
-    <color name="elevation_overlay_3">#33FFFFFF</color>
-    
-    <!-- True black for OLED screens in OLED mode -->
-    <color name="true_black">#000000</color>
-    <color name="background_oled">#000000</color>
-    <color name="surface_oled">#000000</color>
-    <color name="surface_variant_oled">#101010</color>
+    <!-- Connection status colors -->
+    <color name="connected">#80C683</color>
+    <color name="connecting">#FFD54F</color>
+    <color name="disconnected">#FF5252</color>
+    <color name="sensor_normal">#80C683</color>
+    <color name="sensor_alert">#FF5252</color>
 </resources> 

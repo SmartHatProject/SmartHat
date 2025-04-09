@@ -95,6 +95,8 @@ public class BleConnectionManager {
     private static final long MAX_RECONNECTION_DELAY = 60000; // 60 seconds
     private int reconnectionAttempts = 0;
     
+    private final AtomicBoolean userDisconnected = new AtomicBoolean(false);
+    
     // connection timeout runnable
     private Runnable connectionTimeoutRunnable;
     
@@ -135,15 +137,18 @@ public class BleConnectionManager {
     
     // protected constructor for singleton and subclasses (like mockbleconnectionmanager)
     protected BleConnectionManager(Context context, BluetoothPermissionManager manager) {
-        if (context == null) {
-            throw new IllegalArgumentException("Context cannot be null");
-        }
-        if (manager == null) {
-            throw new IllegalArgumentException("BluetoothPermissionManager cannot be null");
-        }
+        Log.d(TAG, "Initializing BleConnectionManager");
         
         this.appContext = context.getApplicationContext();
         this.permissionManager = manager;
+        
+        // Load the userDisconnected flag from SharedPreferences
+        boolean persistedUserDisconnected = appContext.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+            .getBoolean("user_disconnected", false);
+        
+        userDisconnected.set(persistedUserDisconnected);
+        
+        Log.d(TAG, "BleConnectionManager initialized, userDisconnected=" + persistedUserDisconnected);
         
         // initialize bluetooth adapter once during construction to avoid repeated lookups
         BluetoothManager bluetoothManager = (BluetoothManager) appContext.getSystemService(Context.BLUETOOTH_SERVICE);
@@ -288,6 +293,10 @@ public class BleConnectionManager {
             reportError("Cannot connect to null device");
             return;
         }
+        
+        userDisconnected.set(false);
+        
+        Log.d(TAG, "Connecting to device: " + device.getAddress());
         
         // store the target device for connection
         targetDevice = device;
@@ -471,6 +480,8 @@ public class BleConnectionManager {
     public void disconnect() {
         Log.d(TAG, "Disconnecting BLE device");
         
+        userDisconnected.set(true);
+        
         // Update state to disconnecting
         updateState(ConnectionState.DISCONNECTING);
         
@@ -608,7 +619,7 @@ public class BleConnectionManager {
                     updateState(ConnectionState.DISCONNECTED);
                     
                     // Attempt auto-reconnect for unexpected disconnections
-                    if (lastConnectedDevice != null && reconnectionAttempts < MAX_RECONNECTION_ATTEMPTS) {
+                    if (!userDisconnected.get() && lastConnectedDevice != null && reconnectionAttempts < MAX_RECONNECTION_ATTEMPTS) {
                         reconnectionAttempts++;
                         long delay = calculateBackoffDelay();
                         
@@ -934,6 +945,24 @@ public class BleConnectionManager {
         }, "get last connected device");
         
         return lastConnectedDevice;
+    }
+    
+    /**
+     * Set the user disconnect flag
+     * @param disconnected true if the user intentionally disconnected, false otherwise
+     */
+    public void setUserDisconnected(boolean disconnected) {
+        userDisconnected.set(disconnected);
+        
+        // Persist the flag to survive app restarts
+        appContext.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean("user_disconnected", disconnected)
+            .apply();
+    }
+    
+    public boolean isUserDisconnected() {
+        return userDisconnected.get();
     }
     
     /**

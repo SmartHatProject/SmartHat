@@ -1,80 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    android:padding="16dp">
+    android:orientation="vertical"
+    android:background="@color/background">
 
-    <!-- Title with icon -->
-    <LinearLayout
-        android:id="@+id/history_header_layout"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/threshold_history_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="?attr/actionBarSize"
+        style="@style/SmartHat.Toolbar"
+        app:popupTheme="@style/ThemeOverlay.Material3.Light"
+        android:contentDescription="Threshold history toolbar"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="12dp"
-            android:src="@android:drawable/ic_menu_recent_history"
-            android:tint="@color/primary" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="@dimen/app_margin"
+        android:paddingTop="@dimen/spacing_small"
+        android:paddingBottom="0dp">
 
-        <TextView
-            android:id="@+id/tv_history_title"
+        <!-- Title with icon -->
+        <LinearLayout
+            android:id="@+id/history_header_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="@dimen/spacing_small"
+                android:src="@android:drawable/ic_menu_recent_history"
+                android:contentDescription="History icon"
+                app:tint="@color/primary" />
+
+            <TextView
+                android:id="@+id/tv_history_title"
+                style="@style/SmartHat.SectionHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:text="Threshold History" />
+        </LinearLayout>
+
+        <!-- Delete All button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_delete_all"
+            style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
-            android:text="Threshold History"
-            android:textColor="@color/primary"
-            android:textSize="26sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+            android:layout_marginTop="@dimen/spacing_small"
+            android:layout_marginEnd="@dimen/spacing_small"
+            android:minWidth="@dimen/min_touch_target"
+            android:minHeight="40dp"
+            android:text="Delete All"
+            android:textSize="12sp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:textColor="@color/on_error"
+            app:backgroundTint="@color/error"
+            app:layout_constraintTop_toBottomOf="@id/history_header_layout"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Horizontal rule -->
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/primary"
-        android:alpha="0.3"
-        app:layout_constraintTop_toBottomOf="@id/history_header_layout" />
+        <!-- Action buttons layout -->
+        <LinearLayout
+            android:id="@+id/action_buttons_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:layout_marginEnd="@dimen/spacing_small"
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/history_header_layout">
 
-    <!-- RecyclerView for history items -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_threshold_history"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:clipToPadding="false"
-        android:paddingBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@id/tv_no_data"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_cancel_selection"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/min_touch_target"
+                android:minHeight="40dp"
+                android:paddingHorizontal="12dp"
+                android:textSize="12sp"
+                android:text="Cancel"
+                android:textColor="@color/primary" />
 
-    <!-- No data message -->
-    <TextView
-        android:id="@+id/tv_no_data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:fontFamily="sans-serif"
-        android:gravity="center"
-        android:text="No threshold breaches recorded yet"
-        android:textColor="@color/primary"
-        android:textSize="16sp"
-        android:textStyle="italic"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_delete_selected"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/min_touch_target"
+                android:minHeight="40dp"
+                android:paddingHorizontal="12dp"
+                android:textSize="12sp"
+                android:text="Delete"
+                android:textColor="@color/error" />
+        </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout> 
+        <!-- Horizontal rule -->
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:background="@color/outline_variant"
+            app:layout_constraintTop_toBottomOf="@id/btn_delete_all" />
+
+        <!-- RecyclerView for history items -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_threshold_history"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/spacing_large"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="true"
+            android:scrollbarStyle="outsideOverlay"
+            android:overScrollMode="never"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider" />
+
+        <!-- No data message -->
+        <TextView
+            android:id="@+id/tv_no_data"
+            style="@style/TextAppearance.SmartHat.BodyMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="No threshold breaches recorded yet"
+            android:textColor="@color/text_secondary"
+            android:textStyle="italic"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- FAB for selection mode -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_medium"
+            android:src="@drawable/ic_edit_select"
+            android:contentDescription="Select items"
+            app:fabSize="mini"
+            app:backgroundTint="@color/primary"
+            app:tint="@color/on_primary"
+            app:borderWidth="0dp"
+            app:elevation="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout> 

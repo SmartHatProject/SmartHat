@@ -18,7 +18,7 @@ import com.team12.smarthat.utils.Constants;
 /**
  * mock implementation of bleconnectionmanager that simulates connection states
  * without requiring HW
- 
+ * optimized for Android 12 on Pixel 4a
  */
 @SuppressLint("MissingPermission")
 public class MockBleConnectionManager extends BleConnectionManager {
@@ -30,6 +30,9 @@ public class MockBleConnectionManager extends BleConnectionManager {
     
     private final Handler mockHandler = new Handler(Looper.getMainLooper());
     private static MockBleConnectionManager instance;
+    
+    // Flag to track if we're in the middle of a connection process
+    private boolean isConnecting = false;
     
     /**
      * get the singleton instance of mockbleconnectionmanager
@@ -52,10 +55,23 @@ public class MockBleConnectionManager extends BleConnectionManager {
     /**
      * simulate a connection to a device
      * this overrides the real connection method and simulates state changes
+     * optimized for Android 12 on Pixel 4a
      */
     @Override
     public void connect(BluetoothDevice device) {
         Log.d(TAG, "Simulating connection to device: " + (device != null ? device.getAddress() : "null"));
+        
+        // Get current state
+        ConnectionState currentState = getCurrentState();
+        
+        // Only proceed if we're in DISCONNECTED state
+        if (currentState != ConnectionState.DISCONNECTED) {
+            Log.d(TAG, "Cannot connect - not in DISCONNECTED state (current state: " + currentState + ")");
+            return;
+        }
+        
+        // Set connecting flag
+        isConnecting = true;
         
         // start with connecting state
         mockHandler.post(() -> {
@@ -64,6 +80,15 @@ public class MockBleConnectionManager extends BleConnectionManager {
             
             // simulate connection delay
             mockHandler.postDelayed(() -> {
+                // Check if connection was cancelled
+                if (!isConnecting) {
+                    Log.d(TAG, "Connection process was cancelled");
+                    return;
+                }
+                
+                // Reset flag
+                isConnecting = false;
+                
                 // after delay, update to connected state
                 super.updateState(ConnectionState.CONNECTED);
                 Log.d(TAG, "Mock device connected");
@@ -73,10 +98,14 @@ public class MockBleConnectionManager extends BleConnectionManager {
     
     /**
      * simulate disconnection from a device
+     * optimized for Android 12 on Pixel 4a
      */
     @Override
     public void disconnect() {
         Log.d(TAG, "Simulating disconnection");
+        
+        // Cancel any pending connection
+        isConnecting = false;
         
         ConnectionState currentState = getCurrentState();
         
@@ -90,13 +119,20 @@ public class MockBleConnectionManager extends BleConnectionManager {
                 
                 // simulate disconnection delay
                 mockHandler.postDelayed(() -> {
+                    // Clear any pending tasks to prevent state conflicts
+                    mockHandler.removeCallbacksAndMessages(null);
+                    
                     // after delay, update to disconnected state
                     super.updateState(ConnectionState.DISCONNECTED);
                     Log.d(TAG, "Mock device disconnected");
                 }, DISCONNECT_DELAY_MS);
             });
+        } else if (currentState == ConnectionState.DISCONNECTING) {
+            // Already disconnecting, do nothing
+            Log.d(TAG, "Already in DISCONNECTING state");
         } else {
-            // force disconnected state immediately if already disconnecting/disconnected
+            // force disconnected state immediately if already disconnected
+            Log.d(TAG, "Already in DISCONNECTED state");
             super.updateState(ConnectionState.DISCONNECTED);
         }
     }
@@ -135,6 +171,7 @@ public class MockBleConnectionManager extends BleConnectionManager {
      */
     @Override
     public void cleanup() {
+        isConnecting = false;
         mockHandler.removeCallbacksAndMessages(null);
         super.cleanup();
     }

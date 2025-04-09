@@ -1,27 +1,150 @@
-# Android Studio & Gradle
-*.iml
+# Gradle files
 .gradle/
-.idea/
 build/
-captures/
+*/build/
+.gradle
+
+# Keep Gradle wrapper files
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+!gradlew
+!gradlew.bat
+
+# Local configuration file
 local.properties
+*.properties
+!gradle.properties
 
-# Android Generated Files
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.externalNativeBuild
-.cxx
+# Android Studio / IntelliJ IDEA
+*.iml
+*.iws
+*.ipr
+.idea/
+.idea/*
+.idea/**/*
+*.iws
+.navigation/
+captures/
+output.json
 
-# OS-Specific
+# VS Code
+.vscode/
+.vscode/*
+.settings/
+.project
+.classpath
+*.code-workspace
+
+# Mac OS
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
 
-# Logs
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Built application files
+*.apk
+*.ap_
+*.aab
+*.aar
+
+# Files for the Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+out/
+
+# Log Files
 *.log
+logs/
+*.txt
+!README.txt
 
-# Auto-generated files
-app/lint-results.html
+# Android Studio Navigation editor temp files
+.navigation/
+
+# Android Studio captures folder
+captures/
+
+# External native build folder generated in Android Studio
+.externalNativeBuild
+.cxx/
+*.so
+
+# Google Services (e.g. APIs or Firebase)
+google-services.json
+
+# Keystore files
+*.jks
+*.keystore
+!debug.keystore
+
+# Lint check files
+lint/intermediates/
+lint/generated/
+lint/outputs/
+lint/tmp/
+lint-results.html
 **/lint-results.*
+
+# Version control
+.hg/
+.git/
+.gitattributes
+
+# Crashlytics plugin
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+com_crashlytics_export_strings.xml
+
+# Android Profiling
+*.hprof
+
+# Misc
+.project
+.classpath
+.factorypath
+.apt_generated/
+.apt_generated_tests/
+
+# Test-related
+coverage/
+jacoco.exec
+
+# Flutter/Dart specific
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+
+# Node.js (if using React Native)
+node_modules/
+npm-debug.log
+yarn-error.log
+.pnp/
+.pnp.js
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~.nib

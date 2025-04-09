@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 
+    SmartHat Style Guide
+    
+    Text Appearance Patterns:
+    - For primary headlines, use: TextAppearance.SmartHat.HeadlineMedium
+    - For body text, use: TextAppearance.SmartHat.BodyMedium
+    - For smaller text, use: TextAppearance.SmartHat.BodySmall
+    - For caption text, use: TextAppearance.SmartHat.Caption
+    
+    Color Usage:
+    - Primary actions: @color/primary
+    - Backgrounds: @color/background or @color/surface
+    - Text: @color/text_primary or @color/text_secondary
+    - Alerts: @color/error, @color/warning, @color/success
+    
+    Spacing:
+    - Use @dimen/spacing_* values for consistent margins and padding
+    - Buttons should have at least @dimen/min_touch_target size for accessibility
+    -->
+    
     <!-- Base application theme for SmartHat -->
-    <style name="SmartHat" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="SmartHat" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your theme here -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
@@ -11,89 +31,225 @@
     <!-- Theme overlay for dynamic colors optimization on Pixel 4a -->
     <style name="ThemeOverlay.SmartHat.DynamicColors" parent="">
         <!-- Override dynamic colors tones for better OLED contrast -->
-        <item name="colorPrimaryInverse" type="color">@color/primary</item>
+        <item name="colorPrimaryInverse">@color/primary</item>
         
         <!-- Material You dynamic color adjustments for Android 12+ -->
         <item name="colorPrimaryFixed">@color/secondary</item>
-        <item name="colorPrimaryFixedDim">@color/purple_700</item>
+        <item name="colorPrimaryFixedDim">@color/primary_dark</item>
         <item name="colorOnPrimaryFixed">?attr/colorOnPrimary</item>
         <item name="colorOnPrimaryFixedVariant">?attr/colorOnPrimaryContainer</item>
         
         <!-- Optimize contrast ratios for Pixel 4a OLED display -->
-        <item name="colorSurfaceContainer" type="color">@color/surface</item>
-        <item name="colorSurfaceContainerLow" type="color">@color/surface</item>
-        <item name="colorSurfaceContainerHigh" type="color">@color/surface_variant</item>
-        <item name="colorSurfaceContainerLowest" type="color">@color/surface</item>
-        <item name="colorSurfaceContainerHighest" type="color">@color/surface_variant</item>
+        <item name="colorSurfaceContainer">@color/surface</item>
+        <item name="colorSurfaceContainerLow">@color/surface</item>
+        <item name="colorSurfaceContainerHigh">@color/surface_variant</item>
+        <item name="colorSurfaceContainerLowest">@color/surface</item>
+        <item name="colorSurfaceContainerHighest">@color/surface_variant</item>
         
         <!-- Ensure text remains readable on all surfaces -->
-        <item name="android:textColorPrimary" type="color">@color/on_surface</item>
-        <item name="android:textColorSecondary" type="color">@color/on_surface_variant</item>
+        <item name="android:textColorPrimary">@color/on_surface</item>
+        <item name="android:textColorSecondary">@color/on_surface_variant</item>
         
         <!-- Material You specific attributes for Android 12+ -->
         <item name="elevationOverlayEnabled">true</item>
         <item name="elevationOverlayColor">@color/surface</item>
     </style>
 
-    <!-- Activity Toolbar Style -->
+    <!-- Activity Toolbar Style - Updated to not show app name -->
     <style name="SmartHat.Toolbar" parent="Widget.Material3.Toolbar">
-        <item name="android:background">@color/white</item>
-        <item name="android:theme">@style/ThemeOverlay.AppCompat.Light</item>
-        <item name="popupTheme">@style/ThemeOverlay.Material3.Light</item>
-        <item name="titleTextColor">@color/primary</item>
-        <item name="navigationIconTint">@color/primary</item>
-        <item name="elevation">4dp</item>
+        <item name="android:background">@color/primary</item>
+        <item name="titleTextColor">@color/on_primary</item>
+        <item name="subtitleTextColor">@color/on_primary</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:theme">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
+        <item name="titleTextAppearance">@style/TextAppearance.SmartHat.Toolbar.Title</item>
+        <item name="contentInsetStartWithNavigation">16dp</item>
+        <item name="contentInsetStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
     </style>
-
-    <!-- Popup Menu Style -->
-    <style name="PopupMenu.SmartHat" parent="Widget.Material3.PopupMenu">
-        <item name="android:popupBackground">@color/card_background</item>
-        <item name="android:textColor">@color/text_primary</item>
-    </style>
-
-    <!-- Popup Menu Overflow Style -->
-    <style name="PopupMenuOverflow.SmartHat" parent="Widget.Material3.PopupMenu.Overflow">
-        <item name="android:popupBackground">@color/card_background</item>
-        <item name="android:textColor">@color/text_primary</item>
-    </style>
-
-    <!-- Section Header Style -->
-    <style name="SmartHat.SectionHeader">
-        <item name="android:textSize">18sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/primary</item>
-        <item name="android:layout_marginTop">24dp</item>
-        <item name="android:layout_marginBottom">8dp</item>
-    </style>
-
-    <!-- Card Style -->
-    <style name="SmartHat.Card" parent="Widget.Material3.CardView.Elevated">
-        <item name="cardCornerRadius">8dp</item>
-        <item name="cardElevation">2dp</item>
-        <item name="strokeWidth">1dp</item>
-        <item name="strokeColor">#E0E0E0</item>
-        <item name="cardBackgroundColor">@color/card_background</item>
-        <item name="rippleColor">@color/primary_light</item>
-    </style>
-
-    <!-- Button Style -->
-    <style name="SmartHat.Button" parent="Widget.Material3.Button">
-        <item name="backgroundTint">@color/primary</item>
+    
+    <!-- Toolbar title style -->
+    <style name="TextAppearance.SmartHat.Toolbar.Title" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/on_primary</item>
-        <item name="rippleColor">@color/primary_light</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <!-- Toggle Style -->
-    <style name="SmartHat.SwitchCompat" parent="Widget.Material3.CompoundButton.MaterialSwitch">
-        <item name="thumbTint">@color/primary</item>
-        <item name="trackTint">@color/primary_light</item>
+    <!-- Text Input Layout style -->
+    <style name="Widget.SmartHat.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/primary</item>
+        <item name="hintTextColor">@color/primary</item>
+        <item name="errorTextColor">@color/error</item>
     </style>
-
-    <!-- Slider Style -->
+    
+    <!-- Legacy text styles - kept for backward compatibility -->
+    <!-- Use TextAppearance.SmartHat.HeadlineMedium instead for new code -->
+    <style name="TextAppearance.SmartHat.Headline1" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    
+    <!-- Use TextAppearance.SmartHat.HeadlineMedium instead for new code -->
+    <style name="TextAppearance.SmartHat.Headline2" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    
+    <!-- Use TextAppearance.SmartHat.BodyMedium instead for new code -->
+    <style name="TextAppearance.SmartHat.Body1" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    
+    <!-- Use TextAppearance.SmartHat.BodySmall instead for new code -->
+    <style name="TextAppearance.SmartHat.Body2" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    
+    <!-- Used for small helper text and captions -->
+    <style name="TextAppearance.SmartHat.Caption" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+    
+    <!-- Custom ProgressBar style -->
+    <style name="Widget.SmartHat.ProgressBar" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateTint">@color/primary</item>
+        <item name="android:minHeight">4dp</item>
+        <item name="android:maxHeight">4dp</item>
+    </style>
+    
+    <!-- Sensor value display style -->
+    <style name="SensorValueText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/sensor_value</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+    
+    <!-- Sensor label style -->
+    <style name="SensorLabelText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/sensor_label</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+    
+    <!-- Settings styles -->
+    <!-- Section header style for settings -->
+    <style name="SmartHat.SectionHeader" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+    
+    <!-- Switch style for settings -->
+    <style name="SmartHat.SwitchCompat" parent="Widget.Material3.CompoundButton.Switch">
+        <item name="android:thumbTint">@color/switch_thumb_selector</item>
+        <item name="android:trackTint">@color/switch_track_selector</item>
+        <item name="android:minWidth">@dimen/min_touch_target</item>
+        <item name="android:minHeight">@dimen/min_touch_target</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+    
+    <!-- Slider style for settings -->
     <style name="SmartHat.Slider" parent="Widget.Material3.Slider">
         <item name="thumbColor">@color/primary</item>
-        <item name="trackColorActive">@color/primary</item>
-        <item name="trackColorInactive">#E0E0E0</item>
-        <item name="haloColor">@color/primary_light</item>
+        <item name="trackColorActive">@color/primary_light</item>
+        <item name="trackColorInactive">@color/surface_variant</item>
+        <item name="haloColor">@color/primary_container</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="thumbRadius">12dp</item>
+        <item name="labelBehavior">floating</item>
+    </style>
+
+    <style name="SmartHat.SettingRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/min_touch_target</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="SmartHat.SettingLabel" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="SmartHat.SettingValue" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:layout_marginStart">8dp</item>
+    </style>
+
+    <!-- Button styles for layouts -->
+    <style name="SmartHat.Button" parent="Widget.SmartHat.Button">
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="rippleColor">@color/primary_light</item>
+        <item name="cornerRadius">@dimen/button_corner_radius</item>
+    </style>
+    
+    <!-- Button styles - keeping these variants that aren't in themes.xml -->
+    <style name="SmartHat.Button.Secondary" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:textColor">@color/primary</item>
+        <item name="strokeColor">@color/primary</item>
+        <item name="cornerRadius">@dimen/button_corner_radius</item>
+        <item name="android:letterSpacing">0.0125</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="SmartHat.Button.Danger" parent="Widget.Material3.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:textColor">@color/on_error</item>
+        <item name="backgroundTint">@color/error</item>
+        <item name="cornerRadius">@dimen/button_corner_radius</item>
+        <item name="android:letterSpacing">0.0125</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <!-- TextView base style -->
+    <style name="SmartHat.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">@dimen/text_body</item>
+    </style>
+
+    <style name="SmartHat.TextView.Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/outline_variant</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+    
+    <!-- Animation and transition styles -->
+    <style name="SmartHat.Animation.Tooltip" parent="@style/Animation.AppCompat.Tooltip">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 </resources> 

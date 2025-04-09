@@ -116,8 +116,8 @@ public class DatabaseHelper {
     }
     
     // get all threshold breaches
-    public LiveData<List<SensorData>> getThresholdBreaches(float dustThreshold, float noiseThreshold) {
-        return dao.getThresholdBreaches(dustThreshold, noiseThreshold);
+    public LiveData<List<SensorData>> getThresholdBreaches(float dustThreshold, float noiseThreshold, float gasThreshold) {
+        return dao.getThresholdBreaches(dustThreshold, noiseThreshold, gasThreshold);
     }
     
     /**
@@ -190,6 +190,16 @@ public class DatabaseHelper {
     }
     
     /**
+     * Get the user's custom gas threshold value
+     * @param context Context for accessing shared preferences
+     * @return The custom threshold value or the default if not set
+     */
+    public float getCustomGasThreshold(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE);
+        return prefs.getFloat(Constants.PREF_GAS_THRESHOLD, Constants.GAS_THRESHOLD);
+    }
+    
+    /**
      * Get threshold breaches with custom thresholds
      * @param context Context for accessing shared preferences
      * @return LiveData list of threshold breaches based on custom thresholds
@@ -197,7 +207,45 @@ public class DatabaseHelper {
     public LiveData<List<SensorData>> getThresholdBreachesWithCustomThresholds(Context context) {
         float dustThreshold = getCustomDustThreshold(context);
         float noiseThreshold = getCustomNoiseThreshold(context);
-        return getThresholdBreaches(dustThreshold, noiseThreshold);
+        float gasThreshold = getCustomGasThreshold(context);
+        return getThresholdBreaches(dustThreshold, noiseThreshold, gasThreshold);
+    }
+    
+    /**
+     * Delete a specific threshold breach by its ID
+     * @param id ID of the record to delete
+     */
+    public void deleteThresholdBreach(int id) {
+        executor.execute(() -> {
+            dao.deleteById(id);
+            Log.d(Constants.TAG_DATABASE, "Deleted threshold breach with ID: " + id);
+        });
+    }
+    
+    /**
+     * Delete multiple threshold breaches by their IDs
+     * @param ids List of IDs to delete
+     */
+    public void deleteThresholdBreaches(List<Integer> ids) {
+        executor.execute(() -> {
+            dao.deleteByIds(ids);
+            Log.d(Constants.TAG_DATABASE, "Deleted " + ids.size() + " threshold breaches");
+        });
+    }
+    
+    /**
+     * Delete all threshold breaches based on custom thresholds
+     * @param context Context for accessing shared preferences
+     */
+    public void deleteAllThresholdBreaches(Context context) {
+        float dustThreshold = getCustomDustThreshold(context);
+        float noiseThreshold = getCustomNoiseThreshold(context);
+        float gasThreshold = getCustomGasThreshold(context);
+        
+        executor.execute(() -> {
+            int count = dao.deleteAllThresholdBreaches(dustThreshold, noiseThreshold, gasThreshold);
+            Log.d(Constants.TAG_DATABASE, "Deleted all threshold breaches: " + count + " records");
+        });
     }
 }
 

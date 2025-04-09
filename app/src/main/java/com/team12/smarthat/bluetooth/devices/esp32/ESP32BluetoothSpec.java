@@ -18,7 +18,7 @@ public class ESP32BluetoothSpec {
     public static final UUID CLIENT_CONFIG_DESCRIPTOR_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
     
     /** Gas sensor characteristic UUID */
-    public static final UUID GAS_CHARACTERISTIC_UUID = UUID.fromString("34df64de-2d01-4b6b-85c3-c6d1a797b285");
+    public static final UUID GAS_CHARACTERISTIC_UUID = UUID.fromString("b6fc48af-6b61-4f96-afdf-a359a8b2b1b1");
 
     
     public static class ConnectionParams {
@@ -85,5 +85,6 @@ public class ESP32BluetoothSpec {
         // Default initial values matching hardware
         public static final float INITIAL_SOUND_VALUE = 40.0f; // Default quiet room value
         public static final float INITIAL_DUST_VALUE = 10.0f;  // Default clean air value
+        public static final float INITIAL_GAS_VALUE = -1.1f;   // Default initial value for gas sensor
     }
 } 

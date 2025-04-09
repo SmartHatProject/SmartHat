@@ -44,10 +44,12 @@ public class BluetoothServiceIntegration implements
     // constants for sensor types - use sensordata constants for consistency
     public static final String SENSOR_TYPE_DUST = SensorData.TYPE_DUST;
     public static final String SENSOR_TYPE_NOISE = SensorData.TYPE_NOISE;
+    public static final String SENSOR_TYPE_GAS = SensorData.TYPE_GAS;
     
     //sensor value bounds for validation
     private static final float MAX_DUST_VALUE = 1000.0f;
     private static final float MAX_NOISE_VALUE = 150.0f;
+    private static final float MAX_GAS_VALUE = 5000.0f;
     
     // Notification timeout constants - using values from ESP32BluetoothSpec
     private static final long NOTIFICATION_TIMEOUT_MS = ESP32BluetoothSpec.NotificationParams.NOTIFICATION_TIMEOUT_MS;
@@ -68,9 +70,11 @@ public class BluetoothServiceIntegration implements
     // uuids of characteristics we're monitoring 
     private final UUID dustCharacteristicUuid;
     private final UUID soundCharacteristicUuid;
+    private final UUID gasCharacteristicUuid;
     
     // prevent multiple initialization attempts
     private final AtomicBoolean notificationsSetup = new AtomicBoolean(false);
+    private final AtomicBoolean userDisconnected = new AtomicBoolean(false);
     
     // observer for connection state changes
     private Observer<BleConnectionManager.ConnectionState> connectionStateObserver;
@@ -98,6 +102,7 @@ public class BluetoothServiceIntegration implements
     // Last valid readings for each sensor type to use as fallbacks
     private float lastValidDustReading = ESP32BluetoothSpec.NotificationParams.INITIAL_DUST_VALUE; // Default to clean air value
     private float lastValidNoiseReading = ESP32BluetoothSpec.NotificationParams.INITIAL_SOUND_VALUE; // Default to quiet room value
+    private float lastValidGasReading = ESP32BluetoothSpec.NotificationParams.INITIAL_GAS_VALUE; // Default to initial state for gas sensor
     
     // Class to store notification data
     private static class NotificationData {
@@ -134,6 +139,7 @@ public class BluetoothServiceIntegration implements
         // initialize uuids from esp32 spec
         this.dustCharacteristicUuid = ESP32BluetoothSpec.DUST_CHARACTERISTIC_UUID;
         this.soundCharacteristicUuid = ESP32BluetoothSpec.SOUND_CHARACTERISTIC_UUID;
+        this.gasCharacteristicUuid = ESP32BluetoothSpec.GAS_CHARACTERISTIC_UUID;
         
         // Initialize background handler with a dedicated thread
         HandlerThread handlerThread = new HandlerThread("NotificationProcessingThread");
@@ -170,6 +176,7 @@ public class BluetoothServiceIntegration implements
             if (state == BleConnectionManager.ConnectionState.CONNECTED) {
                 // set up notifications when connected
                 setupNotifications();
+                userDisconnected.set(false);
             } else if (state == BleConnectionManager.ConnectionState.DISCONNECTED) {
                 // reset notification setup flag when disconnected so we'll set up again on reconnect
                 notificationsSetup.set(false);
@@ -271,6 +278,14 @@ public class BluetoothServiceIntegration implements
                     // Only update last valid reading if the value is valid
                     lastValidNoiseReading = (float)value;
                 }
+            } else if (SENSOR_TYPE_GAS.equals(sensorType)) {
+                if (value < 0 || value > MAX_GAS_VALUE) {
+                    Log.w(TAG, "Gas sensor value out of range: " + value);
+                    // we'll still create and dispatch the data 
+                } else {
+                    // Only update last valid reading if the value is valid
+                    lastValidGasReading = (float)value;
+                }
             }
             
             // create sensor data object
@@ -283,8 +298,18 @@ public class BluetoothServiceIntegration implements
             Log.e(TAG, "Error parsing JSON: " + e.getMessage());
             Log.e(TAG, "Invalid JSON: " + jsonData);
             
-          
-            float fallbackValue = SENSOR_TYPE_DUST.equals(sensorType) ? lastValidDustReading : lastValidNoiseReading;
+            // Determine appropriate fallback value based on sensor type
+            float fallbackValue;
+            if (SENSOR_TYPE_DUST.equals(sensorType)) {
+                fallbackValue = lastValidDustReading;
+            } else if (SENSOR_TYPE_NOISE.equals(sensorType)) {
+                fallbackValue = lastValidNoiseReading;
+            } else if (SENSOR_TYPE_GAS.equals(sensorType)) {
+                fallbackValue = lastValidGasReading;
+            } else {
+                fallbackValue = 0.0f;
+            }
+            
             Log.w(TAG, "Using last valid reading as fallback: " + fallbackValue + " for " + sensorType);
             
             // Create sensor data with fallback value and current timestamp
@@ -434,6 +459,8 @@ public class BluetoothServiceIntegration implements
             sensorType = SENSOR_TYPE_DUST;
         } else if (uuid.equals(soundCharacteristicUuid)) {
             sensorType = SENSOR_TYPE_NOISE;
+        } else if (uuid.equals(gasCharacteristicUuid)) {
+            sensorType = SENSOR_TYPE_GAS;
         } else {
             Log.w(TAG, "Unknown characteristic UUID: " + uuid);
             return;
@@ -566,9 +593,11 @@ public class BluetoothServiceIntegration implements
                     service.getCharacteristic(dustCharacteristicUuid);
                 BluetoothGattCharacteristic soundChar = 
                     service.getCharacteristic(soundCharacteristicUuid);
+                BluetoothGattCharacteristic gasChar = 
+                    service.getCharacteristic(gasCharacteristicUuid);
                 
-                // check if both characteristics exist before proceeding
-                if (dustChar == null && soundChar == null) {
+                // check if all characteristics exist before proceeding
+                if (dustChar == null && soundChar == null && gasChar == null) {
                     Log.e(TAG, "No sensor characteristics found in ESP32 service");
                     notificationsSetup.set(false);
                     return;
@@ -595,7 +624,16 @@ public class BluetoothServiceIntegration implements
                     overallSuccess &= soundSuccess;
                 }
                 
-                // if both failed, reset the notification setup flag so we can try again
+                // enable gas sensor notifications if available
+                if (gasChar != null) {
+                    boolean gasSuccess = executeGattOperationSafely(gatt, () -> {
+                        return enableNotification(gatt, gasChar);
+                    });
+                    Log.d(TAG, "Gas sensor notification setup: " + (gasSuccess ? "success" : "failed"));
+                    overallSuccess &= gasSuccess;
+                }
+                
+                // if all failed, reset the notification setup flag so we can try again
                 if (!overallSuccess) {
                     Log.w(TAG, "Failed to set up all notifications, will try again on next connection");
                     notificationsSetup.set(false);
@@ -757,7 +795,7 @@ public class BluetoothServiceIntegration implements
      */
     private void checkNotificationTimeout() {
         // Skip check if we're not connected
-        if (connectionManager.getCurrentState() != BleConnectionManager.ConnectionState.CONNECTED) {
+        if (connectionManager.getCurrentState() != BleConnectionManager.ConnectionState.CONNECTED || userDisconnected.get()) {
             return;
         }
         
@@ -785,7 +823,7 @@ public class BluetoothServiceIntegration implements
             Log.e(TAG, "Notification verification failed after " + MAX_VERIFICATION_ATTEMPTS + " attempts");
             
 
-            if (connectionManager.getCurrentState() == BleConnectionManager.ConnectionState.CONNECTED) {
+            if (connectionManager.getCurrentState() == BleConnectionManager.ConnectionState.CONNECTED && !userDisconnected.get()) {
                 Log.w(TAG, "Attempting to reconnect due to notification timeout");
                 
                 
@@ -819,5 +857,9 @@ public class BluetoothServiceIntegration implements
         }
         
         Log.d(TAG, "BluetoothServiceIntegration cleanup completed");
+    }
+    
+    public void setUserDisconnected(boolean disconnected) {
+        userDisconnected.set(disconnected);
     }
 }

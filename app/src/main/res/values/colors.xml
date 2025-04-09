@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Material3 Light Theme Colors based on #266D8D -->
-    <color name="primary">#266D8D</color>
-    <color name="primary_light">#4A8CAD</color>
-    <color name="primary_dark">#16506A</color>
+    <!-- Material3 Light Theme Colors based on #266D8D with improved contrast -->
+    <color name="primary">#0F5070</color>
+    <color name="primary_light">#3880A0</color>
+    <color name="primary_dark">#083040</color>
     <color name="on_primary">#FFFFFF</color>
     <color name="primary_container">#D0E4F0</color>
     <color name="on_primary_container">#0A2635</color>
     
-    <color name="secondary">#266D8D</color>
-    <color name="secondary_light">#4A8CAD</color>
-    <color name="secondary_dark">#16506A</color>
+    <color name="secondary">#0F5070</color>
+    <color name="secondary_light">#3880A0</color>
+    <color name="secondary_dark">#083040</color>
     <color name="on_secondary">#FFFFFF</color>
     <color name="secondary_container">#D0E4F0</color>
     <color name="on_secondary_container">#0A2635</color>
@@ -20,45 +20,45 @@
     <color name="tertiary_container">#B8DCF0</color>
     <color name="on_tertiary_container">#0A2635</color>
     
-    <color name="error">#BA1A1A</color>
+    <color name="error">#CF2B2B</color>
     <color name="on_error">#FFFFFF</color>
-    <color name="error_container">#FFDAD6</color>
-    <color name="on_error_container">#410002</color>
+    <color name="error_container">#FFCDD2</color>
+    <color name="on_error_container">#3E0A0A</color>
     
-    <color name="background">#F8FAFC</color>
-    <color name="on_background">#1A1C18</color>
-    <color name="surface">#F8FAFC</color>
-    <color name="on_surface">#1A1C18</color>
-    <color name="surface_variant">#DFE4F0</color>
-    <color name="on_surface_variant">#43483F</color>
+    <color name="background">#F8F9FA</color>
+    <color name="on_background">#1D1D1D</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="on_surface">#1D1D1D</color>
+    <color name="surface_variant">#EAF3FA</color>
+    <color name="on_surface_variant">#3C4043</color>
     
-    <color name="outline">#73796E</color>
-    <color name="outline_variant">#C3C8BB</color>
+    <color name="outline">#5F6368</color>
+    <color name="outline_variant">#DADCE0</color>
     
     <!-- Card and text colors -->
     <color name="card_background">#FFFFFF</color>
-    <color name="text_primary">#212121</color>
-    <color name="text_secondary">#757575</color>
-    <color name="alert_background">#FDF3E5</color>
+    <color name="text_primary">#202124</color>
+    <color name="text_secondary">#5F6368</color>
+    <color name="alert_background">#FFF3E0</color>
     
     <!-- Sensor-specific colors -->
-    <color name="dust_color">#FF8800</color>
-    <color name="noise_color">#4A8CAD</color>
-    <color name="gas_color">#FF2222</color>
+    <color name="dust_color">#E65100</color>
+    <color name="noise_color">#0F5070</color>
+    <color name="gas_color">#D32F2F</color>
     
     <!-- Chart colors -->
-    <color name="chart_grid">#DDDDDD</color>
-    <color name="chart_label">#266D8D</color>
+    <color name="chart_grid">#DADCE0</color>
+    <color name="chart_label">#0F5070</color>
     
     <!-- Transparent colors -->
     <color name="transparent">#00000000</color>
     <color name="semi_transparent">#80000000</color>
     
     <!-- Status colors -->
-    <color name="success">#4CAF50</color>
-    <color name="warning">#FFC107</color>
-    <color name="danger">#F44336</color>
-    <color name="info">#266D8D</color>
+    <color name="success">#388E3C</color>
+    <color name="warning">#F57C00</color>
+    <color name="danger">#D32F2F</color>
+    <color name="info">#0288D1</color>
     
     <!-- Legacy colors needed for backward compatibility -->
     <color name="purple_500">#266D8D</color>
@@ -70,23 +70,23 @@
     <color name="white">#FFFFFFFF</color>
     
     <!-- UI colors for main activity -->
-    <color name="test_mode_background">#266D8D</color>
+    <color name="test_mode_background">#1A5A78</color>
     <color name="test_mode_text">#FFFFFF</color>
     <color name="status_text_color">#191C1E</color>
-    <color name="disconnected_text">#F44336</color>
-    <color name="helper_text">#5D6569</color>
-    <color name="dust_icon_tint">#16506A</color>
-    <color name="noise_icon_tint">#266D8D</color>
-    <color name="sensor_label">#455A64</color>
-    <color name="sensor_value">#212121</color>
+    <color name="disconnected_text">#D32F2F</color>
+    <color name="helper_text">#424A4E</color>
+    <color name="dust_icon_tint">#E65100</color>
+    <color name="noise_icon_tint">#0F5070</color>
+    <color name="sensor_label">#344249</color>
+    <color name="sensor_value">#1A1A1A</color>
     <color name="connect_button_bg">@color/primary</color>
     <color name="connect_button_text">@color/on_primary</color>
-    <color name="footer_text">#78909C</color>
+    <color name="footer_text">#546E7A</color>
     
     <!-- Connection status colors -->
-    <color name="connected">#4CAF50</color>
-    <color name="connecting">#FFC107</color>
-    <color name="disconnected">#F44336</color>
-    <color name="sensor_normal">#4CAF50</color>
-    <color name="sensor_alert">#F44336</color>
+    <color name="connected">#388E3C</color>
+    <color name="connecting">#F57C00</color>
+    <color name="disconnected">#D32F2F</color>
+    <color name="sensor_normal">#388E3C</color>
+    <color name="sensor_alert">#D32F2F</color>
 </resources>

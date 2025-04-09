@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -120,6 +121,13 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+        // Set up toolbar
+        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
+        
         // initialize components
         initializeComponents();
         
@@ -172,19 +180,9 @@ public class MainActivity extends AppCompatActivity implements
             Intent intent = new Intent(this, ThresholdHistoryActivity.class);
             startActivity(intent);
             return true;
-        } else if (id == R.id.action_profile) {
-            // Open profile activity
-            Intent intent = new Intent(this, ProfileActivity.class);
-            startActivity(intent);
-            return true;
         } else if (id == R.id.action_settings) {
             // Open settings activity
             Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        } else if (id == R.id.action_visualization) {
-            // Open data visualization activity
-            Intent intent = new Intent(this, DataVisualizationActivity.class);
             startActivity(intent);
             return true;
         } else if (id == R.id.action_test_mode_off) {
@@ -246,6 +244,9 @@ public class MainActivity extends AppCompatActivity implements
             updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
             connectionHelper.setText(R.string.permission_required);
         }
+        
+        // Restore test mode state after resuming
+        restoreTestModeState();
     }
 
     @Override
@@ -263,6 +264,8 @@ public class MainActivity extends AppCompatActivity implements
         // cancel any pending ui updates or delayed operations
         mainHandler.removeCallbacksAndMessages(null);
 
+        // Save test mode state when pausing
+        saveTestModeState();
     }
 
     @Override
@@ -539,8 +542,10 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        // Setup Bluetooth service integration
-        btIntegration.observeConnectionState(this);
+        // Setup Bluetooth service integration - optimize for Android 12 on Pixel 4a
+        if (btIntegration != null) {
+            btIntegration.observeConnectionState(this);
+        }
         
         Log.d(Constants.TAG_MAIN, "Observers setup complete for " + 
               (testModeActive ? "TEST" : "REAL") + " mode");
@@ -590,6 +595,7 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * toggle connection state
      * for both real and test mode connections
+     * optimized for Android 12 on Pixel 4a
      */
     private void toggleConnection() {
         // determine which manager to use
@@ -612,13 +618,33 @@ public class MainActivity extends AppCompatActivity implements
             switch (currentState) {
                 case CONNECTED:
                     Log.d(Constants.TAG_MAIN, "User requested disconnect from connected state");
+                    if (!testModeActive) {
+                        btIntegration.setUserDisconnected(true);
+                        connectionManager.setUserDisconnected(true);
+                    }
                     activeManager.disconnect();
+                    
+                    // For test mode, ensure test data generation is stopped
+                    if (testModeActive && testDataGenerator != null && testDataGenerator.isTestModeActive()) {
+                        testDataGenerator.stopTestMode();
+                    }
                     break;
                     
                 case CONNECTING:
                     Log.d(Constants.TAG_MAIN, "User requested cancel during connection attempt");
                     showToast("Cancelling connection attempt...");
+                    
+                    // Call disconnect on the active manager to cancel the connection attempt
+                    if (!testModeActive) {
+                        btIntegration.setUserDisconnected(true);
+                        connectionManager.setUserDisconnected(true);
+                    }
                     activeManager.disconnect();
+                    
+                    // For test mode, we need to ensure any test data generation is also stopped
+                    if (testModeActive && testDataGenerator != null && testDataGenerator.isTestModeActive()) {
+                        testDataGenerator.stopTestMode();
+                    }
                     break;
                     
                 case DISCONNECTING:
@@ -631,6 +657,17 @@ public class MainActivity extends AppCompatActivity implements
                     
                     if (testModeActive) {
                         Log.d(Constants.TAG_MAIN, "Using mock connection in test mode");
+                        // Ensure test mode is properly configured before connecting
+                        if (testDataGenerator != null) {
+                            TestDataGenerator.TestMode currentMode = testDataGenerator.getCurrentMode();
+                            if (currentMode == TestDataGenerator.TestMode.OFF) {
+                                // Default to NORMAL mode if not set
+                                testDataGenerator.setCurrentMode(TestDataGenerator.TestMode.NORMAL);
+                                updateTestModeUI(TestDataGenerator.TestMode.NORMAL);
+                            }
+                            // No need to start the test data generation here - it will be started 
+                            // by the connection state change observer when connection completes
+                        }
                         mockConnectionManager.connect(null); // null device is fine for mock
                     } else {
                         // in real mode check permissions and start real connection process
@@ -667,8 +704,7 @@ public class MainActivity extends AppCompatActivity implements
             showToast("Error: " + e.getMessage());
             
             // Ensure UI is updated to a consistent state
-            BleConnectionManager.ConnectionState recoveryState = BleConnectionManager.ConnectionState.DISCONNECTED;
-            updateConnectionUI(recoveryState);
+            updateConnectionUI(BleConnectionManager.ConnectionState.DISCONNECTED);
         }
     }
     
@@ -753,6 +789,7 @@ public class MainActivity extends AppCompatActivity implements
     
     /**
      * update the connection ui elements based on the current connection state
+     * optimized for Android 12 on Pixel 4a
      */
     private void updateConnectionUI(BleConnectionManager.ConnectionState state) {
         if (isFinishing() || isDestroyed()) return;
@@ -781,7 +818,7 @@ public class MainActivity extends AppCompatActivity implements
                     }
                 }
                 
-
+                // Update the connection indicator with appropriate color
                 if (connectionIndicator != null) {
                     int drawableResId;
                     switch (state) {
@@ -800,30 +837,77 @@ public class MainActivity extends AppCompatActivity implements
                     connectionIndicator.setBackground(ContextCompat.getDrawable(this, drawableResId));
                 }
 
+                // Update status text
                 if (tvStatus != null) {
-                    tvStatus.setText(getString(R.string.status_format, state.name()));
+                    String statusText;
+                    if (testModeActive) {
+                        statusText = getString(R.string.status_format, "TEST " + state.name());
+                    } else {
+                        statusText = getString(R.string.status_format, state.name());
+                    }
+                    tvStatus.setText(statusText);
                 }
 
+                // Update helper text
                 if (connectionHelper != null) {
                     int helperTextResId;
                     switch (state) {
                         case CONNECTED:
-                            helperTextResId = R.string.helper_text_connected;
+                            helperTextResId = testModeActive ? 
+                                R.string.helper_text_test_connected : 
+                                R.string.helper_text_connected;
                             break;
                         case CONNECTING:
-                            helperTextResId = R.string.helper_text_connecting;
+                            helperTextResId = testModeActive ? 
+                                R.string.helper_text_test_connecting : 
+                                R.string.helper_text_connecting;
                             break;
                         case DISCONNECTING:
                             helperTextResId = R.string.helper_text_disconnecting;
                             break;
                         case DISCONNECTED:
-                            helperTextResId = R.string.helper_text_disconnected;
+                            helperTextResId = testModeActive ? 
+                                R.string.helper_text_test_disconnected : 
+                                R.string.helper_text_disconnected;
                             break;
                         default:
                             helperTextResId = R.string.helper_text_disconnected;
                             break;
                     }
-                    connectionHelper.setText(helperTextResId);
+                    
+                    // Check if the resource exists before trying to use it
+                    try {
+                        connectionHelper.setText(helperTextResId);
+                    } catch (Resources.NotFoundException e) {
+                        // Fallback to standard helper text if test-specific resources aren't defined
+                        Log.d(Constants.TAG_MAIN, "Resource not found, using fallback: " + e.getMessage());
+                        
+                        switch (state) {
+                            case CONNECTED:
+                                connectionHelper.setText(R.string.helper_text_connected);
+                                break;
+                            case CONNECTING:
+                                connectionHelper.setText(R.string.helper_text_connecting);
+                                break;
+                            case DISCONNECTING:
+                                connectionHelper.setText(R.string.helper_text_disconnecting);
+                                break;
+                            case DISCONNECTED:
+                                connectionHelper.setText(R.string.helper_text_disconnected);
+                                break;
+                            default:
+                                connectionHelper.setText(R.string.helper_text_disconnected);
+                                break;
+                        }
+                    }
+                }
+                
+                // Update test mode indicator visibility
+                if (tvTestMode != null && testModeActive && testDataGenerator != null) {
+                    TestDataGenerator.TestMode currentMode = testDataGenerator.getCurrentMode();
+                    if (currentMode != TestDataGenerator.TestMode.OFF) {
+                        updateTestModeUI(currentMode);
+                    }
                 }
             } catch (Exception e) {
                 Log.e(Constants.TAG_MAIN, "Error updating connection UI: " + e.getMessage());
@@ -993,20 +1077,16 @@ public class MainActivity extends AppCompatActivity implements
                             boolean autoReconnect = getSharedPreferences("app_prefs", MODE_PRIVATE)
                                     .getBoolean("auto_reconnect", true);
                             
-                            if (autoReconnect && connectionManager.getLastConnectedDevice() != null) {
+                            if (autoReconnect && connectionManager.getLastConnectedDevice() != null 
+                                    && !connectionManager.isUserDisconnected()) {
 
                                 mainHandler.postDelayed(() -> {
                                     if (!isFinishing() && !isDestroyed()) {
                                         startReconnectionProcess();
                                     }
                                 }, 1500);
-        } else {
+                            } else {
                                 connectionHelper.setText(R.string.ready_to_connect);
-                            }
-                            
-                            // Only show toast if app is in foreground
-                            if (!isFinishing() && !isDestroyed()) {
-                                showToast("Bluetooth turned on");
                             }
                     break;
             }
@@ -1018,6 +1098,9 @@ public class MainActivity extends AppCompatActivity implements
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     private void startReconnectionProcess() {
+        if (connectionManager.isUserDisconnected()) {
+            return;
+        }
 
         BluetoothDevice lastDevice = connectionManager.getLastConnectedDevice();
         if (lastDevice == null) {
@@ -1164,13 +1247,14 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * set the test mode state and config the test data generation
      * simulates the connection 
+     * optimized for Android 12 on Pixel 4a
      */
     private void setTestMode(TestDataGenerator.TestMode mode) {
         boolean wasTestModeActive = testModeActive;
         boolean enableTestMode = mode != TestDataGenerator.TestMode.OFF;
 
         // Initialize testDataGenerator if it doesn't exist
-        if (enableTestMode && testDataGenerator == null) {
+        if (testDataGenerator == null) {
             testDataGenerator = new TestDataGenerator();
             testDataGenerator.setListener(this);
         }
@@ -1194,7 +1278,9 @@ public class MainActivity extends AppCompatActivity implements
                 if (enableTestMode) {
                     // Switch to test mode
                     testDataGenerator.setMockBleManager(mockConnectionManager);
-                    btIntegration.cleanup();
+                    if (btIntegration != null) {
+                        btIntegration.cleanup();
+                    }
                     btIntegration = new BluetoothServiceIntegration(mockConnectionManager);
                     btIntegration.addSensorDataListener(this);
                     testModeActive = true;
@@ -1208,7 +1294,9 @@ public class MainActivity extends AppCompatActivity implements
                     if (testDataGenerator != null) {
                         testDataGenerator.stopTestMode();
                     }
-                    btIntegration.cleanup();
+                    if (btIntegration != null) {
+                        btIntegration.cleanup();
+                    }
                     btIntegration = new BluetoothServiceIntegration(connectionManager);
                     btIntegration.addSensorDataListener(this);
                     tvTestMode.setVisibility(View.GONE);
@@ -1230,31 +1318,19 @@ public class MainActivity extends AppCompatActivity implements
                 invalidateOptionsMenu(); // Update menu to reflect reverted state
                 return;
             }
-        }
-        
-        // Update test mode UI and functionality regardless of whether we were already in test mode
-        if (testModeActive) {
-            if (mode == TestDataGenerator.TestMode.OFF) {
-                testDataGenerator.stopTestMode();
-                tvTestMode.setVisibility(View.GONE);
-                testModeActive = false;
-                
-                // Ensure UI reflects the current real connection state
-                updateConnectionUI(connectionManager.getCurrentState());
-            } else {
-                updateTestModeUI(mode);
-                
-                // If already connected in test mode, restart data generation with new mode
-                if (mockConnectionManager.getCurrentState() == BleConnectionManager.ConnectionState.CONNECTED) {
+        } else if (testModeActive && mode != TestDataGenerator.TestMode.OFF) {
+            // Just changing test mode types while remaining in test mode
+            updateTestModeUI(mode);
+            
+            // If already connected in test mode, restart data generation with new mode
+            if (mockConnectionManager.getCurrentState() == BleConnectionManager.ConnectionState.CONNECTED) {
+                if (testDataGenerator != null) {
                     testDataGenerator.stopTestMode(); // Stop current generation
                     testDataGenerator.startTestMode(mode); // Restart with new mode
-                    // Show toast to indicate mode change
-                    showToast("Test mode changed to: " + mode.name());
                 }
             }
         }
         
-        // Force menu to update
         invalidateOptionsMenu();
     }
     
@@ -1365,5 +1441,100 @@ public class MainActivity extends AppCompatActivity implements
                 Log.d(Constants.TAG_MAIN, "Gas threshold exceeded: " + data.getValue() + " ppm (threshold: " + gasThreshold + " ppm)");
             }
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    // Add after the test mode region
+    /**
+     * Save the current test mode state and connection state to SharedPreferences
+     * Optimized for Android 12 on Pixel 4a
+     */
+    private void saveTestModeState() {
+        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        
+        // Save whether test mode is active
+        editor.putBoolean(Constants.PREF_TEST_MODE_ACTIVE, testModeActive);
+        
+        // Save test mode type if active
+        if (testModeActive && testDataGenerator != null) {
+            TestDataGenerator.TestMode mode = testDataGenerator.getCurrentMode();
+            editor.putString(Constants.PREF_TEST_MODE_TYPE, mode.name());
+        }
+        
+        // Save connection state of the active manager
+        BleConnectionManager activeManager = testModeActive ? mockConnectionManager : connectionManager;
+        if (activeManager != null) {
+            BleConnectionManager.ConnectionState state = activeManager.getCurrentState();
+            editor.putString(Constants.PREF_CONNECTION_STATE, state.name());
+        }
+        
+        editor.apply();
+        Log.d(Constants.TAG_MAIN, "Saved test mode state: active=" + testModeActive + 
+              ", connection=" + (activeManager != null ? activeManager.getCurrentState() : "unknown"));
+    }
+    
+    /**
+     * Restore the test mode state and connection state from SharedPreferences
+     * Optimized for Android 12 on Pixel 4a
+     */
+    private void restoreTestModeState() {
+        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
+        
+        // Get saved test mode active state (default to false if not found)
+        boolean savedTestModeActive = prefs.getBoolean(Constants.PREF_TEST_MODE_ACTIVE, false);
+        
+        // Only restore if there's a change in the test mode state
+        if (savedTestModeActive != testModeActive) {
+            if (savedTestModeActive) {
+                // Get the saved test mode type (default to NORMAL if not found)
+                String modeStr = prefs.getString(Constants.PREF_TEST_MODE_TYPE, TestDataGenerator.TestMode.NORMAL.name());
+                TestDataGenerator.TestMode mode;
+                try {
+                    mode = TestDataGenerator.TestMode.valueOf(modeStr);
+                } catch (IllegalArgumentException e) {
+                    // Fall back to NORMAL if there's an error parsing the mode
+                    mode = TestDataGenerator.TestMode.NORMAL;
+                }
+                
+                // Set the test mode
+                setTestMode(mode);
+            } else {
+                // Turn off test mode if it was previously off
+                setTestMode(TestDataGenerator.TestMode.OFF);
+            }
+        }
+        
+        // Get the saved connection state
+        String savedStateStr = prefs.getString(Constants.PREF_CONNECTION_STATE, BleConnectionManager.ConnectionState.DISCONNECTED.name());
+        BleConnectionManager.ConnectionState savedState;
+        try {
+            savedState = BleConnectionManager.ConnectionState.valueOf(savedStateStr);
+        } catch (IllegalArgumentException e) {
+            // Fall back to DISCONNECTED if there's an error parsing the state
+            savedState = BleConnectionManager.ConnectionState.DISCONNECTED;
+        }
+        
+        // Get the active manager based on current test mode
+        BleConnectionManager activeManager = testModeActive ? mockConnectionManager : connectionManager;
+        
+        // If saved state was CONNECTED but current state is DISCONNECTED, try to reconnect in test mode
+        if (testModeActive && savedState == BleConnectionManager.ConnectionState.CONNECTED && 
+            activeManager.getCurrentState() == BleConnectionManager.ConnectionState.DISCONNECTED) {
+            Log.d(Constants.TAG_MAIN, "Restoring test mode connection");
+            mockConnectionManager.connect(null);
+        }
+        
+        // Update UI with correct connection state
+        updateConnectionUI(activeManager.getCurrentState());
+        
+        Log.d(Constants.TAG_MAIN, "Restored test mode state: active=" + testModeActive + 
+              ", expected connection=" + savedState + 
+              ", actual connection=" + activeManager.getCurrentState());
     }
 }
