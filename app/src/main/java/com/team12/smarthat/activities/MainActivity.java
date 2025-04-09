@@ -1077,20 +1077,16 @@ public class MainActivity extends AppCompatActivity implements
                             boolean autoReconnect = getSharedPreferences("app_prefs", MODE_PRIVATE)
                                     .getBoolean("auto_reconnect", true);
                             
-                            if (autoReconnect && connectionManager.getLastConnectedDevice() != null) {
+                            if (autoReconnect && connectionManager.getLastConnectedDevice() != null 
+                                    && !connectionManager.isUserDisconnected()) {
 
                                 mainHandler.postDelayed(() -> {
                                     if (!isFinishing() && !isDestroyed()) {
                                         startReconnectionProcess();
                                     }
                                 }, 1500);
-        } else {
+                            } else {
                                 connectionHelper.setText(R.string.ready_to_connect);
-                            }
-                            
-                            // Only show toast if app is in foreground
-                            if (!isFinishing() && !isDestroyed()) {
-                                showToast("Bluetooth turned on");
                             }
                     break;
             }

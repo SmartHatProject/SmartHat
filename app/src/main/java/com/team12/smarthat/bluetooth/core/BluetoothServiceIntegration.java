@@ -823,7 +823,7 @@ public class BluetoothServiceIntegration implements
             Log.e(TAG, "Notification verification failed after " + MAX_VERIFICATION_ATTEMPTS + " attempts");
             
 
-            if (connectionManager.getCurrentState() == BleConnectionManager.ConnectionState.CONNECTED) {
+            if (connectionManager.getCurrentState() == BleConnectionManager.ConnectionState.CONNECTED && !userDisconnected.get()) {
                 Log.w(TAG, "Attempting to reconnect due to notification timeout");
                 
                 
