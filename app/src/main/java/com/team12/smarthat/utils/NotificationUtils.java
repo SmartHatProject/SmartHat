@@ -154,6 +154,8 @@ public class NotificationUtils {
             return "dust";
         } else if (lowerTitle.contains("noise")) {
             return "noise";
+        } else if (lowerTitle.contains("gas")) {
+            return "gas";
         } else {
             return "general";
         }
