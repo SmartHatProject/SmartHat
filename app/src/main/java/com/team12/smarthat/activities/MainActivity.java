@@ -618,6 +618,9 @@ public class MainActivity extends AppCompatActivity implements
             switch (currentState) {
                 case CONNECTED:
                     Log.d(Constants.TAG_MAIN, "User requested disconnect from connected state");
+                    if (!testModeActive) {
+                        btIntegration.setUserDisconnected(true);
+                    }
                     activeManager.disconnect();
                     
                     // For test mode, ensure test data generation is stopped
@@ -631,6 +634,9 @@ public class MainActivity extends AppCompatActivity implements
                     showToast("Cancelling connection attempt...");
                     
                     // Call disconnect on the active manager to cancel the connection attempt
+                    if (!testModeActive) {
+                        btIntegration.setUserDisconnected(true);
+                    }
                     activeManager.disconnect();
                     
                     // For test mode, we need to ensure any test data generation is also stopped

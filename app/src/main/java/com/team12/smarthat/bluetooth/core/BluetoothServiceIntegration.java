@@ -74,6 +74,7 @@ public class BluetoothServiceIntegration implements
     
     // prevent multiple initialization attempts
     private final AtomicBoolean notificationsSetup = new AtomicBoolean(false);
+    private final AtomicBoolean userDisconnected = new AtomicBoolean(false);
     
     // observer for connection state changes
     private Observer<BleConnectionManager.ConnectionState> connectionStateObserver;
@@ -175,6 +176,7 @@ public class BluetoothServiceIntegration implements
             if (state == BleConnectionManager.ConnectionState.CONNECTED) {
                 // set up notifications when connected
                 setupNotifications();
+                userDisconnected.set(false);
             } else if (state == BleConnectionManager.ConnectionState.DISCONNECTED) {
                 // reset notification setup flag when disconnected so we'll set up again on reconnect
                 notificationsSetup.set(false);
@@ -793,7 +795,7 @@ public class BluetoothServiceIntegration implements
      */
     private void checkNotificationTimeout() {
         // Skip check if we're not connected
-        if (connectionManager.getCurrentState() != BleConnectionManager.ConnectionState.CONNECTED) {
+        if (connectionManager.getCurrentState() != BleConnectionManager.ConnectionState.CONNECTED || userDisconnected.get()) {
             return;
         }
         
@@ -855,5 +857,9 @@ public class BluetoothServiceIntegration implements
         }
         
         Log.d(TAG, "BluetoothServiceIntegration cleanup completed");
+    }
+    
+    public void setUserDisconnected(boolean disconnected) {
+        userDisconnected.set(disconnected);
     }
 }
