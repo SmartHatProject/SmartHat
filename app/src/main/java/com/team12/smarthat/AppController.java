@@ -1,10 +1,12 @@
 package com.team12.smarthat;
 
 import android.app.Application;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.google.android.material.color.DynamicColors;
 import com.team12.smarthat.database.DatabaseHelper;
 
 /** 
@@ -29,6 +31,11 @@ public class AppController extends Application {
         
         // Initialize database
         DatabaseHelper.initialize(this);
+        
+        // Apply dynamic colors on Android 12+ devices (like Pixel 4a)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            DynamicColors.applyToActivitiesIfAvailable(this);
+        }
         
         // Set up simple ANR watchdog - use a more lightweight approach
         setupSimpleWatchdog();

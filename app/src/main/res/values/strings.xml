@@ -133,4 +133,12 @@
     <string name="dust_threshold_value_format">%.1f μg/m³</string>
     <string name="noise_threshold_value_format">%.1f dB</string>
     <string name="gas_threshold_value_format">%.1f ppm</string>
+
+    <string name="apply_filters">Apply</string>
+    <string name="clear_filters">Clear Filters</string>
+    <string name="filter_history_label">Filter History</string>
+    <string name="timestamp_date_format">MM-dd-yy HH:mm</string>
+    <string name="filter_start_date_label">Start Date (MM-DD-YY):</string>
+    <string name="filter_end_date_label">End Date (MM-DD-YY):</string>
+    <string name="filter_date_range_label">Date Range:</string>
 </resources>

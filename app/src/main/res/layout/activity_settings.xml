@@ -180,19 +180,23 @@
 
             <!-- Alert Thresholds Section -->
             <TextView
+                android:id="@+id/threshold_section_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
                 android:text="@string/alert_thresholds"
                 style="@style/SmartHat.SectionHeader"
-                android:contentDescription="@string/alert_thresholds_section" />
+                android:contentDescription="@string/alert_thresholds_section"
+                android:visibility="invisible" />
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/threshold_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                style="@style/Widget.SmartHat.CardView">
+                style="@style/Widget.SmartHat.CardView"
+                android:visibility="invisible">
 
                 <LinearLayout
                     android:layout_width="match_parent"

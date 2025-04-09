@@ -5,12 +5,14 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.Room;
+import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.team12.smarthat.models.SensorData;
 import com.team12.smarthat.utils.Constants;
 
 import java.util.List;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
@@ -21,7 +23,7 @@ public class DatabaseHelper {
     private static Context appContext;
     
     private final SensorDataDao dao;
-    private final Executor executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     // max records# in db
     public static final int MAX_RECORDS = 10000;
     
@@ -207,8 +209,37 @@ public class DatabaseHelper {
     public LiveData<List<SensorData>> getThresholdBreachesWithCustomThresholds(Context context) {
         float dustThreshold = getCustomDustThreshold(context);
         float noiseThreshold = getCustomNoiseThreshold(context);
+        
+        // Use the version that supports filtering
+        if(com.team12.smarthat.utils.DataFilterHelper.getInstance().getCurrentFilter() != null) {
+            return getThresholdBreaches(dustThreshold, noiseThreshold);
+        }
+        
+        // If no filtering needed, use original version with gas threshold
         float gasThreshold = getCustomGasThreshold(context);
         return getThresholdBreaches(dustThreshold, noiseThreshold, gasThreshold);
+    }
+    
+    /**
+     * Get threshold breaches with filter handling support
+     * @param dustThreshold Custom dust threshold
+     * @param noiseThreshold Custom noise threshold
+     * @return LiveData list of threshold breaches with filter support
+     */
+    public LiveData<List<SensorData>> getThresholdBreaches(float dustThreshold, float noiseThreshold) {
+        float gasThreshold = Constants.GAS_THRESHOLD; // Use default gas threshold as fallback
+        
+        // Check if date filtering is needed
+        com.team12.smarthat.models.DataFilter filter = com.team12.smarthat.utils.DataFilterHelper.getInstance().getCurrentFilter();
+        if (filter != null) {
+            // Apply date range filtering
+            return dao.getThresholdBreaches(
+                dustThreshold, noiseThreshold, gasThreshold, 
+                filter.getStartTimestamp(), filter.getEndTimestamp());
+        }
+        
+        // No date filtering
+        return dao.getThresholdBreaches(dustThreshold, noiseThreshold, gasThreshold);
     }
     
     /**

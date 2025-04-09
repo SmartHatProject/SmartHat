@@ -337,14 +337,8 @@ public class NotificationUtils {
             return true;
         }
         
-        boolean typeEnabled = context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
-                .getBoolean(prefKey, true); // Default to enabled
-                
-        if (Constants.ENABLE_DEBUG_LOGGING) {
-            Log.d(Constants.TAG_MAIN, alertType + " notifications enabled: " + typeEnabled);
-        }
-        
-        return typeEnabled;
+        return context.getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE)
+               .getBoolean(prefKey, true);
     }
     
     /**

@@ -32,6 +32,10 @@ public interface SensorDataDao {
     @Query("SELECT * FROM sensor_data WHERE (sensorType = 'dust' AND value > :dustThreshold) OR (sensorType = 'noise' AND value > :noiseThreshold) OR (sensorType = 'gas' AND value > :gasThreshold) ORDER BY timestamp DESC")
     LiveData<List<SensorData>> getThresholdBreaches(float dustThreshold, float noiseThreshold, float gasThreshold);
 
+    // get threshold breaches with date range filtering
+    @Query("SELECT * FROM sensor_data WHERE ((sensorType = 'dust' AND value > :dustThreshold) OR (sensorType = 'noise' AND value > :noiseThreshold) OR (sensorType = 'gas' AND value > :gasThreshold)) AND timestamp >= :startTimestamp AND timestamp <= :endTimestamp ORDER BY timestamp DESC")
+    LiveData<List<SensorData>> getThresholdBreaches(float dustThreshold, float noiseThreshold, float gasThreshold, long startTimestamp, long endTimestamp);
+
     // get total count of records
     @Query("SELECT COUNT(*) FROM sensor_data")
     int getCount();

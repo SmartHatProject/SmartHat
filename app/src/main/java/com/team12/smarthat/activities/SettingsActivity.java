@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -72,6 +73,19 @@ public class SettingsActivity extends AppCompatActivity {
             // Initialize permission manager
             permissionManager = new PermissionManager(this);
             
+            // Load threshold values synchronously to prevent flash of default values
+            if (savedInstanceState != null) {
+                dustThreshold = savedInstanceState.getFloat("dust_threshold", Constants.DUST_THRESHOLD);
+                noiseThreshold = savedInstanceState.getFloat("noise_threshold", Constants.NOISE_THRESHOLD);
+                gasThreshold = savedInstanceState.getFloat("gas_threshold", Constants.GAS_THRESHOLD);
+                thresholdsChanged = savedInstanceState.getBoolean("thresholds_changed", false);
+            } else {
+                // Load from SharedPreferences
+                dustThreshold = preferences.getFloat(Constants.PREF_DUST_THRESHOLD, Constants.DUST_THRESHOLD);
+                noiseThreshold = preferences.getFloat(Constants.PREF_NOISE_THRESHOLD, Constants.NOISE_THRESHOLD);
+                gasThreshold = preferences.getFloat(Constants.PREF_GAS_THRESHOLD, Constants.GAS_THRESHOLD);
+            }
+            
             // Defer all heavy initialization to a post-UI render handler with longer delay
             new Handler().postDelayed(() -> initializeSettingsActivity(savedInstanceState), 300);
         } catch (Exception e) {
@@ -104,57 +118,20 @@ public class SettingsActivity extends AppCompatActivity {
             // Initialize notification utils (reusing existing class)
             // Already initialized in onCreate
             
-            // Get preferences in background thread
-            runInBackground(() -> {
-                try {
-                    // Preferences are now initialized in onCreate
-                    // preferences = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
-                    
-                    // Restore state if available
-                    final float dustThresholdValue, noiseThresholdValue, gasThresholdValue;
-                    final boolean thresholdsChangedValue;
-                    
-                    if (savedInstanceState != null) {
-                        dustThresholdValue = savedInstanceState.getFloat("dust_threshold", Constants.DUST_THRESHOLD);
-                        noiseThresholdValue = savedInstanceState.getFloat("noise_threshold", Constants.NOISE_THRESHOLD);
-                        gasThresholdValue = savedInstanceState.getFloat("gas_threshold", Constants.GAS_THRESHOLD);
-                        thresholdsChangedValue = savedInstanceState.getBoolean("thresholds_changed", false);
-                    } else {
-                        // Load saved thresholds
-                        dustThresholdValue = preferences.getFloat(Constants.PREF_DUST_THRESHOLD, Constants.DUST_THRESHOLD);
-                        noiseThresholdValue = preferences.getFloat(Constants.PREF_NOISE_THRESHOLD, Constants.NOISE_THRESHOLD);
-                        gasThresholdValue = preferences.getFloat(Constants.PREF_GAS_THRESHOLD, Constants.GAS_THRESHOLD);
-                        thresholdsChangedValue = false;
-                    }
-                    
-                    // Update UI on main thread with loaded values
-                    new Handler(Looper.getMainLooper()).post(() -> {
-                        try {
-                            // Update member variables with loaded values
-                            dustThreshold = dustThresholdValue;
-                            noiseThreshold = noiseThresholdValue;
-                            gasThreshold = gasThresholdValue;
-                            thresholdsChanged = thresholdsChangedValue;
-                            
-                            // Stagger UI setup with longer delays between operations
-                            new Handler().post(() -> setupNotificationToggles());
-                            new Handler().postDelayed(() -> setupThresholdSliders(), 200);
-                            new Handler().postDelayed(() -> setupResetButton(), 400);
-                            
-                            // Update threshold text displays after sliders are set up
-                            new Handler().postDelayed(() -> {
-                                updateDustThresholdText(dustThreshold);
-                                updateNoiseThresholdText(noiseThreshold);
-                                updateGasThresholdText(gasThreshold);
-                            }, 600);
-                        } catch (Exception e) {
-                            Log.e(Constants.TAG_MAIN, "Error updating UI with loaded values: " + e.getMessage());
-                        }
-                    });
-                } catch (Exception e) {
-                    Log.e(Constants.TAG_MAIN, "Error loading preferences: " + e.getMessage());
-                }
-            });
+            // Set up UI components with already loaded values
+            setupNotificationToggles();
+            setupThresholdSliders();
+            setupResetButton();
+            
+            // Update threshold text displays
+            updateDustThresholdText(dustThreshold);
+            updateNoiseThresholdText(noiseThreshold);
+            updateGasThresholdText(gasThreshold);
+            
+            // Show threshold section with correct values
+            binding.thresholdSectionHeader.setVisibility(View.VISIBLE);
+            binding.thresholdCard.setVisibility(View.VISIBLE);
+            
         } catch (Exception e) {
             Log.e(Constants.TAG_MAIN, "Error in initializeSettingsActivity: " + e.getMessage());
         }
@@ -205,31 +182,10 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         
-        // Ensure thresholds are saved when activity is paused
+        // Save any threshold changes when leaving activity
         if (thresholdsChanged) {
-            saveDustThreshold();
-            saveNoiseThreshold();
-            saveGasThreshold();
-            thresholdsChanged = false;
-            Log.d(Constants.TAG_MAIN, "Thresholds saved on activity pause");
-        }
-    }
-    
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        
-        // Handle low memory by releasing resources
-        try {
-            Log.w(Constants.TAG_MAIN, "SettingsActivity: onLowMemory called - releasing resources");
-            
-            // Clear any pending operations
-            new Handler().removeCallbacksAndMessages(null);
-            
-            // Release cached resources
-            System.gc();
-        } catch (Exception e) {
-            Log.e(Constants.TAG_MAIN, "Error in onLowMemory: " + e.getMessage());
+            // Save all thresholds in a single batch operation
+            saveAllThresholds();
         }
     }
     
@@ -524,8 +480,8 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(Slider slider) {
                 // Save when user stops interacting with slider
-                saveDustThreshold();
-                Log.d(Constants.TAG_MAIN, "Dust threshold saved: " + dustThreshold);
+                saveAllThresholds();
+                Log.d(Constants.TAG_MAIN, "Dust threshold saved via batch operation");
             }
         });
     }
@@ -560,8 +516,8 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(Slider slider) {
                 // Save when user stops interacting with slider
-                saveNoiseThreshold();
-                Log.d(Constants.TAG_MAIN, "Noise threshold saved: " + noiseThreshold);
+                saveAllThresholds();
+                Log.d(Constants.TAG_MAIN, "Noise threshold saved via batch operation");
             }
         });
     }
@@ -596,8 +552,8 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(Slider slider) {
                 // Save when user stops interacting with slider
-                saveGasThreshold();
-                Log.d(Constants.TAG_MAIN, "Gas threshold saved: " + gasThreshold);
+                saveAllThresholds();
+                Log.d(Constants.TAG_MAIN, "Gas threshold saved via batch operation");
             }
         });
     }
@@ -619,10 +575,8 @@ public class SettingsActivity extends AppCompatActivity {
             updateNoiseThresholdText(noiseThreshold);
             updateGasThresholdText(gasThreshold);
             
-            // Save default values
-            saveDustThreshold();
-            saveNoiseThreshold();
-            saveGasThreshold();
+            // Save all threshold values in one batch operation
+            saveAllThresholds();
             
             Log.d(Constants.TAG_MAIN, "Thresholds reset to defaults");
         });
@@ -735,44 +689,22 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
     
-    private void saveDustThreshold() {
+    /**
+     * Save all thresholds in a single batch operation
+     * More efficient than calling individual save methods
+     */
+    private void saveAllThresholds() {
         runInBackground(() -> {
             try {
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putFloat(Constants.PREF_DUST_THRESHOLD, dustThreshold);
-                editor.apply();
-                Log.d(Constants.TAG_MAIN, "Dust threshold set to: " + dustThreshold);
-                thresholdsChanged = false;
-            } catch (Exception e) {
-                Log.e(Constants.TAG_MAIN, "Error saving dust threshold: " + e.getMessage());
-            }
-        });
-    }
-    
-    private void saveNoiseThreshold() {
-        runInBackground(() -> {
-            try {
-                SharedPreferences.Editor editor = preferences.edit();
                 editor.putFloat(Constants.PREF_NOISE_THRESHOLD, noiseThreshold);
-                editor.apply();
-                Log.d(Constants.TAG_MAIN, "Noise threshold set to: " + noiseThreshold);
-                thresholdsChanged = false;
-            } catch (Exception e) {
-                Log.e(Constants.TAG_MAIN, "Error saving noise threshold: " + e.getMessage());
-            }
-        });
-    }
-
-    private void saveGasThreshold() {
-        runInBackground(() -> {
-            try {
-                SharedPreferences.Editor editor = preferences.edit();
                 editor.putFloat(Constants.PREF_GAS_THRESHOLD, gasThreshold);
                 editor.apply();
-                Log.d(Constants.TAG_MAIN, "Gas threshold set to: " + gasThreshold);
+                Log.d(Constants.TAG_MAIN, "All thresholds saved in batch operation");
                 thresholdsChanged = false;
             } catch (Exception e) {
-                Log.e(Constants.TAG_MAIN, "Error saving gas threshold: " + e.getMessage());
+                Log.e(Constants.TAG_MAIN, "Error saving thresholds: " + e.getMessage());
             }
         });
     }
