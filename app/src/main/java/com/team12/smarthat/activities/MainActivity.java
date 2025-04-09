@@ -620,6 +620,7 @@ public class MainActivity extends AppCompatActivity implements
                     Log.d(Constants.TAG_MAIN, "User requested disconnect from connected state");
                     if (!testModeActive) {
                         btIntegration.setUserDisconnected(true);
+                        connectionManager.setUserDisconnected(true);
                     }
                     activeManager.disconnect();
                     
@@ -636,6 +637,7 @@ public class MainActivity extends AppCompatActivity implements
                     // Call disconnect on the active manager to cancel the connection attempt
                     if (!testModeActive) {
                         btIntegration.setUserDisconnected(true);
+                        connectionManager.setUserDisconnected(true);
                     }
                     activeManager.disconnect();
                     
@@ -1100,6 +1102,9 @@ public class MainActivity extends AppCompatActivity implements
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     private void startReconnectionProcess() {
+        if (connectionManager.isUserDisconnected()) {
+            return;
+        }
 
         BluetoothDevice lastDevice = connectionManager.getLastConnectedDevice();
         if (lastDevice == null) {
