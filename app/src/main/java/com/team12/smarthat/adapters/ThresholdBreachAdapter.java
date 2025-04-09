@@ -8,6 +8,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.os.Build;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,13 +31,20 @@ public class ThresholdBreachAdapter extends RecyclerView.Adapter<ThresholdBreach
     private final Context context;
     private final SimpleDateFormat dateFormat;
     
-    // Track selection state
-    private boolean selectionMode = false;
-    private final Set<Integer> selectedItems = new HashSet<>();
+    // Callback for item deletion
+    private ItemDeleteListener deleteListener;
+    
+    public interface ItemDeleteListener {
+        void onDeleteItem(int id);
+    }
     
     public ThresholdBreachAdapter(Context context) {
         this.context = context;
         this.dateFormat = new SimpleDateFormat("MM/dd/yy HH:mm", Locale.getDefault());
+    }
+    
+    public void setDeleteListener(ItemDeleteListener listener) {
+        this.deleteListener = listener;
     }
     
     @NonNull
@@ -59,19 +67,15 @@ public class ThresholdBreachAdapter extends RecyclerView.Adapter<ThresholdBreach
         boolean isNoiseSensor = sensorType.equals("noise");
         boolean isGasSensor = sensorType.equals("gas");
         
-        // Selection checkbox visibility and state
-        holder.cbSelectItem.setVisibility(selectionMode ? View.VISIBLE : View.GONE);
-        holder.cbSelectItem.setChecked(selectedItems.contains(data.getId()));
+        // Hide the checkbox since we're not using selection mode
+        holder.cbSelectItem.setVisibility(View.GONE);
         
-        // Apply lighter highlight to selected items for better performance
-        if (selectionMode && selectedItems.contains(data.getId())) {
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.primary_container));
-        } else {
-            holder.itemView.setBackground(null);
-        }
-        
-        // Set up click listeners - optimized for Android 12
-        setupClickListeners(holder, data, position);
+        // Set up delete button click listener
+        holder.btnDeleteItem.setOnClickListener(v -> {
+            if (deleteListener != null) {
+                deleteListener.onDeleteItem(data.getId());
+            }
+        });
         
         // Set sensor icon based on sensor type
         int iconResource;
@@ -112,24 +116,6 @@ public class ThresholdBreachAdapter extends RecyclerView.Adapter<ThresholdBreach
         thresholdStatus.setBackgroundResource(R.drawable.bg_threshold_chip);
     }
     
-    private void setupClickListeners(ViewHolder holder, SensorData data, int position) {
-        View.OnClickListener clickListener = v -> {
-            if (selectionMode) {
-                toggleSelection(data.getId());
-                notifyItemChanged(position);
-            }
-        };
-        
-        // Optimize touch events for Android 12
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            holder.itemView.setOnClickListener(clickListener);
-            holder.cbSelectItem.setOnClickListener(clickListener);
-        } else {
-            holder.itemView.setOnClickListener(clickListener);
-            holder.cbSelectItem.setOnClickListener(clickListener);
-        }
-    }
-    
     private String formatSensorValue(SensorData data) {
         boolean isDustSensor = data.getSensorType().equals("dust");
         boolean isNoiseSensor = data.getSensorType().equals("noise");
@@ -157,56 +143,6 @@ public class ThresholdBreachAdapter extends RecyclerView.Adapter<ThresholdBreach
         notifyDataSetChanged();
     }
     
-    /**
-     * Toggle selection mode
-     * @param enabled true to enable selection mode, false to disable
-     */
-    public void setSelectionMode(boolean enabled) {
-        if (this.selectionMode != enabled) {
-            this.selectionMode = enabled;
-            if (!enabled) {
-                selectedItems.clear();
-            }
-            notifyDataSetChanged();
-        }
-    }
-    
-    /**
-     * Toggle item selection
-     * @param id ID of the item to toggle
-     */
-    private void toggleSelection(int id) {
-        if (selectedItems.contains(id)) {
-            selectedItems.remove(id);
-        } else {
-            selectedItems.add(id);
-        }
-    }
-    
-    /**
-     * Get all selected item IDs
-     * @return List of selected IDs
-     */
-    public List<Integer> getSelectedIds() {
-        return new ArrayList<>(selectedItems);
-    }
-    
-    /**
-     * Check if any items are selected
-     * @return true if there are selected items
-     */
-    public boolean hasSelections() {
-        return !selectedItems.isEmpty();
-    }
-    
-    /**
-     * Clear all selections
-     */
-    public void clearSelections() {
-        selectedItems.clear();
-        notifyDataSetChanged();
-    }
-    
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final CheckBox cbSelectItem;
         private final ImageView ivSensorIcon;
@@ -214,6 +150,7 @@ public class ThresholdBreachAdapter extends RecyclerView.Adapter<ThresholdBreach
         private final TextView tvSensorValue;
         private final TextView tvTimestamp;
         private final TextView tvThresholdStatus;
+        private final ImageButton btnDeleteItem;
         
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -223,6 +160,7 @@ public class ThresholdBreachAdapter extends RecyclerView.Adapter<ThresholdBreach
             tvSensorValue = itemView.findViewById(R.id.tv_sensor_value);
             tvTimestamp = itemView.findViewById(R.id.tv_timestamp);
             tvThresholdStatus = itemView.findViewById(R.id.tv_threshold_status);
+            btnDeleteItem = itemView.findViewById(R.id.btn_delete_item);
         }
     }
 } 

@@ -35,10 +35,7 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
     private TextView tvNoData;
     private ThresholdBreachAdapter adapter;
     private DatabaseHelper databaseHelper;
-    private LinearLayout actionButtonsLayout;
-    private Button btnCancelSelection, btnDeleteSelected, btnDeleteAll;
-    private FloatingActionButton fabSelect;
-    private boolean isInSelectionMode = false;
+    private Button btnDeleteAll;
     private Toolbar toolbar;
     private DataFilterHelper dataFilterHelper;
 
@@ -71,11 +68,7 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
     private void initializeComponents() {
         recyclerView = findViewById(R.id.rv_threshold_history);
         tvNoData = findViewById(R.id.tv_no_data);
-        actionButtonsLayout = findViewById(R.id.action_buttons_layout);
-        btnCancelSelection = findViewById(R.id.btn_cancel_selection);
-        btnDeleteSelected = findViewById(R.id.btn_delete_selected);
         btnDeleteAll = findViewById(R.id.btn_delete_all);
-        fabSelect = findViewById(R.id.fab_select);
         
         // Optimize recyclerview for Pixel 4a on Android 12
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -88,6 +81,11 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
         // Set up adapter with optimized configuration
         adapter = new ThresholdBreachAdapter(this);
         recyclerView.setAdapter(adapter);
+        
+        // Set delete listener for individual item deletion
+        adapter.setDeleteListener(id -> {
+            confirmDeleteSingleItem(id);
+        });
         
         // Optimize scroll performance for Android 12
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -103,64 +101,8 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
     }
     
     private void setupListeners() {
-        // FAB click listener
-        fabSelect.setOnClickListener(v -> toggleSelectionMode());
-        
-        // Cancel button click listener
-        btnCancelSelection.setOnClickListener(v -> toggleSelectionMode());
-        
-        // Delete button click listener
-        btnDeleteSelected.setOnClickListener(v -> {
-            if (adapter.hasSelections()) {
-                showDeleteConfirmationDialog();
-            } else {
-                Snackbar.make(recyclerView, "No items selected", Snackbar.LENGTH_SHORT).show();
-            }
-        });
-        
         // Delete All button click listener
         btnDeleteAll.setOnClickListener(v -> showDeleteAllConfirmationDialog());
-    }
-    
-    private void toggleSelectionMode() {
-        isInSelectionMode = !isInSelectionMode;
-        
-        // Update UI
-        actionButtonsLayout.setVisibility(isInSelectionMode ? View.VISIBLE : View.GONE);
-        btnDeleteAll.setVisibility(isInSelectionMode ? View.GONE : View.VISIBLE);
-        
-        // Change FAB icon with animation for Android 12 style
-        fabSelect.animate().scaleX(0.5f).scaleY(0.5f).setDuration(100).withEndAction(() -> {
-            fabSelect.setImageResource(isInSelectionMode 
-                    ? R.drawable.ic_close
-                    : R.drawable.ic_edit_select);
-            fabSelect.animate().scaleX(1f).scaleY(1f).setDuration(100).start();
-        }).start();
-        
-        // Update adapter
-        adapter.setSelectionMode(isInSelectionMode);
-        
-        // Clear selections when exiting selection mode
-        if (!isInSelectionMode) {
-            adapter.clearSelections();
-        }
-    }
-    
-    private void showDeleteConfirmationDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle("Delete Selected")
-                .setMessage("Are you sure you want to delete the selected items? This action cannot be undone.")
-                .setPositiveButton("Delete", (dialog, which) -> deleteSelectedItems())
-                .setNegativeButton("Cancel", null);
-        
-        AlertDialog dialog = builder.create();
-        dialog.setOnShowListener(dialogInterface -> {
-            // Style the buttons with Material You colors for Android 12
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.error));
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.primary));
-        });
-        
-        dialog.show();
     }
     
     private void showDeleteAllConfirmationDialog() {
@@ -183,18 +125,26 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
         dialog.show();
     }
     
-    private void deleteSelectedItems() {
-        List<Integer> selectedIds = adapter.getSelectedIds();
+    private void confirmDeleteSingleItem(int id) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("Delete Item")
+                .setMessage("Delete this threshold breach record?")
+                .setPositiveButton("Delete", (dialog, which) -> deleteThresholdBreach(id))
+                .setNegativeButton("Cancel", null);
         
-        if (!selectedIds.isEmpty()) {
-            databaseHelper.deleteThresholdBreaches(selectedIds);
-            toggleSelectionMode(); // Exit selection mode
-            
-            // Use Snackbar for Material Design 3 style feedback
-            Snackbar.make(recyclerView, 
-                    selectedIds.size() + " items deleted", 
-                    Snackbar.LENGTH_SHORT).show();
-        }
+        AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(dialogInterface -> {
+            // Style the buttons with Material You colors for Android 12
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.error));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.primary));
+        });
+        
+        dialog.show();
+    }
+    
+    private void deleteThresholdBreach(int id) {
+        databaseHelper.deleteThresholdBreach(id);
+        Snackbar.make(recyclerView, "Item deleted", Snackbar.LENGTH_SHORT).show();
     }
     
     private void loadThresholdBreaches() {
@@ -206,22 +156,10 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
                     tvNoData.setVisibility(View.GONE);
                     adapter.setBreaches(sensorDataList);
                     btnDeleteAll.setVisibility(View.VISIBLE);
-                    fabSelect.show();
-                    
-                    // Add optimization for redraw
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        recyclerView.post(() -> recyclerView.invalidateItemDecorations());
-                    }
                 } else {
                     recyclerView.setVisibility(View.GONE);
                     tvNoData.setVisibility(View.VISIBLE);
                     btnDeleteAll.setVisibility(View.GONE);
-                    fabSelect.hide();
-                    
-                    // Exit selection mode if active
-                    if (isInSelectionMode) {
-                        toggleSelectionMode();
-                    }
                 }
                 
                 // Invalidate options menu to update action items

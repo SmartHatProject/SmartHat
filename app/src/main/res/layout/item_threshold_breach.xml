@@ -99,6 +99,17 @@
                 android:text="@string/threshold_exceeded"
                 android:textColor="@color/on_error_container"
                 android:textSize="10sp" />
+            
+            <!-- Delete button for individual items -->
+            <ImageButton
+                android:id="@+id/btn_delete_item"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Delete item"
+                android:src="@android:drawable/ic_menu_delete"
+                app:tint="@color/error" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView> 

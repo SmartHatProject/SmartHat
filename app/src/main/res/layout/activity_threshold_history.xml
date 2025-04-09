@@ -71,44 +71,6 @@
             app:layout_constraintTop_toBottomOf="@id/history_header_layout"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Action buttons layout -->
-        <LinearLayout
-            android:id="@+id/action_buttons_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_small"
-            android:layout_marginEnd="@dimen/spacing_small"
-            android:gravity="end"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/history_header_layout">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_cancel_selection"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="@dimen/min_touch_target"
-                android:minHeight="40dp"
-                android:paddingHorizontal="12dp"
-                android:textSize="12sp"
-                android:text="Cancel"
-                android:textColor="@color/primary" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_delete_selected"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="@dimen/min_touch_target"
-                android:minHeight="40dp"
-                android:paddingHorizontal="12dp"
-                android:textSize="12sp"
-                android:text="Delete"
-                android:textColor="@color/error" />
-        </LinearLayout>
-
         <!-- Horizontal rule -->
         <View
             android:id="@+id/divider"
@@ -150,22 +112,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- FAB for selection mode -->
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_select"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/spacing_medium"
-            android:src="@drawable/ic_edit_select"
-            android:contentDescription="Select items"
-            app:fabSize="mini"
-            app:backgroundTint="@color/primary"
-            app:tint="@color/on_primary"
-            app:borderWidth="0dp"
-            app:elevation="4dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout> 
