@@ -34,9 +34,27 @@ public class ThresholdBreachAdapter extends RecyclerView.Adapter<ThresholdBreach
     private boolean selectionMode = false;
     private final Set<Integer> selectedItems = new HashSet<>();
     
+    // Callback for item deletion
+    private ItemDeleteListener deleteListener;
+    
+    // Callback for selection changes
+    private SelectionListener selectionListener;
+    
+    public interface ItemDeleteListener {
+        void onDeleteItem(int id);
+    }
+    
+    public interface SelectionListener {
+        void onSelectionChanged(int count);
+    }
+    
     public ThresholdBreachAdapter(Context context) {
         this.context = context;
-        this.dateFormat = new SimpleDateFormat("MM/dd/yy HH:mm", Locale.getDefault());
+        this.dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault());
+    }
+    
+    public void setDeleteListener(ItemDeleteListener listener) {
+        this.deleteListener = listener;
     }
     
     @NonNull
@@ -110,6 +128,29 @@ public class ThresholdBreachAdapter extends RecyclerView.Adapter<ThresholdBreach
         TextView thresholdStatus = holder.tvThresholdStatus;
         thresholdStatus.setText(R.string.threshold_exceeded);
         thresholdStatus.setBackgroundResource(R.drawable.bg_threshold_chip);
+        
+        // Add long press listener for individual delete
+        holder.itemView.setOnLongClickListener(v -> {
+            if (!selectionMode && deleteListener != null) {
+                showDeleteConfirmation(data);
+                return true;
+            }
+            return false;
+        });
+    }
+    
+    private void showDeleteConfirmation(SensorData data) {
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context)
+                .setTitle("Delete Item")
+                .setMessage("Delete this threshold breach record?")
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    if (deleteListener != null) {
+                        deleteListener.onDeleteItem(data.getId());
+                    }
+                })
+                .setNegativeButton("Cancel", null);
+        
+        builder.create().show();
     }
     
     private void setupClickListeners(ViewHolder holder, SensorData data, int position) {
@@ -181,6 +222,11 @@ public class ThresholdBreachAdapter extends RecyclerView.Adapter<ThresholdBreach
         } else {
             selectedItems.add(id);
         }
+        
+        // Notify selection listener
+        if (selectionListener != null) {
+            selectionListener.onSelectionChanged(selectedItems.size());
+        }
     }
     
     /**
@@ -204,7 +250,21 @@ public class ThresholdBreachAdapter extends RecyclerView.Adapter<ThresholdBreach
      */
     public void clearSelections() {
         selectedItems.clear();
+        
+        // Notify selection listener
+        if (selectionListener != null) {
+            selectionListener.onSelectionChanged(0);
+        }
+        
         notifyDataSetChanged();
+    }
+    
+    /**
+     * Set selection change listener
+     * @param listener The listener to call when selection changes
+     */
+    public void setSelectionListener(SelectionListener listener) {
+        this.selectionListener = listener;
     }
     
     public static class ViewHolder extends RecyclerView.ViewHolder {

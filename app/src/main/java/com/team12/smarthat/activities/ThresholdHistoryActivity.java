@@ -139,11 +139,19 @@ public class ThresholdHistoryActivity extends AppCompatActivity {
         
         // Update adapter
         adapter.setSelectionMode(isInSelectionMode);
+        adapter.setSelectionListener(count -> updateDeleteButtonText(count));
         
         // Clear selections when exiting selection mode
         if (!isInSelectionMode) {
             adapter.clearSelections();
+        } else {
+            updateDeleteButtonText(0);
         }
+    }
+    
+    private void updateDeleteButtonText(int count) {
+        btnDeleteSelected.setText(count > 0 ? "Delete (" + count + ")" : "Delete");
+        btnDeleteSelected.setEnabled(count > 0);
     }
     
     private void showDeleteConfirmationDialog() {

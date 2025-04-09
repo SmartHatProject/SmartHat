@@ -1207,4 +1207,14 @@ public class BleConnectionManager {
     protected CharacteristicChangeListener getCharacteristicChangeListener() {
         return characteristicChangeListener;
     }
+    
+    /**
+     * Check if the disconnection was initiated by the user
+     * This is used to prevent automatic reconnection attempts when the user intentionally disconnected
+     * @return true if the user initiated the disconnection
+     */
+    public boolean isUserDisconnected() {
+        ConnectionState state = connectionState.getValue();
+        return state == ConnectionState.DISCONNECTING || state == ConnectionState.DISCONNECTED;
+    }
 }  
