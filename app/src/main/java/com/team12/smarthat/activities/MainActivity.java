@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ImageView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -440,23 +442,25 @@ public class MainActivity extends AppCompatActivity implements
         
         // Configure gas gauge
         if (gasGauge != null) {
-            gasGauge.setMaxSpeed(500);
+            gasGauge.setMaxSpeed(5000);
             gasGauge.setUnit("PPM");
             gasGauge.setSpeedTextColor(Color.BLACK);
             gasGauge.setCenterCircleColor(Color.WHITE);
             gasGauge.setMarkColor(Color.DKGRAY);
-            gasGauge.setTextSize(30f);
-            gasGauge.setUnitTextSize(15f);
+            gasGauge.setTextSize(24f);
+            gasGauge.setUnitTextSize(12f);
             gasGauge.setWithTremble(false);
             
-            // Get custom gas threshold to configure the sections
-            float gasThreshold = getCustomGasThreshold();
-            float thresholdRatio = Math.min(gasThreshold / gasGauge.getMaxSpeed(), 0.9f);
-            
             gasGauge.clearSections();
+
             gasGauge.addSections(
-                new Section(0f, thresholdRatio, Color.parseColor("#4CAF50"), 30),
-                new Section(thresholdRatio, 1f, Color.parseColor("#F44336"), 30)
+                    new Section(0f, 350 / 5000f, Color.parseColor("#2196F3"), 30),
+                    new Section(350 / 5000f, 600 / 5000f, Color.parseColor("#388E3c"), 30),
+                    new Section(600 / 5000f, 800 / 5000f, Color.parseColor("#689F38"), 30),
+                    new Section(800 / 5000f, 1000 / 5000f, Color.parseColor("#FBC02D"), 30),
+                    new Section( 1000 / 5000f, 1200 / 5000f, Color.parseColor("#FFA000"), 30),
+                    new Section(1200 / 5000f, 2000 / 5000f, Color.parseColor("#FF6F00"), 30),
+                    new Section(2000 / 5000f, 1f, Color.parseColor("#D32F2F"), 30)
             );
             
             // Set initial speed to 0
@@ -843,27 +847,33 @@ public class MainActivity extends AppCompatActivity implements
                 // Update helper text
                 if (connectionHelper != null) {
                     int helperTextResId;
+                    int helperTextColor;
                     switch (state) {
                         case CONNECTED:
                             helperTextResId = testModeActive ? 
                                 R.string.helper_text_test_connected : 
                                 R.string.helper_text_connected;
+                            helperTextColor = ContextCompat.getColor(this, R.color.connected);
                             break;
                         case CONNECTING:
                             helperTextResId = testModeActive ? 
                                 R.string.helper_text_test_connecting : 
                                 R.string.helper_text_connecting;
+                            helperTextColor = ContextCompat.getColor(this, R.color.connecting);
                             break;
                         case DISCONNECTING:
                             helperTextResId = R.string.helper_text_disconnecting;
+                            helperTextColor = ContextCompat.getColor(this, R.color.disconnected);
                             break;
                         case DISCONNECTED:
                             helperTextResId = testModeActive ? 
                                 R.string.helper_text_test_disconnected : 
                                 R.string.helper_text_disconnected;
+                            helperTextColor = ContextCompat.getColor(this, R.color.disconnected);
                             break;
                         default:
                             helperTextResId = R.string.helper_text_disconnected;
+                            helperTextColor = ContextCompat.getColor(this, R.color.disconnected);
                             break;
                     }
                     
@@ -892,6 +902,8 @@ public class MainActivity extends AppCompatActivity implements
                                 break;
                         }
                     }
+
+                    connectionHelper.setTextColor(helperTextColor);
                 }
                 
                 // Update test mode indicator visibility
@@ -972,10 +984,27 @@ public class MainActivity extends AppCompatActivity implements
                     gasGauge.speedTo(gasValue, 1000);
                     
                     // Update pointer color based on threshold
-                    if (data.getValue() > gasThreshold) {
+                    if(gasValue > 2000){
                         gasGauge.setPointerColor(Color.RED);
+                    } else if (gasValue > 1200) {
+                        gasGauge.setPointerColor(Color.parseColor("#FF6F00"));
+                    } else if (gasValue > 1000) {
+                        gasGauge.setPointerColor(Color.parseColor("#FFA000"));
+                    } else if (gasValue > 800) {
+                        gasGauge.setPointerColor(Color.parseColor("#FBC02D"));
+                    } else if (gasValue > 600) {
+                        gasGauge.setPointerColor(Color.parseColor("#689F38"));
+                    } else if (gasValue > 350) {
+                        gasGauge.setPointerColor(Color.parseColor("#388E3C"));
                     } else {
-                        gasGauge.setPointerColor(Color.DKGRAY);
+                        gasGauge.setPointerColor(Color.parseColor("#2196F3"));
+                    }
+
+                    ImageView customPointer = findViewById(R.id.custom_pointer);
+                    if(customPointer != null){
+                        float maxSpeed = gasGauge.getMaxSpeed();
+                        float rotationAngle = (gasValue/maxSpeed) * 180;
+                        customPointer.setRotation(rotationAngle -90);
                     }
                 }
                 

@@ -35,8 +35,8 @@ public class TestDataGenerator {
 
     // Gas value ranges
     private static final float MIN_GAS_VALUE = 5.0f;
-    private static final float MAX_GAS_VALUE = 300.0f;
-    private static final float HIGH_GAS_VALUE = 180.0f;
+    private static final float MAX_GAS_VALUE = 5000.0f;
+    private static final float HIGH_GAS_VALUE = 2000.0f;
     //NOTE FOR FUTURE: WE WILL INVENTUALLY GET RID OF SOME PARTS OF THIS (UNLESS...)
     // Test mode states
     public enum TestMode {

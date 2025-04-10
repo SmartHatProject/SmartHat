@@ -72,7 +72,7 @@
             style="@style/Widget.SmartHat.CardView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginTop="@dimen/spacing_medium"
             android:clickable="true"
             android:focusable="true"
             app:layout_constraintEnd_toEndOf="parent"
@@ -275,6 +275,7 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/spacing_medium">
 
+
                 <ImageView
                     android:id="@+id/gas_icon"
                     android:layout_width="@dimen/sensor_icon_size"
@@ -307,24 +308,35 @@
                     app:layout_constraintTop_toTopOf="@id/tv_gas_label"
                     app:layout_constraintBottom_toBottomOf="@id/tv_gas_label"/>
 
-                <com.github.anastr.speedviewlib.PointerSpeedometer
-                    android:id="@+id/gas_gauge"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/sensor_gauge_height"
-                    app:layout_constraintTop_toBottomOf="@id/tv_gas_label"
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_gas_label"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    app:sv_speedometerBackColor="@color/surface_variant"
-                    app:sv_withTremble="false"
-                    app:sv_indicatorLightColor="@color/primary"
-                    app:sv_speedTextColor="@color/text_primary"
-                    app:sv_unitTextColor="@color/text_secondary"
-                    app:sv_textSize="@dimen/text_caption"
-                    app:sv_unitTextSize="@dimen/text_small"
-                    app:sv_speedTextSize="@dimen/text_subtitle"
-                    app:sv_unitUnderSpeedText="true"
-                    android:layerType="hardware" />
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <com.github.anastr.speedviewlib.PointerSpeedometer
+                        android:id="@+id/gas_gauge"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_gravity="center"
+
+                        app:sv_indicatorLightColor="@color/primary"
+                        app:sv_speedTextColor="@color/text_primary"
+                        app:sv_withTremble="false"
+                    />
+
+                    <ImageView
+                        android:id="@+id/custom_pointer"
+                        android:layout_width="6dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/custom_pointer"
+                        android:rotation="90"
+                    />
+
+            </FrameLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
