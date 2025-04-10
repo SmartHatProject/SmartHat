@@ -209,14 +209,14 @@ public class DatabaseHelper {
     public LiveData<List<SensorData>> getThresholdBreachesWithCustomThresholds(Context context) {
         float dustThreshold = getCustomDustThreshold(context);
         float noiseThreshold = getCustomNoiseThreshold(context);
+        float gasThreshold = getCustomGasThreshold(context);
         
         // Use the version that supports filtering
         if(com.team12.smarthat.utils.DataFilterHelper.getInstance().getCurrentFilter() != null) {
-            return getThresholdBreaches(dustThreshold, noiseThreshold);
+            return getThresholdBreaches(dustThreshold, noiseThreshold, gasThreshold, context);
         }
         
         // If no filtering needed, use original version with gas threshold
-        float gasThreshold = getCustomGasThreshold(context);
         return getThresholdBreaches(dustThreshold, noiseThreshold, gasThreshold);
     }
     
@@ -224,11 +224,11 @@ public class DatabaseHelper {
      * Get threshold breaches with filter handling support
      * @param dustThreshold Custom dust threshold
      * @param noiseThreshold Custom noise threshold
+     * @param gasThreshold Custom gas threshold
+     * @param context Context for accessing shared preferences
      * @return LiveData list of threshold breaches with filter support
      */
-    public LiveData<List<SensorData>> getThresholdBreaches(float dustThreshold, float noiseThreshold) {
-        float gasThreshold = Constants.GAS_THRESHOLD; // Use default gas threshold as fallback
-        
+    public LiveData<List<SensorData>> getThresholdBreaches(float dustThreshold, float noiseThreshold, float gasThreshold, Context context) {
         // Check if date filtering is needed
         com.team12.smarthat.models.DataFilter filter = com.team12.smarthat.utils.DataFilterHelper.getInstance().getCurrentFilter();
         if (filter != null) {
