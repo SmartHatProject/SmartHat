@@ -23,7 +23,7 @@ public class SensorData {
     private static final float MAX_DUST_VALUE = 1000.0f;
     private static final float MAX_NOISE_VALUE = 150.0f;
     private static final long MAX_FUTURE_TIMESTAMP = 60000; // 1 minute in the future
-    private static final float MAX_GAS_VALUE = 400.0f;
+    private static final float MAX_GAS_VALUE = 5000.0f;
     
     @PrimaryKey(autoGenerate = true)
     private int id;
