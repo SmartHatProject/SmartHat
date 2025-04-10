@@ -9,9 +9,9 @@
     <dimen name="card_internal_padding">12dp</dimen>
     
     <!-- Standard spacing dimensions for consistent padding and margins -->
-    <dimen name="spacing_small">4dp</dimen>
-    <dimen name="spacing_medium">8dp</dimen>
-    <dimen name="spacing_large">16dp</dimen>
+    <dimen name="spacing_small">1dp</dimen>
+    <dimen name="spacing_medium">6dp</dimen>
+    <dimen name="spacing_large">12dp</dimen>
     <dimen name="spacing_xlarge">24dp</dimen>
     <dimen name="spacing_xxlarge">32dp</dimen>
     
@@ -26,7 +26,7 @@
     
     <!-- Sensor card dimensions - optimized for Pixel 4a display -->
     <dimen name="sensor_icon_size">28dp</dimen>
-    <dimen name="sensor_gauge_height">120dp</dimen>
+    <dimen name="sensor_gauge_height">180dp</dimen>
     <dimen name="sensor_meter_height">16dp</dimen>
     
     <!-- Button dimensions - enhanced for better touch experience -->
