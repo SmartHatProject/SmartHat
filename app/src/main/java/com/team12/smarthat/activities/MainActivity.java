@@ -454,6 +454,7 @@ public class MainActivity extends AppCompatActivity implements
             gasGauge.clearSections();
 
             gasGauge.addSections(
+
                     new Section(0f, 350 / 5000f, Color.parseColor("#2196F3"), 30),
                     new Section(350 / 5000f, 600 / 5000f, Color.parseColor("#388E3c"), 30),
                     new Section(600 / 5000f, 800 / 5000f, Color.parseColor("#689F38"), 30),
@@ -461,7 +462,7 @@ public class MainActivity extends AppCompatActivity implements
                     new Section( 1000 / 5000f, 1200 / 5000f, Color.parseColor("#FFA000"), 30),
                     new Section(1200 / 5000f, 2000 / 5000f, Color.parseColor("#FF6F00"), 30),
                     new Section(2000 / 5000f, 1f, Color.parseColor("#D32F2F"), 30)
-            );
+
             
             // Set initial speed to 0
             gasGauge.speedTo(0, 1000);
@@ -983,6 +984,7 @@ public class MainActivity extends AppCompatActivity implements
                     float gasValue = data.getValue();
                     gasGauge.speedTo(gasValue, 1000);
                     
+
                     // Update pointer color based on threshold
                     if(gasValue > 2000){
                         gasGauge.setPointerColor(Color.RED);
