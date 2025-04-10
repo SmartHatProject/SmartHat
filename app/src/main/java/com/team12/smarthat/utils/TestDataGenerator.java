@@ -35,8 +35,8 @@ public class TestDataGenerator {
 
     // Gas value ranges
     private static final float MIN_GAS_VALUE = 5.0f;
-    private static final float MAX_GAS_VALUE = 300.0f;
-    private static final float HIGH_GAS_VALUE = 180.0f;
+    private static final float MAX_GAS_VALUE = 5000.0f;
+    private static final float HIGH_GAS_VALUE = 1200.0f;
     //NOTE FOR FUTURE: WE WILL INVENTUALLY GET RID OF SOME PARTS OF THIS (UNLESS...)
     // Test mode states
     public enum TestMode {
@@ -330,19 +330,30 @@ public class TestDataGenerator {
         
         switch (currentMode) {
             case HIGH_GAS:
-                // High gas values
-                value = HIGH_GAS_VALUE + (random.nextFloat() * 50.0f);
+                // High gas values - negative health effects range (1200-2000)
+                value = 1200.0f + (random.nextFloat() * 800.0f);
                 break;
                 
             case RANDOM:
                 // Random values across entire range
-                value = MIN_GAS_VALUE + (random.nextFloat() * (MAX_GAS_VALUE - MIN_GAS_VALUE));
+                // Using weighted randomness to favor more realistic values
+                float randomValue = random.nextFloat();
+                if (randomValue < 0.6f) {
+                    // 60% chance for 5-1000 range (normal to caution)
+                    value = MIN_GAS_VALUE + (random.nextFloat() * 995.0f);
+                } else if (randomValue < 0.85f) {
+                    // 25% chance for 1000-2000 range (warning to health effects) 
+                    value = 1000.0f + (random.nextFloat() * 1000.0f);
+                } else {
+                    // 15% chance for 2000-5000 range (hazardous)
+                    value = 2000.0f + (random.nextFloat() * 3000.0f);
+                }
                 break;
                 
             case NORMAL:
             default:
-                // Normal values - below dangerous levels
-                value = MIN_GAS_VALUE + (random.nextFloat() * 80.0f);
+                // Normal values - healthy outside to acceptable (5-800)
+                value = MIN_GAS_VALUE + (random.nextFloat() * 795.0f);
                 break;
         }
         

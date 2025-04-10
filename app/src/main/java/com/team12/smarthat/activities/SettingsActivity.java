@@ -663,25 +663,28 @@ public class SettingsActivity extends AppCompatActivity {
         try {
             binding.txtGasThresholdValue.setText(String.format("%.1f ppm", threshold));
             
-            // Update risk level indicator
+            // Update risk level indicator based on the air quality chart
             TextView riskText = binding.txtGasThresholdRisk;
-            if (threshold <= 50.0f) {
-                riskText.setText("Good");
-                riskText.setTextColor(colorGreen);
-            } else if (threshold <= 100.0f) {
-                riskText.setText("Moderate");
+            if (threshold <= 350.0f) {
+                riskText.setText("Healthy outside air level");
                 riskText.setTextColor(colorBlue);
-            } else if (threshold <= 150.0f) {
-                riskText.setText("Unhealthy for Sensitive");
+            } else if (threshold <= 600.0f) {
+                riskText.setText("Healthy indoor climate");
+                riskText.setTextColor(colorGreen);
+            } else if (threshold <= 800.0f) {
+                riskText.setText("Acceptable level");
+                riskText.setTextColor(colorGreenLight);
+            } else if (threshold <= 1000.0f) {
+                riskText.setText("Ventilation required");
                 riskText.setTextColor(colorOrangeLight);
-            } else if (threshold <= 200.0f) {
-                riskText.setText("Unhealthy");
+            } else if (threshold <= 1200.0f) {
+                riskText.setText("Ventilation necessary");
                 riskText.setTextColor(colorOrangeDark);
-            } else if (threshold <= 300.0f) {
-                riskText.setText("Very Unhealthy");
+            } else if (threshold <= 2000.0f) {
+                riskText.setText("Negative health effects");
                 riskText.setTextColor(colorRedLight);
             } else {
-                riskText.setText("Hazardous");
+                riskText.setText("Hazardous prolonged exposure");
                 riskText.setTextColor(colorRedDark);
             }
         } catch (Exception e) {

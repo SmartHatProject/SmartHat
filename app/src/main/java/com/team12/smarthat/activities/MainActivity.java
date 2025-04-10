@@ -440,7 +440,7 @@ public class MainActivity extends AppCompatActivity implements
         
         // Configure gas gauge
         if (gasGauge != null) {
-            gasGauge.setMaxSpeed(500);
+            gasGauge.setMaxSpeed(5000);
             gasGauge.setUnit("PPM");
             gasGauge.setSpeedTextColor(Color.BLACK);
             gasGauge.setCenterCircleColor(Color.WHITE);
@@ -449,14 +449,16 @@ public class MainActivity extends AppCompatActivity implements
             gasGauge.setUnitTextSize(15f);
             gasGauge.setWithTremble(false);
             
-            // Get custom gas threshold to configure the sections
-            float gasThreshold = getCustomGasThreshold();
-            float thresholdRatio = Math.min(gasThreshold / gasGauge.getMaxSpeed(), 0.9f);
-            
+            // Clear and add sections matching air quality chart
             gasGauge.clearSections();
             gasGauge.addSections(
-                new Section(0f, thresholdRatio, Color.parseColor("#4CAF50"), 30),
-                new Section(thresholdRatio, 1f, Color.parseColor("#F44336"), 30)
+                new Section(0f, 350f/5000f, Color.parseColor("#0288D1"), 30),      // Blue - Healthy outside
+                new Section(350f/5000f, 600f/5000f, Color.parseColor("#388E3C"), 30), // Green - Healthy indoor
+                new Section(600f/5000f, 800f/5000f, Color.parseColor("#689F38"), 30), // Light Green - Acceptable
+                new Section(800f/5000f, 1000f/5000f, Color.parseColor("#FBC02D"), 30), // Yellow - Ventilation required
+                new Section(1000f/5000f, 1200f/5000f, Color.parseColor("#FFA000"), 30), // Amber - Ventilation necessary
+                new Section(1200f/5000f, 2000f/5000f, Color.parseColor("#FF6F00"), 30), // Dark Orange - Negative health
+                new Section(2000f/5000f, 1f, Color.parseColor("#D32F2F"), 30)      // Red - Hazardous
             );
             
             // Set initial speed to 0
@@ -971,11 +973,23 @@ public class MainActivity extends AppCompatActivity implements
                     float gasValue = data.getValue();
                     gasGauge.speedTo(gasValue, 1000);
                     
-                    // Update pointer color based on threshold
-                    if (data.getValue() > gasThreshold) {
-                        gasGauge.setPointerColor(Color.RED);
+                    // Update pointer color based on air quality thresholds
+                    if (gasValue > 5000) {
+                        gasGauge.setPointerColor(Color.parseColor("#B71C1C")); // Deep Red
+                    } else if (gasValue > 2000) {
+                        gasGauge.setPointerColor(Color.parseColor("#D32F2F")); // Red
+                    } else if (gasValue > 1200) {
+                        gasGauge.setPointerColor(Color.parseColor("#FF6F00")); // Dark Orange
+                    } else if (gasValue > 1000) {
+                        gasGauge.setPointerColor(Color.parseColor("#FFA000")); // Amber
+                    } else if (gasValue > 800) {
+                        gasGauge.setPointerColor(Color.parseColor("#FBC02D")); // Yellow
+                    } else if (gasValue > 600) {
+                        gasGauge.setPointerColor(Color.parseColor("#689F38")); // Light Green
+                    } else if (gasValue > 350) {
+                        gasGauge.setPointerColor(Color.parseColor("#388E3C")); // Green
                     } else {
-                        gasGauge.setPointerColor(Color.DKGRAY);
+                        gasGauge.setPointerColor(Color.parseColor("#0288D1")); // Blue
                     }
                 }
                 
