@@ -36,7 +36,7 @@ public class DataFilterFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+     
         View view = inflater.inflate(R.layout.fragment_data_filter, container, false);
         initializeComponents(view);
         setupUI();
@@ -68,20 +68,19 @@ public class DataFilterFragment extends DialogFragment {
     }
 
     private DataFilter createDataFilter() {
-        // Format the date string according to the expected format in DataFilter
-        // User enters MM-DD-YY but DataFilter expects MM/dd/yy HH:mm
+     
         String startDateRaw = etStartDate.getText().toString().trim();
         String endDateRaw = etEndDate.getText().toString().trim();
         
-        // Check for empty fields
+        
         if(startDateRaw.isEmpty() || endDateRaw.isEmpty()) {
             Toast.makeText(getActivity().getBaseContext(), "Please enter a start and an end date", Toast.LENGTH_SHORT).show();
             return null;
         }
         
-        // Convert from UI format to internal format
+        
         try {
-            // Replace dashes with slashes and add time
+            
             String startDateString = startDateRaw.replace("-", "/") + " 00:00";
             String endDateString = endDateRaw.replace("-", "/") + " 23:59";
             
@@ -93,7 +92,7 @@ public class DataFilterFragment extends DialogFragment {
                 return null;
             }
 
-            // Check that start date is before end date
+           
             if(!startDate.before(endDate)) {
                 Toast.makeText(getActivity().getBaseContext(), "Start date must be before the end date", Toast.LENGTH_SHORT).show();
                 return null;
@@ -107,7 +106,7 @@ public class DataFilterFragment extends DialogFragment {
     }
 
     private Date parseDate(String dateString) throws ParseException {
-        // Define valid date format as being MM-dd-yy. Any other format will be rejected.
+      
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DataFilter.TIMESTAMP_DATE_FORMAT, Locale.getDefault());
         simpleDateFormat.setLenient(false);
 

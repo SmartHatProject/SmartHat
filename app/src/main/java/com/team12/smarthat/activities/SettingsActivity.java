@@ -28,18 +28,18 @@ public class SettingsActivity extends AppCompatActivity {
     private SharedPreferences preferences;
     private PermissionManager permissionManager;
     
-    // Default thresholds from Constants
+    
     private float dustThreshold = Constants.DUST_THRESHOLD;
     private float noiseThreshold = Constants.NOISE_THRESHOLD;
     private float gasThreshold = Constants.GAS_THRESHOLD;
     
-    // Track if values have changed
+    
     private boolean thresholdsChanged = false;
     
-    // Cache color resources to avoid repeated lookups
+    
     private int colorGreen, colorGreenLight, colorBlue, colorOrangeLight, colorOrangeDark, colorRedLight, colorRedDark;
     
-    // Thread pool for background operations
+    
     private final ExecutorService backgroundExecutor = Executors.newSingleThreadExecutor();
     
     @Override
@@ -47,16 +47,16 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         
         try {
-            // Enable strict mode for development builds to detect UI thread issues
+            
             if (Constants.DEV_MODE) {
                 enableStrictMode();
             }
             
-            // Just set up basic content view in onCreate - defer everything else
+            
             binding = ActivitySettingsBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());
             
-            // Initialize toolbar - this is lightweight
+            
             setSupportActionBar(binding.settingsToolbar);
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -64,38 +64,36 @@ public class SettingsActivity extends AppCompatActivity {
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
             }
             
-            // Initialize notification utils early to avoid NPE in onResume
+           
             notificationUtils = new NotificationUtils(this);
             
-            // Initialize preferences early to avoid NPE in toggle setup
+         
             preferences = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
             
-            // Initialize permission manager
+            
             permissionManager = new PermissionManager(this);
             
-            // Load threshold values synchronously to prevent flash of default values
+           
             if (savedInstanceState != null) {
                 dustThreshold = savedInstanceState.getFloat("dust_threshold", Constants.DUST_THRESHOLD);
                 noiseThreshold = savedInstanceState.getFloat("noise_threshold", Constants.NOISE_THRESHOLD);
                 gasThreshold = savedInstanceState.getFloat("gas_threshold", Constants.GAS_THRESHOLD);
                 thresholdsChanged = savedInstanceState.getBoolean("thresholds_changed", false);
             } else {
-                // Load from SharedPreferences
+              
                 dustThreshold = preferences.getFloat(Constants.PREF_DUST_THRESHOLD, Constants.DUST_THRESHOLD);
                 noiseThreshold = preferences.getFloat(Constants.PREF_NOISE_THRESHOLD, Constants.NOISE_THRESHOLD);
                 gasThreshold = preferences.getFloat(Constants.PREF_GAS_THRESHOLD, Constants.GAS_THRESHOLD);
             }
             
-            // Defer all heavy initialization to a post-UI render handler with longer delay
+            
             new Handler().postDelayed(() -> initializeSettingsActivity(savedInstanceState), 300);
         } catch (Exception e) {
             Log.e(Constants.TAG_MAIN, "Error in onCreate: " + e.getMessage());
         }
     }
     
-    /**
-     * Enable StrictMode for development builds
-     */
+    
     private void enableStrictMode() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
             android.os.StrictMode.setThreadPolicy(new android.os.StrictMode.ThreadPolicy.Builder()
@@ -106,29 +104,21 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
     
-    /**
-     * Initialize the activity components after the UI has been rendered
-     * This prevents ANRs by ensuring UI is shown before heavy work starts
-     */
+    
     private void initializeSettingsActivity(Bundle savedInstanceState) {
         try {
-            // Cache color resources
+            
             cacheColorResources();
-            
-            // Initialize notification utils (reusing existing class)
-            // Already initialized in onCreate
-            
-            // Set up UI components with already loaded values
             setupNotificationToggles();
             setupThresholdSliders();
             setupResetButton();
             
-            // Update threshold text displays
+            
             updateDustThresholdText(dustThreshold);
             updateNoiseThresholdText(noiseThreshold);
             updateGasThresholdText(gasThreshold);
             
-            // Show threshold section with correct values
+         
             binding.thresholdSectionHeader.setVisibility(View.VISIBLE);
             binding.thresholdCard.setVisibility(View.VISIBLE);
             
@@ -139,7 +129,7 @@ public class SettingsActivity extends AppCompatActivity {
     
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        // Save current slider values for configuration changes
+       
         outState.putFloat("dust_threshold", dustThreshold);
         outState.putFloat("noise_threshold", noiseThreshold);
         outState.putFloat("gas_threshold", gasThreshold);
@@ -151,11 +141,11 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         
-        // Update all notification toggle states when activity resumes
+       
         // in case permissions or system notification settings changed
         updateNotificationToggleState();
         
-        // Ensure that child toggles enabled state matches main toggle state
+        
         boolean notificationsEnabled = binding.switchNotifications.isChecked();
         updateChildTogglesState(notificationsEnabled);
         
@@ -174,7 +164,7 @@ public class SettingsActivity extends AppCompatActivity {
             notificationUtils.setNotificationsEnabledForType("gas", false);
         }
         
-        // Log current state for debugging
+       
         Log.d(Constants.TAG_MAIN, "SettingsActivity resumed, notification state refreshed");
     }
     
@@ -182,9 +172,9 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         
-        // Save any threshold changes when leaving activity
+        // any threshold changes when leaving activity saved
         if (thresholdsChanged) {
-            // Save all thresholds in a single batch operation
+            
             saveAllThresholds();
         }
     }
@@ -193,12 +183,12 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         
-        // Clean up resources to prevent memory leaks
+        // clean up resources to prevent memory leaks
         try {
             // Shutdown executor service
             backgroundExecutor.shutdown();
             
-            // Clear references
+            // clear references
             binding = null;
             notificationUtils = null;
             permissionManager = null;
@@ -208,19 +198,19 @@ public class SettingsActivity extends AppCompatActivity {
     }
     
     private void loadSavedThresholds() {
-        // Load saved values or use defaults from Constants
+        
         dustThreshold = preferences.getFloat(Constants.PREF_DUST_THRESHOLD, Constants.DUST_THRESHOLD);
         noiseThreshold = preferences.getFloat(Constants.PREF_NOISE_THRESHOLD, Constants.NOISE_THRESHOLD);
         gasThreshold = preferences.getFloat(Constants.PREF_GAS_THRESHOLD, Constants.GAS_THRESHOLD);
-        
-        // Update UI with current values immediately
+       
+
         updateDustThresholdText(dustThreshold);
         updateNoiseThresholdText(noiseThreshold);
         updateGasThresholdText(gasThreshold);
     }
     
     private void updateNotificationToggleState() {
-        // Get current notification state from the existing utility
+   
         boolean notificationsEnabled = notificationUtils.areNotificationsEnabled();
         
         // Set checked state without triggering listener
@@ -575,7 +565,7 @@ public class SettingsActivity extends AppCompatActivity {
             updateNoiseThresholdText(noiseThreshold);
             updateGasThresholdText(gasThreshold);
             
-            // Save all threshold values in one batch operation
+           
             saveAllThresholds();
             
             Log.d(Constants.TAG_MAIN, "Thresholds reset to defaults");
@@ -630,7 +620,7 @@ public class SettingsActivity extends AppCompatActivity {
         try {
             binding.txtNoiseThresholdValue.setText(String.format("%.1f dB", threshold));
             
-            // Update risk level indicator based on OSHA standards
+           
             TextView riskText = binding.txtNoiseThresholdRisk;
             if (threshold < 85.0f) {
                 riskText.setText("Safe");
@@ -663,7 +653,7 @@ public class SettingsActivity extends AppCompatActivity {
         try {
             binding.txtGasThresholdValue.setText(String.format("%.1f ppm", threshold));
             
-            // Update risk level indicator based on the air quality chart
+            
             TextView riskText = binding.txtGasThresholdRisk;
             if (threshold <= 350.0f) {
                 riskText.setText("Healthy outside air level");
@@ -692,10 +682,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
     
-    /**
-     * Save all thresholds in a single batch operation
-     * More efficient than calling individual save methods
-     */
+    
     private void saveAllThresholds() {
         runInBackground(() -> {
             try {
@@ -718,7 +705,7 @@ public class SettingsActivity extends AppCompatActivity {
         return true;
     }
 
-    // Helper method to run tasks on background thread
+  
     private void runInBackground(Runnable task) {
         try {
             if (!backgroundExecutor.isShutdown()) {

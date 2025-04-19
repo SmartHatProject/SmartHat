@@ -40,7 +40,6 @@ public class LogHelper {
     }
     
     /**
-     * Log an info message (these will always be logged)
      * 
      * @param tag Tag for the log message
      * @param message Message to log

@@ -7,14 +7,12 @@ import com.team12.smarthat.models.DataFilter;
 
 import static android.content.Context.MODE_PRIVATE;
 
-/**
- * Singleton helper class to manage date filters across the app
- */
+
 public class DataFilterHelper {
     private static DataFilterHelper instance;
     private DataFilter currentFilter;
     
-    // Private constructor to prevent direct instantiation
+    
     private DataFilterHelper() {
         currentFilter = null;
     }
