@@ -462,7 +462,7 @@ public class MainActivity extends AppCompatActivity implements
                     new Section( 1000 / 5000f, 1200 / 5000f, Color.parseColor("#FFA000"), 30),
                     new Section(1200 / 5000f, 2000 / 5000f, Color.parseColor("#FF6F00"), 30),
                     new Section(2000 / 5000f, 1f, Color.parseColor("#D32F2F"), 30)
-
+            );
             
             // Set initial speed to 0
             gasGauge.speedTo(0, 1000);
